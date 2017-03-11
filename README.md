@@ -11,6 +11,8 @@ Includes an opinionated set of very simple defaults:
 - hot reload everything with `module.hot.accept()`
 - fast to install, fast to use
 
+![jetpack](https://cloud.githubusercontent.com/assets/324440/23823107/1e3336a4-0653-11e7-883e-2f6b9dbbc20b.png)
+
 ## Usage
 
 Install globally:
