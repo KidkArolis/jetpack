@@ -3,6 +3,16 @@
   "version": "0.1.0",
   "main": "index.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/KidkArolis/jetpack.git"
+  },
+  "keywords": [
+    "webpack",
+    "jetpack",
+    "build"
+  ],
+  "author": "Karolis Narkevicius",
   "bin": {
     "jetpack": "./bin/jetpack.js"
   },
