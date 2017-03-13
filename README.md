@@ -33,9 +33,9 @@ If you've reached a point where you want to switch away from using jetpack and j
 
     jetpack unstrap
 
-## Settings
+## Configuration
 
-You can change some settings in `package.json` or via command line arguments:
+You can change some config in `package.json` or via command line arguments:
 
 ```js
 {
