@@ -19,15 +19,19 @@ Includes an opinionated set of very simple defaults:
 
 Install globally (or locally):
 
-        yarn global add jetpack
+    yarn global add jetpack
 
 In your project, with package.json or index.js, start your app on http://localhost:3000:
 
-        jetpack
+    jetpack
 
 To build the app for production to `dist` directory (coming soon):
 
-        jetpack build
+    jetpack build
+
+If you've reached a point where you want to switch away from using jetpack and jump into raw webpack (coming soon):
+
+    jetpack unstrap
 
 ## Settings
 
@@ -56,3 +60,11 @@ if (module.hot) {
   })
 }
 ```
+
+## FAQ
+
+* **Is this meant to replace webpack?** No.
+* **So when should I use this?** When you want to run a snippet of code in the browser, when you want to try an npm package, when you have an idea for an app and want to start hacking on it right away (instead of spending time setting up boilerplate), when you're live coding in a talk.
+* **Should I use it for production apps?** You could, it's just that if you reach a point where the defaults don't work for your specific case, you might want to `unstrap` and tweak the webpack config at that point.
+* **What about [Neutrino from Mozilla](https://neutrino.js.org/)?** Neutrino seems awesome, I hope it takes off. I'd like to look into integrating Jetpack with Neurtino if that makes sense. Neutrino is a more ambitious approach of improving webpack's API for production apps. Jetpack is more about seamlessly running a bit of JS in the browser.
+* **What about [ratpack](https://github.com/threepointone/ratpack)?** Definitely an inspiration for jetpack. It's pretty much the same idea. You should try it.
