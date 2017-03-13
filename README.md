@@ -25,7 +25,7 @@ In your project, with package.json or index.js, start your app on http://localho
 
     jetpack
 
-To build the app for production to `dist` directory (coming soon):
+To build the app for production to `dist` directory:
 
     jetpack build
 

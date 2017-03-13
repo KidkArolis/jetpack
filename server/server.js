@@ -6,11 +6,10 @@ const requireRelative = require('require-relative')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const wpConf = require('../webpack.config')
-
-const app = express()
 const render = require('./render')
 
 module.exports = function (cliOptions) {
+  // get pkg meta
   let pkg
   try {
     pkg = JSON.parse(fs.readFileSync('./package.json'))
@@ -18,40 +17,47 @@ module.exports = function (cliOptions) {
     pkg = { name: 'jetpack' }
   }
 
+  // detect how to compile jsx
   let jsx = 'React.createElement'
   try {
     requireRelative.resolve('preact', process.cwd())
     jsx = 'Preact.h'
   } catch (err) {}
 
+  // combine defaults/pkg/cli options
   const options = Object.assign({
     port: 3000,
     jsx: jsx,
     html: null,
     public: 'public'
-  }, pkg.jetpack)
+  }, pkg.jetpack, cliOptions)
 
-  if (cliOptions.port) options.port = cliOptions.port
-  if (cliOptions.jsx) options.jsx = cliOptions.jsx
-  if (cliOptions.html) options.html = cliOptions.html
-  if (cliOptions.public) options.public = cliOptions.public
+  const webpackConfig = wpConf(options)
+  const compiler = webpack(webpackConfig)
+
+  if (options.build) {
+    build({ pkg, options, webpackConfig, compiler })
+  } else {
+    serve({ pkg, options, webpackConfig, compiler })
+  }
+}
+
+function build ({ compiler }) {
+  // if we're building, switch to prod env
+  process.env.NODE_ENV = 'production'
+  compiler.run(function (err, stats) {
+    if (err) return console.log(err)
+    console.log(stats.toString())
+  })
+}
+
+function serve ({ pkg, options, webpackConfig, compiler }) {
+  const app = express()
 
   let html
   if (options.html) {
     html = fs.readFileSync(path.join(process.cwd(), html))
   }
-
-  let webpackConfig
-
-  webpackConfig = Object.assign({}, wpConf(options), {
-    plugins: (wpConf.plugins || []).concat(new webpack.HotModuleReplacementPlugin())
-  })
-
-  Object.keys(webpackConfig.entry).forEach(e => {
-    webpackConfig.entry[e] = [webpackConfig.entry[e], require.resolve('webpack-hot-middleware/client')]
-  })
-
-  const compiler = webpack(webpackConfig)
 
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath

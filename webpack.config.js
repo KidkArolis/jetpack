@@ -1,13 +1,13 @@
-// const path = require('path')
+const path = require('path')
 const webpack = require('webpack')
 
 module.exports = function (options) {
-  return {
+  const config = {
     entry: {
       bundle: '.'
     },
     output: {
-      path: '/dist/',
+      path: path.join(process.cwd(), 'dist/'),
       filename: '[name].js',
       publicPath: '/dist/'
     },
@@ -60,7 +60,14 @@ module.exports = function (options) {
     }
   }
 
-  // if (!config.hot) {
-  //   module.exports.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }))
-  // }
+  if (options.build) {
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }))
+  } else {
+    config.plugins.push(new webpack.HotModuleReplacementPlugin())
+    Object.keys(config.entry).forEach(e => {
+      config.entry[e] = [config.entry[e], require.resolve('webpack-hot-middleware/client')]
+    })
+  }
+
+  return config
 }
