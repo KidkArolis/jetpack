@@ -2,7 +2,7 @@
 
 0 setup.
 
-Jetpack makes running browser JavaScript as easy as using `node .`. Run `jetpack` and start hacking on your app.
+Jetpack makes running browser JavaScript as easy as using `node .` Run `jetpack` and start hacking on your app.
 
 Includes an opinionated set of very simple defaults:
 
