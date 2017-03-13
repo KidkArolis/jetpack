@@ -68,3 +68,4 @@ if (module.hot) {
 * **Should I use it for production apps?** You could, it's just that if you reach a point where the defaults don't work for your specific case, you might want to `unstrap` and tweak the webpack config at that point.
 * **What about [Neutrino from Mozilla](https://neutrino.js.org/)?** Neutrino seems awesome, I hope it takes off. I'd like to look into integrating Jetpack with Neurtino if that makes sense. Neutrino is a more ambitious approach of improving webpack's API for production apps. Jetpack is more about seamlessly running a bit of JS in the browser.
 * **What about [ratpack](https://github.com/threepointone/ratpack)?** Definitely an inspiration for jetpack. It's pretty much the same idea. You should try it.
+* **What about support for less/sass/svg/images/angular/vue/...?** Post an issue and we can try to integrate if it makes sense. It obviously might not be possible to achieve a universal webpack setup, but let's see where we can take this.
