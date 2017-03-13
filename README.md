@@ -1,13 +1,15 @@
 # jetpack
 
-0 setup. Run `jetpack` and start hacking on your app.
+0 setup.
+
+Jetpack makes running browser JavaScript as easy as using `node .`. Run `jetpack` and start hacking on your app.
 
 Includes an opinionated set of very simple defaults:
 
 - powered by [webpack](https://webpack.js.org/)
 - es6 code transpiled with [buble](https://buble.surge.sh/guide/)
 - jsx transpiled to React/Preact depending on what's installed
-- use good ol regular css with `require('./styles.css')`, includes autoprefixing
+- use good ol css with `require('./styles.css')`, includes autoprefix
 - hot reload everything with `module.hot.accept()`
 - fast to install, fast to use
 
@@ -15,7 +17,7 @@ Includes an opinionated set of very simple defaults:
 
 ## Usage
 
-Install globally:
+Install globally (or locally):
 
         yarn global add jetpack
 
@@ -23,7 +25,7 @@ In your project, with package.json or index.js, start your app on http://localho
 
         jetpack
 
-To build the app for production to `dist` directory (coming soon).
+To build the app for production to `dist` directory (coming soon):
 
         jetpack build
 
