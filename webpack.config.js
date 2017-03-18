@@ -62,7 +62,7 @@ module.exports = function (options) {
 
   if (options.build) {
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }))
-  } else {
+  } else if (!options.start) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
       config.entry[e] = [config.entry[e], require.resolve('webpack-hot-middleware/client')]

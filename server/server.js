@@ -32,6 +32,10 @@ module.exports = function (cliOptions) {
     public: 'public'
   }, pkg.jetpack, cliOptions)
 
+  if (options.start) {
+    return serve({ pkg, options })
+  }
+
   const webpackConfig = wpConf(options)
   const compiler = webpack(webpackConfig)
 
@@ -59,11 +63,16 @@ function serve ({ pkg, options, webpackConfig, compiler }) {
     html = fs.readFileSync(path.join(process.cwd(), html))
   }
 
-  app.use(webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath
-  }))
+  // no runtime webpack in start mode
+  if (options.start) {
+    app.use('/dist', express.static(path.join(process.cwd(), 'dist')))
+  } else {
+    app.use(webpackDevMiddleware(compiler, {
+      publicPath: webpackConfig.output.publicPath
+    }))
 
-  app.use(webpackHotMiddleware(compiler))
+    app.use(webpackHotMiddleware(compiler))
+  }
 
   app.use(express.static(path.join(process.cwd(), options.public)))
 

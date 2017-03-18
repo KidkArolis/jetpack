@@ -29,6 +29,10 @@ To build the app for production to `dist` directory:
 
     jetpack build
 
+To serve the app in production after it's been built, run:
+
+    jetpack start
+
 If you've reached a point where you want to switch away from using jetpack and jump into raw webpack (coming soon):
 
     jetpack unstrap

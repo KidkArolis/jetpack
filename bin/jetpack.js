@@ -2,6 +2,7 @@
 
 const program = require('commander')
 let build = false
+let start = false
 
 program
   .version(require('../package.json').version)
@@ -13,8 +14,16 @@ program
 
 program
   .command('build [dir]')
+  .description('Build the app for production')
   .action(function (dir) {
     build = true
+  })
+
+program
+  .command('start [dir]')
+  .description('Serve a built app in production')
+  .action(function (dir) {
+    start = true
   })
 
 program.parse(process.argv)
@@ -25,6 +34,7 @@ if (program.args[0]) {
 
 require('../server/server')(clean({
   build: build,
+  start: start,
   port: program.port,
   jsx: program.jsx,
   html: program.html,
