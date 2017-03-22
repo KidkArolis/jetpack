@@ -18,10 +18,14 @@ module.exports = function (cliOptions) {
   }
 
   // detect how to compile jsx
-  let jsx = 'React.createElement'
+  let jsx = 'h'
   try {
     requireRelative.resolve('preact', process.cwd())
     jsx = 'Preact.h'
+  } catch (err) {}
+  try {
+    requireRelative.resolve('react', process.cwd())
+    jsx = 'React.createElement'
   } catch (err) {}
 
   // combine defaults/pkg/cli options

@@ -8,7 +8,7 @@ Includes an opinionated set of very simple defaults:
 
 - powered by [webpack](https://webpack.js.org/)
 - es6 code transpiled with [buble](https://buble.surge.sh/guide/)
-- jsx transpiled to React/Preact depending on what's installed
+- jsx transpiled to h/React.createElement/Preact.h depending on what's installed
 - use good ol css with `require('./styles.css')`, includes autoprefix
 - hot reload everything with `module.hot.accept()`
 - fast to install, fast to use
@@ -20,6 +20,8 @@ Includes an opinionated set of very simple defaults:
 Install globally (or locally):
 
     yarn global add jetpack
+    # or
+    npm install -g jetpack
 
 In your project, with package.json or index.js, start your app on http://localhost:3000:
 
@@ -45,7 +47,7 @@ You can change some config in `package.json` or via command line arguments:
 {
     "jetpack": {
         "port": 3000,
-        "jsx": "React.createElement", // or Preact.h if preact is installed
+        "jsx": "h", // Preact.h/React.createElement if preact/react is installed
         "html": "./index.html", // if you want to change html that's served
         "public": "public" // if you want to reference assets like images
     }
