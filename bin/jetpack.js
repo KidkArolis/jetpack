@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
+const fs = require('fs')
 const program = require('commander')
 let build = false
 let start = false
+let entry = '.'
 
 program
   .version(require('../package.json').version)
@@ -29,10 +31,23 @@ program
 program.parse(process.argv)
 
 if (program.args[0]) {
-  process.chdir(program.args[0])
+  if (fs.lstatSync(program.args[0]).isDirectory()) {
+    // if path provided is a directory, switch to it before proceeding
+    // useful to run jetpack in projects that are somewhere else on the disk
+    process.chdir(program.args[0])
+  } else {
+    // but if it's a file, we'll stay in current working directory
+    // and will use this file as the entry point instead of the default
+    // node resolution logic for '.'
+    entry = program.args[0].trim()
+    if (entry.indexOf('./') !== 0 && entry.indexOf('/') !== 0) {
+      entry = './' + entry
+    }
+  }
 }
 
 require('../server/server')(clean({
+  entry: entry,
   build: build,
   start: start,
   port: program.port,

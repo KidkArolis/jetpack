@@ -1,10 +1,11 @@
 const path = require('path')
 const webpack = require('webpack')
+const requireRelative = require('require-relative')
 
 module.exports = function (options) {
   const config = {
     entry: {
-      bundle: '.'
+      bundle: options.entry === '.' ? '.' : requireRelative.resolve(options.entry, process.cwd())
     },
     output: {
       path: path.join(process.cwd(), 'dist/'),
