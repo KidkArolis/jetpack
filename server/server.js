@@ -64,7 +64,7 @@ function serve ({ pkg, options, webpackConfig, compiler }) {
 
   let html
   if (options.html) {
-    html = fs.readFileSync(path.join(process.cwd(), html))
+    html = fs.readFileSync(path.join(process.cwd(), options.html))
   }
 
   // no runtime webpack in start mode
