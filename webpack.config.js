@@ -5,14 +5,14 @@ const requireRelative = require('require-relative')
 module.exports = function (options) {
   const config = {
     entry: {
-      bundle: options.entry === '.' ? '.' : requireRelative.resolve(options.entry, process.cwd())
+      bundle: options.client === '.' ? '.' : requireRelative.resolve(options.client, process.cwd())
     },
     output: {
       path: path.join(process.cwd(), 'dist/'),
       filename: '[name].js',
       publicPath: '/dist/'
     },
-    devtool: 'source-map',
+    devtool: 'eval',
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
@@ -22,11 +22,16 @@ module.exports = function (options) {
     ],
     module: {
       loaders: [{
-        test: /.js$/,
-        loaders: require.resolve('buble-loader'),
-        query: {
-          jsx: options.jsx,
-          objectAssign: 'Object.assign'
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: require.resolve('babel-loader'),
+          options: {
+            presets: [
+              [require.resolve('babel-preset-env'), { modules: false }],
+              require.resolve('babel-preset-react')
+            ]
+          }
         }
       }, {
         test: /\.css$/,
@@ -47,16 +52,14 @@ module.exports = function (options) {
       }]
     },
     devServer: {
-      hot: true,
-      inline: true,
+      noInfo: true,
       publicPath: '/dist/',
-      historyApiFallback: {
-        index: '/dist/'
-      },
       stats: {
-        errors: true,
-        errorDetails: true,
-        warnings: false
+        // assets: false,
+        // errors: true,
+        // errorDetails: true,
+        // warnings: true,
+        colors: true
       }
     }
   }
@@ -66,7 +69,10 @@ module.exports = function (options) {
   } else if (!options.start) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
-      config.entry[e] = [config.entry[e], require.resolve('webpack-hot-middleware/client')]
+      config.entry[e] = [
+        require.resolve('webpack-hot-middleware/client'),
+        config.entry[e]
+      ]
     })
   }
 
