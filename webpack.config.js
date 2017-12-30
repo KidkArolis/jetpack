@@ -2,6 +2,8 @@ const path = require('path')
 const webpack = require('webpack')
 const requireRelative = require('require-relative')
 
+const env = process.env.NODE_ENV || 'development'
+
 module.exports = function (options) {
   const config = {
     entry: {
@@ -12,11 +14,11 @@ module.exports = function (options) {
       filename: '[name].js',
       publicPath: '/dist/'
     },
-    devtool: 'eval',
+    devtool: 'source-maps',
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+          NODE_ENV: JSON.stringify(env)
         }
       })
     ],
@@ -29,6 +31,8 @@ module.exports = function (options) {
           options: {
             presets: [
               [require.resolve('babel-preset-env'), { modules: false }],
+              // TODO - use the underlying modules + prgamatic jsx,
+              // to get support for alt pragrams
               require.resolve('babel-preset-react')
             ]
           }
@@ -55,10 +59,6 @@ module.exports = function (options) {
       noInfo: true,
       publicPath: '/dist/',
       stats: {
-        // assets: false,
-        // errors: true,
-        // errorDetails: true,
-        // warnings: true,
         colors: true
       }
     }
@@ -66,7 +66,9 @@ module.exports = function (options) {
 
   if (options.build) {
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }))
-  } else if (!options.start) {
+  }
+
+  if (!options.build && !options.start && options.hot) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
       config.entry[e] = [
