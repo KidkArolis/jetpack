@@ -72,7 +72,7 @@ module.exports = function (options) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
       config.entry[e] = [
-        require.resolve('webpack-hot-middleware/client'),
+        require.resolve('webpack-hot-middleware/client') + '?path=/dist/__webpack_hmr',
         config.entry[e]
       ]
     })
