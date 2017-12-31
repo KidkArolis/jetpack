@@ -10,7 +10,7 @@ module.exports = function (options) {
       bundle: options.client === '.' ? '.' : requireRelative.resolve(options.client, process.cwd())
     },
     output: {
-      path: path.join(process.cwd(), 'client'),
+      path: options.build ? path.join(process.cwd(), options.dist, 'client') : path.join(process.cwd(), 'client'),
       filename: '[name].js',
       publicPath: '/client/'
     },
