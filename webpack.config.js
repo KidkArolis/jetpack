@@ -10,9 +10,9 @@ module.exports = function (options) {
       bundle: options.client === '.' ? '.' : requireRelative.resolve(options.client, process.cwd())
     },
     output: {
-      path: path.join(process.cwd(), 'dist/'),
+      path: path.join(process.cwd(), 'client'),
       filename: '[name].js',
-      publicPath: '/dist/'
+      publicPath: '/client/'
     },
     devtool: 'source-maps',
     plugins: [
@@ -57,7 +57,7 @@ module.exports = function (options) {
     },
     devServer: {
       noInfo: true,
-      publicPath: '/dist/',
+      publicPath: '/client/',
       stats: {
         colors: true
       }
@@ -72,7 +72,7 @@ module.exports = function (options) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
       config.entry[e] = [
-        require.resolve('webpack-hot-middleware/client') + '?path=/dist/__webpack_hmr',
+        require.resolve('webpack-hot-middleware/client') + '?path=/client/__webpack_hmr&noInfo=true&reload=true',
         config.entry[e]
       ]
     })

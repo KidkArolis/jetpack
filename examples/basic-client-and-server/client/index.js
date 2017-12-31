@@ -5,10 +5,10 @@ import './styles.css'
 class App extends React.Component {
   constructor () {
     super()
-    this.state = {}
+    this.state = window.DATA
   }
 
-  componentWillMount () {
+  update () {
     window.fetch('./api/data')
       .then(res => {
         return res.json()
@@ -24,9 +24,9 @@ class App extends React.Component {
   render () {
     return (
       <div className='App'>
-        <h1>HMR!</h1>
-        <img src='/static/file.png' />
-        <p>{this.state.data ? this.state.data : 'Loading...'}</p>
+        <h1 style={{color: '#111'}}>HMR!</h1>
+        <img height='132' src='/static/file.png' />
+        <p onClick={() => this.update()}>{this.state.data ? this.state.data : 'Loading...'}</p>
       </div>
     )
   }
