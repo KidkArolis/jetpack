@@ -1517,14 +1517,6 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
-driftwood@^1.4.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/driftwood/-/driftwood-1.5.1.tgz#63ee75d41c54b61283f36eba836943b73882099d"
-  dependencies:
-    chalk "^1.1.3"
-    json-bourne "^1.0.1"
-    slapdash "^1.3.0"
-
 duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
@@ -1892,12 +1884,6 @@ expand-range@^1.8.1:
   resolved "https://registry.yarnpkg.com/expand-range/-/expand-range-1.8.2.tgz#a299effd335fe2721ebae8e257ec79644fc85337"
   dependencies:
     fill-range "^2.1.0"
-
-express-driftwood@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/express-driftwood/-/express-driftwood-1.1.1.tgz#a9c3e5ddc157aa99b937230d2e8c13982b66a374"
-  dependencies:
-    chalk "^1.1.3"
 
 express-http-proxy@KidkArolis/express-http-proxy#stream-responses:
   version "1.0.7"
@@ -2675,10 +2661,6 @@ jsesc@^1.3.0:
 jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
-
-json-bourne@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/json-bourne/-/json-bourne-1.0.1.tgz#0cdd562941665a637cb604e04931e6f8de7c7e78"
 
 json-loader@^0.5.4:
   version "0.5.7"
@@ -4162,10 +4144,6 @@ shelljs@^0.7.5:
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
-
-slapdash@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/slapdash/-/slapdash-1.3.0.tgz#ba04660b5197b43da5f465b2662aa15279e8cdf0"
 
 slash@^1.0.0:
   version "1.0.0"
