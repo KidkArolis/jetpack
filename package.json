@@ -43,6 +43,15 @@
     "webpack-hot-middleware": "^2.17.1"
   },
   "devDependencies": {
+    "mocha": "^4.1.0",
     "standard": "^10.0.3"
+  },
+  "standard": {
+    "global": [
+      "describe",
+      "it",
+      "afterEach",
+      "beforeEach"
+    ]
   }
 }

@@ -137,3 +137,5 @@ module.exports = {
 * **Can I use TypeScript or Flow?** Hm, haven't figured this one out atm. Maybe via neutrino presets for the client.
 * **Can I use `jetpack` with a different server side language** Yeah, run your client side code server with `jetpack` and load `http://localhost:3000/bundle.js` in your server project. Alternatively use the proxy feature *(coming soon)*.
 * **I want to do server side rendering** That can be tricky. You can do it with `jetpack`, but there isn't any special help provided. You can render your own html in your custom server. Your best bet might be to use `next` in this case.
+
+TODO - add chart with architecture of how webpack/neutrino/server connects up. Illustration is important to portray the purpose of the project in the quickest way possible.
