@@ -17,7 +17,7 @@
     "jetpack": "./bin/jetpack.js"
   },
   "scripts": {
-    "test": "standard"
+    "test": "mocha && standard"
   },
   "dependencies": {
     "autoprefixer": "^6.7.6",
