@@ -5,6 +5,7 @@ const options = require('../../lib/cli/options')
 const dir = (...subdir) => path.join(__dirname, '..', ...subdir)
 
 const base = (pkg, extra = {}) => Object.assign({
+  cmd: 'dev',
   owd: dir('fixtures', pkg),
   dir: dir('fixtures', pkg),
   bundle: '/client/bundle.js',
@@ -25,7 +26,7 @@ describe('options', () => {
   it('creates options object from cli args and jetpack.config.js', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
     const program = { args: [] }
-    const opts = options(program)
+    const opts = options('dev', program)
     assert.deepEqual(opts, base('pkg-swoosh'))
   })
 
@@ -38,7 +39,7 @@ describe('options', () => {
       jsx: 'React.createElement',
       static: 'public'
     }
-    const opts = options(program)
+    const opts = options('dev', program)
     assert.deepEqual(opts, base('pkg-swoosh', {
       hot: false,
       client: 'some/path',
@@ -51,7 +52,7 @@ describe('options', () => {
   it('handles an individual js module as an entry', () => {
     process.chdir(dir('fixtures', 'pkg-individual'))
     const program = { args: ['./module.js'] }
-    const opts = options(program)
+    const opts = options('dev', program)
     assert.deepEqual(opts, base('pkg-individual', {
       client: './module.js'
     }))
@@ -60,7 +61,7 @@ describe('options', () => {
   it('handles projects that have both client and server', () => {
     process.chdir(dir('fixtures', 'pkg-client-server'))
     const program = { args: ['.'] }
-    const opts = options(program)
+    const opts = options('dev', program)
     assert.deepEqual(opts, base('pkg-client-server', {
       client: './client',
       server: './server'
@@ -70,7 +71,7 @@ describe('options', () => {
   it('handles projects that have both client and server in different target dir', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
     const program = { args: ['../pkg-client-server'] }
-    const opts = options(program)
+    const opts = options('dev', program)
     assert.deepEqual(opts, base('pkg-client-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: './client',
@@ -81,7 +82,7 @@ describe('options', () => {
   it('handles projects that only have client dir', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
     const program = { args: ['../pkg-client'] }
-    const opts = options(program)
+    const opts = options('dev', program)
     assert.deepEqual(opts, base('pkg-client', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: './client',
@@ -92,7 +93,7 @@ describe('options', () => {
   it('handles projects that only have server dir', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
     const program = { args: ['../pkg-server'] }
-    const opts = options(program)
+    const opts = options('dev', program)
     assert.deepEqual(opts, base('pkg-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: '.',
@@ -107,7 +108,7 @@ describe('options', () => {
       client: dir('fixtures', 'pkg-custom-client-server', 'my-client'),
       server: '../pkg-custom-client-server/my-server'
     }
-    const opts = options(program)
+    const opts = options('dev', program)
     assert.deepEqual(opts, base('pkg-custom-client-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: dir('fixtures', 'pkg-custom-client-server', './my-client'),

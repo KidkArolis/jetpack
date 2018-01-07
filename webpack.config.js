@@ -6,10 +6,10 @@ const env = process.env.NODE_ENV || 'development'
 module.exports = function (options) {
   const config = {
     entry: {
-      bundle: options.client === '.' ? '.' : path.join(process.cwd(), options.client)
+      bundle: options.client
     },
     output: {
-      path: options.build ? path.join(process.cwd(), options.dist, 'client') : path.join(process.cwd(), 'client'),
+      path: options.cmd === 'build' ? path.join(process.cwd(), options.dist, 'client') : path.join(process.cwd(), 'client'),
       filename: '[name].js',
       publicPath: '/client/'
     },
@@ -63,11 +63,11 @@ module.exports = function (options) {
     }
   }
 
-  if (options.build) {
+  if (options.cmd === 'build') {
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }))
   }
 
-  if (!options.build && !options.start && options.hot) {
+  if (options.cmd !== 'build' && options.cmd !== 'start' && options.hot) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
       config.entry[e] = [
