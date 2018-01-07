@@ -31,7 +31,7 @@ For the **server**:
 
 Jetpack brings together a common pattern into a single command. It streamlines the dev and production flows for JavaScript projects.
 
-![architecture](https://user-images.githubusercontent.com/324440/34653920-b3cc7244-f3eb-11e7-9d6d-30dc7a6103e1.png)
+![architecture](https://user-images.githubusercontent.com/324440/34653944-29e868a2-f3ec-11e7-9a2e-994da2a2cda7.png)
 
 ## Reasoning
 
