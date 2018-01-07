@@ -1,32 +1,40 @@
 const path = require('path')
 const webpack = require('webpack')
-const requireRelative = require('require-relative')
+
+const env = process.env.NODE_ENV || 'development'
 
 module.exports = function (options) {
   const config = {
     entry: {
-      bundle: options.entry === '.' ? '.' : requireRelative.resolve(options.entry, process.cwd())
+      bundle: options.client
     },
     output: {
-      path: path.join(process.cwd(), 'dist/'),
+      path: options.cmd === 'build' ? path.join(process.cwd(), options.dist, 'client') : path.join(process.cwd(), 'client'),
       filename: '[name].js',
-      publicPath: '/dist/'
+      publicPath: '/client/'
     },
-    devtool: 'source-map',
+    devtool: 'source-maps',
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+          NODE_ENV: JSON.stringify(env)
         }
       })
     ],
     module: {
       loaders: [{
-        test: /.js$/,
-        loaders: require.resolve('buble-loader'),
-        query: {
-          jsx: options.jsx,
-          objectAssign: 'Object.assign'
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: require.resolve('babel-loader'),
+          options: {
+            presets: [
+              [require.resolve('babel-preset-env'), { modules: false }],
+              // TODO - use the underlying modules + prgamatic jsx,
+              // to get support for alt pragrams
+              require.resolve('babel-preset-react')
+            ]
+          }
         }
       }, {
         test: /\.css$/,
@@ -47,26 +55,25 @@ module.exports = function (options) {
       }]
     },
     devServer: {
-      hot: true,
-      inline: true,
-      publicPath: '/dist/',
-      historyApiFallback: {
-        index: '/dist/'
-      },
+      noInfo: true,
+      publicPath: '/client/',
       stats: {
-        errors: true,
-        errorDetails: true,
-        warnings: false
+        colors: true
       }
     }
   }
 
-  if (options.build) {
+  if (options.cmd === 'build') {
     config.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }))
-  } else if (!options.start) {
+  }
+
+  if (options.cmd !== 'build' && options.cmd !== 'start' && options.hot) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
-      config.entry[e] = [config.entry[e], require.resolve('webpack-hot-middleware/client')]
+      config.entry[e] = [
+        require.resolve('webpack-hot-middleware/client') + '?path=/client/__webpack_hmr&noInfo=true&reload=true',
+        config.entry[e]
+      ]
     })
   }
 

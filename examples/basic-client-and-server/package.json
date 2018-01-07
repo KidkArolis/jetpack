@@ -1,0 +1,11 @@
+{
+  "name": "basic-client-and-server",
+  "version": "1.0.0",
+  "description": "A jetpack example",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1"
+  }
+}
