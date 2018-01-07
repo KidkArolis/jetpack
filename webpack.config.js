@@ -30,7 +30,7 @@ module.exports = function (options) {
           options: {
             presets: [
               [require.resolve('babel-preset-env'), { modules: false }],
-              // TODO - use the underlying modules + prgamatic jsx,
+              // TODO - use the underlying modules + pragamatic jsx,
               // to get support for alt pragrams
               require.resolve('babel-preset-react')
             ]
