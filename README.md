@@ -27,7 +27,11 @@ For the **server**:
 - use the very lightweight built in express based server `jetpack/server` for rapid prototypes
 - or use any server library of your choice and use `jetpack/handle` to handle the client side concerns seamlessly
 
-![jetpack](https://cloud.githubusercontent.com/assets/324440/23823107/1e3336a4-0653-11e7-883e-2f6b9dbbc20b.png)
+## Architecture
+
+Jetpack brings together a common pattern into a single command. It streamlines the dev and production flows for JavaScript projects.
+
+![architecture](https://user-images.githubusercontent.com/324440/34653619-7fa375d0-f3e6-11e7-8fa6-6c4e3261f794.png)
 
 ## Reasoning
 
@@ -137,5 +141,3 @@ module.exports = {
 * **Can I use TypeScript or Flow?** Hm, haven't figured this one out atm. Maybe via neutrino presets for the client.
 * **Can I use `jetpack` with a different server side language** Yeah, run your client side code server with `jetpack` and load `http://localhost:3000/bundle.js` in your server project. Alternatively use the proxy feature *(coming soon)*.
 * **I want to do server side rendering** That can be tricky. You can do it with `jetpack`, but there isn't any special help provided. You can render your own html in your custom server. Your best bet might be to use `next` in this case.
-
-TODO - add chart with architecture of how webpack/neutrino/server connects up. Illustration is important to portray the purpose of the project in the quickest way possible.
