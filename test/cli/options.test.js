@@ -7,10 +7,9 @@ const dir = (...subdir) => path.join(__dirname, '..', ...subdir)
 const base = (pkg, extra = {}) => Object.assign({
   owd: dir('fixtures', pkg),
   dir: dir('fixtures', pkg),
-  target: dir('fixtures', pkg),
   bundle: '/client/bundle.js',
   client: '.',
-  server: false,
+  server: null,
   dist: 'dist',
   static: 'static',
   jsx: 'h',
@@ -42,7 +41,7 @@ describe('options', () => {
     const opts = options(program)
     assert.deepEqual(opts, base('pkg-swoosh', {
       hot: false,
-      target: dir('fixtures', 'pkg-swoosh', 'some', 'path'),
+      client: 'some/path',
       port: 2800,
       jsx: 'React.createElement',
       static: 'public'
@@ -54,7 +53,7 @@ describe('options', () => {
     const program = { args: ['./module.js'] }
     const opts = options(program)
     assert.deepEqual(opts, base('pkg-individual', {
-      target: dir('fixtures', 'pkg-individual', 'module.js')
+      client: './module.js'
     }))
   })
 
@@ -63,8 +62,8 @@ describe('options', () => {
     const program = { args: ['.'] }
     const opts = options(program)
     assert.deepEqual(opts, base('pkg-client-server', {
-      client: dir('fixtures', 'pkg-client-server', 'client'),
-      server: dir('fixtures', 'pkg-client-server', 'server')
+      client: './client',
+      server: './server'
     }))
   })
 
@@ -74,8 +73,8 @@ describe('options', () => {
     const opts = options(program)
     assert.deepEqual(opts, base('pkg-client-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
-      client: dir('fixtures', 'pkg-client-server', 'client'),
-      server: dir('fixtures', 'pkg-client-server', 'server')
+      client: './client',
+      server: './server'
     }))
   })
 
@@ -85,8 +84,8 @@ describe('options', () => {
     const opts = options(program)
     assert.deepEqual(opts, base('pkg-client', {
       owd: dir('fixtures', 'pkg-swoosh'),
-      client: dir('fixtures', 'pkg-client', 'client'),
-      server: false
+      client: './client',
+      server: null
     }))
   })
 
@@ -96,8 +95,8 @@ describe('options', () => {
     const opts = options(program)
     assert.deepEqual(opts, base('pkg-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
-      client: false,
-      server: dir('fixtures', 'pkg-server', 'server')
+      client: '.',
+      server: './server'
     }))
   })
 
@@ -112,11 +111,7 @@ describe('options', () => {
     assert.deepEqual(opts, base('pkg-custom-client-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: dir('fixtures', 'pkg-custom-client-server', './my-client'),
-      server: dir('fixtures', 'pkg-custom-client-server', './my-server')
+      server: '../pkg-custom-client-server/my-server'
     }))
   })
 })
-
-// if you point to a file - it will use that file as entry point
-// if you point to a dir - it will use that dir as entry point
-// but if the dir pointed at has client or server subdirs it will use those

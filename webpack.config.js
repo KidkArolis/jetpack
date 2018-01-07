@@ -1,13 +1,12 @@
 const path = require('path')
 const webpack = require('webpack')
-const requireRelative = require('require-relative')
 
 const env = process.env.NODE_ENV || 'development'
 
 module.exports = function (options) {
   const config = {
     entry: {
-      bundle: options.client === '.' ? '.' : requireRelative.resolve(options.client, process.cwd())
+      bundle: options.client === '.' ? '.' : path.join(process.cwd(), options.client)
     },
     output: {
       path: options.build ? path.join(process.cwd(), options.dist, 'client') : path.join(process.cwd(), 'client'),
