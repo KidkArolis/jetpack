@@ -2,6 +2,7 @@
   "name": "with-preact",
   "version": "1.0.0",
   "main": "index.js",
+  "browser": "app.js",
   "license": "MIT",
   "dependencies": {
     "preact": "^8.2.7"
