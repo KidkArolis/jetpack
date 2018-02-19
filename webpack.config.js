@@ -4,7 +4,7 @@ const webpack = require('webpack')
 const env = process.env.NODE_ENV || 'development'
 
 module.exports = function (options) {
-  const config = {
+  let config = {
     entry: {
       bundle: options.client
     },
