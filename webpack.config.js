@@ -78,7 +78,7 @@ module.exports = function (options) {
   }
 
   if (options.webpack) {
-    const transformedConfig = options.wepback(config, options)
+    const transformedConfig = options.webpack(config, options)
     if (transformedConfig) {
       config = transformedConfig
     }
