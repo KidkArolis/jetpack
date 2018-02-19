@@ -77,5 +77,12 @@ module.exports = function (options) {
     })
   }
 
+  if (options.webpack) {
+    const transformedConfig = options.wepback(config, options)
+    if (transformedConfig) {
+      config = transformedConfig
+    }
+  }
+
   return config
 }
