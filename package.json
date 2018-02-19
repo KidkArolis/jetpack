@@ -20,11 +20,11 @@
     "test": "mocha && standard"
   },
   "dependencies": {
+    "@babel/core": "^7.0.0-beta.39",
+    "@babel/preset-env": "^7.0.0-beta.39",
+    "@babel/preset-react": "^7.0.0-beta.39",
     "autoprefixer": "^6.7.6",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
+    "babel-loader": "8.0.0-beta.0",
     "chalk": "^2.1.0",
     "commander": "^2.9.0",
     "css-loader": "^0.27.1",

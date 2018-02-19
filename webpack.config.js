@@ -13,7 +13,7 @@ module.exports = function (options) {
       filename: '[name].js',
       publicPath: '/client/'
     },
-    devtool: 'source-maps',
+    devtool: options.cmd !== 'build' && 'cheap-module-eval-source-map',
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
@@ -29,10 +29,19 @@ module.exports = function (options) {
           loader: require.resolve('babel-loader'),
           options: {
             presets: [
-              [require.resolve('babel-preset-env'), { modules: false }],
-              // TODO - use the underlying modules + pragamatic jsx,
-              // to get support for alt pragrams
-              require.resolve('babel-preset-react')
+              [
+                require.resolve('@babel/preset-env'), {
+                  modules: false,
+                  targets: {
+                    'browsers': 'last 2 versions'
+                  }
+                }
+              ],
+              [
+                require.resolve('@babel/preset-react'), {
+                  pragma: options.jsx
+                }
+              ]
             ]
           }
         }
