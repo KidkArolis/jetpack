@@ -106,13 +106,11 @@ Server side code is reloaded using `nodemon`.
 
 ## Custom webpack loaders
 
-*(coming soon)*
-
 You can extend the default webpack config using `jetpack.config.js`:
 
 ```js
 module.exports = {
-  webpack: (config, { dev }) => {
+  webpack: (config, opts) => {
     // Perform customizations to webpack config
     // Important: return the modified config
     return config
