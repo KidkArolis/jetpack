@@ -5,8 +5,8 @@ Start building apps with 0 setup. Rapidly **start**, **develop**, **build** and 
 Use `jetpack` to:
 
 * run a bit of JavaScript in the browser
-* build production ready client side only apps
-* build production ready client and server apps
+* build production ready client only apps
+* build production ready client/server apps
 
 ## Convention over configuration
 
@@ -88,6 +88,24 @@ module.exports = {
   hot: true // toggle hot reloading
 }
 ```
+
+## jetpack/server
+
+For realy simple prototypes of initial versions of your app, jetpack comes with a small express wrapper:
+
+```js
+const server = require('jetpack/server')
+
+const app = server()
+
+app.get('/api/data', (req, res) => {
+  res.send({ data: Date.now() })
+})
+
+app.listen()
+```
+
+See [examples/basic-client-and-server](examples/basic-client-and-server) for a working example.
 
 ## Hot reloading
 
