@@ -85,7 +85,9 @@ module.exports = {
   dist: "dist", // the destination for building production client side code
   quiet: false, // no jetpack logs, only errors and logs from the app
   verbose: false, // more detailed logs, restarts, detailed webpack stats
-  hot: true // toggle hot reloading
+  hot: true, // toggle hot reloading
+  webpack: (config, options) => {}, // modify the webpack config with your own fancy stuff
+  use: (req, res, next) => {} // mount your own middleware on the server
 }
 ```
 
