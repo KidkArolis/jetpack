@@ -8,12 +8,14 @@ module.exports = function (options) {
     entry: {
       bundle: options.client
     },
+    mode: options.cmd === 'build'
+      ? 'production'
+      : 'development',
     output: {
       path: options.cmd === 'build' ? path.join(process.cwd(), options.dist, 'client') : path.join(process.cwd(), 'client'),
       filename: '[name].js',
       publicPath: '/client/'
     },
-    devtool: options.cmd !== 'build' && 'cheap-module-eval-source-map',
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
@@ -22,7 +24,7 @@ module.exports = function (options) {
       })
     ],
     module: {
-      loaders: [{
+      rules: [{
         test: /\.js$/,
         exclude: /(node_modules)/,
         use: {
@@ -47,7 +49,7 @@ module.exports = function (options) {
         }
       }, {
         test: /\.css$/,
-        loaders: [
+        use: [
           require.resolve('style-loader'),
           require.resolve('css-loader'),
           {
@@ -65,15 +67,8 @@ module.exports = function (options) {
     },
     devServer: {
       noInfo: true,
-      publicPath: '/client/',
-      stats: {
-        colors: true
-      }
+      publicPath: '/client/'
     }
-  }
-
-  if (options.cmd === 'build') {
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }))
   }
 
   if (options.cmd !== 'build' && options.cmd !== 'start' && options.hot) {
