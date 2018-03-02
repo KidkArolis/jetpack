@@ -16,13 +16,6 @@ module.exports = function (options) {
       filename: '[name].js',
       publicPath: '/client/'
     },
-    plugins: [
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: JSON.stringify(env)
-        }
-      })
-    ],
     module: {
       rules: [{
         test: /\.js$/,
@@ -66,12 +59,14 @@ module.exports = function (options) {
       }]
     },
     devServer: {
+      logLevel: 'silent',
       noInfo: true,
       publicPath: '/client/'
     }
   }
 
   if (options.cmd !== 'build' && options.cmd !== 'start' && options.hot) {
+    config.plugins = config.plugins || []
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
       config.entry[e] = [
