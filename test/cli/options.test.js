@@ -5,6 +5,7 @@ const options = require('../../lib/cli/options')
 const dir = (...subdir) => path.join(__dirname, '..', ...subdir)
 
 const base = (pkg, extra = {}) => Object.assign({
+  env: 'development',
   cmd: 'dev',
   owd: dir('fixtures', pkg),
   dir: dir('fixtures', pkg),
