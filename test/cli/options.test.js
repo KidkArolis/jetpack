@@ -9,7 +9,7 @@ const base = (pkg, extra = {}) => Object.assign({
   cmd: 'dev',
   owd: dir('fixtures', pkg),
   dir: dir('fixtures', pkg),
-  bundle: '/client/bundle.js',
+  assets: ['/client/bundle.js'],
   client: '.',
   clientDisabled: false,
   server: null,

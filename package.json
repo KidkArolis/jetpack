@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.0.0-beta.40",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.40",
     "@babel/preset-env": "^7.0.0-beta.40",
     "@babel/preset-react": "^7.0.0-beta.40",
     "autoprefixer": "^6.7.6",
@@ -41,8 +42,10 @@
     "send": "^0.16.2",
     "style-loader": "^0.20.2",
     "webpack": "^4.0.0",
+    "webpack-bundle-analyzer": "^2.11.1",
     "webpack-dev-middleware": "^3.0.0",
-    "webpack-hot-middleware": "^2.21.0"
+    "webpack-hot-middleware": "^2.21.0",
+    "webpack-manifest-plugin": "^2.0.0-rc.2"
   },
   "devDependencies": {
     "mocha": "^4.1.0",
