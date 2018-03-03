@@ -168,15 +168,23 @@ Server side code is reloaded using `nodemon`.
 You can extend the default webpack config using `jetpack.config.js`:
 
 ```js
+// jetpack exposes it's webpack so you could use webpack's plugins
+const webpack = require('jetpack/webpack')
+
 module.exports = {
   webpack: (config, options) => {
-    // Perform customizations to webpack config
+    // perform customizations to webpack config
+
     config.module.rules.push({
       test: /\.png|\.svg$/,
       use: 'file-loader'
     })
 
-    // Important: return the modified config
+    config.plugins.push(
+      new webpack.NamedModulesPlugin()
+    )
+
+    // important: return the modified config
     return config
   }
 }
