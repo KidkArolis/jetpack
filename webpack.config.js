@@ -1,17 +1,20 @@
 const path = require('path')
 const webpack = require('webpack')
+const ManifestPlugin = require('webpack-manifest-plugin')
 
 module.exports = function (options) {
+  const mode = options.cmd === 'build' || options.cmd === 'inspect'
+    ? 'production'
+    : 'development'
+
   let config = {
     entry: {
       bundle: options.client
     },
-    mode: options.cmd === 'build'
-      ? 'production'
-      : 'development',
+    mode,
     output: {
-      path: options.cmd === 'build' ? path.join(process.cwd(), options.dist, 'client') : path.join(process.cwd(), 'client'),
-      filename: '[name].js',
+      path: mode === 'production' ? path.join(process.cwd(), options.dist, 'client') : path.join(process.cwd(), 'client'),
+      filename: mode === 'production' ? '[name].[chunkhash].js' : '[name].js',
       publicPath: '/client/'
     },
     module: {
@@ -21,6 +24,9 @@ module.exports = function (options) {
         use: {
           loader: require.resolve('babel-loader'),
           options: {
+            plugins: [
+              require.resolve('@babel/plugin-syntax-dynamic-import')
+            ],
             presets: [
               [
                 require.resolve('@babel/preset-env'), {
@@ -56,6 +62,9 @@ module.exports = function (options) {
         ]
       }]
     },
+    plugins: [
+      new ManifestPlugin()
+    ],
     devServer: {
       logLevel: 'silent',
       noInfo: true,
@@ -63,8 +72,15 @@ module.exports = function (options) {
     }
   }
 
-  if (options.cmd !== 'build' && options.cmd !== 'start' && options.hot) {
-    config.plugins = config.plugins || []
+  if (mode === 'production') {
+    config.optimization = {
+      splitChunks: {
+        chunks: 'all'
+      }
+    }
+  }
+
+  if (mode !== 'production' && options.hot) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
       config.entry[e] = [
