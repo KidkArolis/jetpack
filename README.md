@@ -50,7 +50,7 @@ Install globally:
 
     npm install -g jetpack
 
-In your project with package.json or index.js, start your app on http://localhost:3000:
+In your project with `package.json` or `index.js`, start your app on `http://localhost:3000`:
 
     jetpack
 
@@ -77,15 +77,15 @@ You can change config by using `jetpack.config.js` or command line arguments:
 ```js
 module.exports = {
   port: 3000,
-  jsx: "h", // Preact.h/React.createElement if preact/react is installed
-  html: "./index.html", // if you want to change the default html served
+  jsx: "React.createElement" | "Preact.h", // if (p)react is installed
   client: "client", // the directory with the client code, ignored by nodemon
   server: "server", // the directory with the server code
   static: "static", // if you want to serve assets like images
-  dist: "dist", // the destination for building production client side code
+  dist: "dist", // the dir for building production client side code
+  html: "./index.html", // if you want to change the default html served
+  hot: true // toggle hot reloading,
   quiet: false, // no jetpack logs, only errors and logs from the app
-  verbose: false, // more detailed logs, restarts, detailed webpack stats
-  hot: true // toggle hot reloading
+  verbose: false, // more detailed logs
 }
 ```
 
@@ -106,6 +106,47 @@ app.listen()
 ```
 
 See [examples/basic-client-and-server](examples/basic-client-and-server) for a working example.
+
+## jetpack/handle
+
+When you want to use your own server, you can plug jetpack right into any server that works with node's standard request/response objects, e.g.:
+
+```js
+const express = require('express')
+const { handle, options } = require('jetpack/handle')
+
+const app = express()
+
+app.get('/api/data', (req, res) => {
+  res.send({ data: Date.now() })
+})
+
+// this serves the html page with the right script tags
+// and the client assets
+app.get('*', handle)
+
+app.listen()
+```
+
+Alternatively, you can only serve the client assets and render the html page yourself:
+
+```js
+const { handle, options } = require('jetpack/handle')
+
+app.get('/client/*', handle)
+
+app.get('*', (req, res) => {
+  res.send(`
+    <body>
+      ${options.assets.map(asset =>
+        `<script type='text/javascript' src='${asset}'></script>`
+      ).join('\n')}
+    </body>
+  `)
+})
+```
+
+Alternatively, do the above in development only, and serve the client assets from a CDN, which case it's up to you how you upload the built assets and how to serve them. Check out [bapistrano](https://github.com/QubitProducts/bapistrano) - a tool for uploading and serving long term cached assets from S3 with feature branch support.
 
 ## Hot reloading
 
@@ -128,8 +169,13 @@ You can extend the default webpack config using `jetpack.config.js`:
 
 ```js
 module.exports = {
-  webpack: (config, opts) => {
+  webpack: (config, options) => {
     // Perform customizations to webpack config
+    config.module.rules.push({
+      test: /\.png|\.svg$/,
+      use: 'file-loader'
+    })
+
     // Important: return the modified config
     return config
   }
@@ -138,16 +184,12 @@ module.exports = {
 
 ## FAQ
 
-**Is this meant to replace webpack?** No.
+**Is this meant to replace webpack?** No. It's an exploration of a better developer experience for using webpack.
 
-**So when should I use this?** When you want to run a snippet of code in the browser, when you want to try an npm package, when you have an idea for an app and want to start hacking on it right away (instead of spending time setting up boilerplate), when you're live coding in a talk. When you're building a client side app with or without the server side bit.
+**When should I use this?** When you want to run a snippet of code in the browser. When you want to try an npm package. When you're live coding in a talk. When you have an idea for an app and want to start hacking on it right away instead of spending time setting up boilerplate. Any time you'd reach for webpack otherwise.
 
 **Should I use it for production apps?** Absolutely, that's the idea.
 
-**What about [Neutrino from Mozilla](https://neutrino.js.org/)** Neutrino seems awesome, I hope it takes off. I'd like to look into integrating Jetpack with Neutrino if that makes sense. Neutrino is a more ambitious approach of improving webpack's API for production apps by creating composable presets. It would be cool if jetpack automatically pulled in the installed neutrino presets.
-
-**Can I use TypeScript or Flow?** Hm, haven't figured this one out atm. Probably by customizing the webpack config.
-
-**Can I use `jetpack` with a different server side language** Yeah, run your client side code server with `jetpack` and load `http://localhost:3000/bundle.js` in your server project.
+**Can I use TypeScript or Flow?** Yes, by including the required webpack loader via `jetpack.config.js`.
 
 **I want to do server side rendering** You can do it with `jetpack`, but there isn't any special help provided. You can render your own html in your custom server. In general, your best bet might be to use something like [next.js](https://github.com/zeit/next.js) in this case.
