@@ -14,7 +14,7 @@
   ],
   "author": "Karolis Narkevicius",
   "bin": {
-    "jetpack": "./bin/jetpack.js"
+    "jetpack": "./bin/jetpack"
   },
   "scripts": {
     "test": "mocha && standard"
