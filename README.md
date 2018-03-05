@@ -206,3 +206,5 @@ module.exports = {
 **Can I use TypeScript or Flow?** Yes, by including the required webpack loader via `jetpack.config.js`.
 
 **I want to do server side rendering** You can do it with `jetpack`, but there isn't any special help provided. You can render your own html in your custom server. In general, your best bet might be to use something like [next.js](https://github.com/zeit/next.js) in this case.
+
+**Where's that cool banner photo from?** It's a photo by [SpaceX](https://unsplash.com/photos/-p-KCm6xB9I?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on the awesome [Unsplash](https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
