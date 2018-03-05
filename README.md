@@ -1,13 +1,11 @@
 <h1 align="center">
-  <img src="https://user-images.githubusercontent.com/324440/36952861-eed2803e-200c-11e8-9426-dc0b9d5a90e8.jpg" alt="jetpack" title="jetpack">
+  <img src="https://user-images.githubusercontent.com/324440/36952908-871e050c-200d-11e8-83eb-12d29fef261f.jpg" alt="jetpack" title="jetpack">
 </h1>
 
-<h5 align="center">Start building browser apps with zero config.</h5>
+<h5 align="center">Start building browser apps with zero config</h5>
 <br />
 
-# jetpack 🚀
-
-Rapidly **start**, **develop**, **build** and **release** production ready apps. Jetpack makes running browser JavaScript as easy as using `node .`. Jetpack wraps webpack and nodemon to give you the quickest development workflow.
+Rapidly **start**, **develop**, **build** and **release** production ready apps. Jetpack makes running browser JavaScript as easy as running `node script.js`. Jetpack wraps webpack and nodemon to give you the quickest development workflow.
 
 Use `jetpack` to:
 
