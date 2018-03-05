@@ -2,6 +2,7 @@
   "name": "jetpack",
   "version": "0.7.3",
   "main": "index.js",
+  "description": "Jetpack wraps webpack and nodemon to give you the best development workflow.",
   "license": "MIT",
   "repository": {
     "type": "git",
