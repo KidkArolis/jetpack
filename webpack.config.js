@@ -46,9 +46,35 @@ module.exports = function (options) {
         }
       }, {
         test: /\.css$/,
+        exclude: /\.module\.css$/,
         use: [
           require.resolve('style-loader'),
           require.resolve('css-loader'),
+          {
+            loader: require.resolve('postcss-loader'),
+            options: {
+              plugins: function () {
+                return [
+                  require('autoprefixer')
+                ]
+              }
+            }
+          }
+        ]
+      }, {
+        test: /\.module\.css$/,
+        use: [
+          require.resolve('style-loader'),
+          {
+            loader: require.resolve('css-loader'),
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: mode === 'production'
+                ? '[name]--[local]___[hash:base64:5]'
+                : '[path][name]--[local]___[hash:base64:5]'
+            }
+          },
           {
             loader: require.resolve('postcss-loader'),
             options: {
