@@ -1,6 +1,6 @@
-import Preact from 'preact'
+import { h, Component, render } from 'preact'
 
-class App extends Preact.Component {
+class App extends Component {
   constructor () {
     super()
     this.state = { now: Date.now() }
@@ -21,6 +21,6 @@ class App extends Preact.Component {
   }
 }
 
-Preact.render(<App />, document.body)
+render(<App />, document.body)
 
 if (module.hot) module.hot.accept()

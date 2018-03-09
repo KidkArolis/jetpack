@@ -20,7 +20,7 @@ Use `jetpack` to:
 For the **client**:
 - client side bundling powered by [webpack](https://webpack.js.org/)
 - es6 code transpiled with [babel](https://babeljs.io/) with [babel-preset-env](https://babeljs.io/docs/plugins/preset-env/)
-- jsx is transpiled to h/React.createElement/Preact.h depending on what's installed
+- jsx is transpiled to `React.createElement` or `h` depending on what's installed
 - use good ol css with autoprefixing with `require('./styles.css')`
 - hot reload everything with `module.hot.accept()`
 
@@ -82,7 +82,7 @@ You can change config by using `jetpack.config.js` or command line arguments:
 ```js
 module.exports = {
   port: 3000,
-  jsx: "React.createElement" | "Preact.h", // if (p)react is installed
+  jsx: "React.createElement" | "h", // if react is installed, h otherwise
   client: "client", // the directory with the client code, ignored by nodemon
   server: "server", // the directory with the server code
   static: "static", // if you want to serve assets like images
