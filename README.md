@@ -83,9 +83,9 @@ You can change config by using `jetpack.config.js` or command line arguments:
 module.exports = {
   port: 3000,
   jsx: "React.createElement" | "h", // if react is installed, h otherwise
-  client: "client", // the directory with the client code, ignored by nodemon
-  server: "server", // the directory with the server code
-  static: "static", // if you want to serve assets like images
+  client: "./app/client", // the directory with the client code, ignored by nodemon
+  server: "./app/server", // the directory with the server code
+  static: "./static", // if you want to serve assets like images
   dist: "dist", // the dir for building production client side code
   html: "./index.html", // if you want to change the default html served
   hot: true // toggle hot reloading,

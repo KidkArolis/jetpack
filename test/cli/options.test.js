@@ -71,6 +71,16 @@ describe('options', () => {
     }))
   })
 
+  it('handles projects that have both client and server in app', () => {
+    process.chdir(dir('fixtures', 'pkg-app-client-server'))
+    const program = { args: ['.'] }
+    const opts = options('dev', program)
+    assert.deepEqual(opts, base('pkg-app-client-server', {
+      client: './app/client',
+      server: './app/server'
+    }))
+  })
+
   it('handles projects that have both client and server in different target dir', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
     const program = { args: ['../pkg-client-server'] }
