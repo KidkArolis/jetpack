@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const ManifestPlugin = require('webpack-manifest-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 module.exports = function (options) {
   const mode = options.cmd === 'build' || options.cmd === 'inspect'
@@ -89,6 +90,9 @@ module.exports = function (options) {
       }]
     },
     plugins: [
+      new FriendlyErrorsWebpackPlugin({
+        clearConsole: false
+      }),
       new ManifestPlugin()
     ],
     devServer: {
