@@ -13,22 +13,22 @@ Use `jetpack` to:
 * build production ready client only apps
 * build production ready client/server apps
 
-## Convention over configuration
+Why use `jetpack`? To avoid rolling your own custom webpack config or copy pasting it from another project. Jetpack has a good set of defaults that should get you off the ground immediately. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server - everything _just works_.
 
-`jetpack` includes an opinionated, yet configurable, set of defaults.
+## Features
 
-For the **client**:
-- client side bundling powered by [webpack](https://webpack.js.org/)
-- es6 code transpiled with [babel](https://babeljs.io/) with [babel-preset-env](https://babeljs.io/docs/plugins/preset-env/)
-- jsx is transpiled to `React.createElement` or `h` depending on what's installed
-- use good ol css with autoprefixing with `require('./styles.css')`
-- hot reload everything with `module.hot.accept()`
-
-For the **server**:
-
-- development reloading powered by [nodemon](github.com/nodemon/nodemon)
-- use the lightweight built in express based server `jetpack/server` for rapid prototypes
-- or use any server library of your choice and use `jetpack/handle` to handle the client side concerns seamlessly
+* **sensible webpack defaults** yet configurable
+* **es6+ compiled with [babel-preset-env](https://babeljs.io/docs/plugins/preset-env/)** without any need for `.bablerc`
+* **jsx is transpiled to `React.createElement` or `h`** depending on what's installed
+* **css with autoprefixing**
+* **css modules kick in if the file is named \*.module.css**
+* **hot reloading**
+* **automatic production bundle chunk splitting**
+* **close to the metal** - no framework here, what you write is what you get
+* **server code is reloaded with [nodemon](github.com/nodemon/nodemon)**
+* **server code is completely optional**
+* **built in lightweight express wrapper `jetpack/server`** for rapid prototypes
+* **use any server framework** - seamlessly handle client assets in dev and production with `jetpack/handle`
 
 ## Architecture
 
