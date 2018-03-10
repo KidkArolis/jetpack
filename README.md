@@ -17,18 +17,18 @@ Why use `jetpack`? To avoid rolling your own custom webpack config or copy pasti
 
 ## Features
 
-* **sensible webpack defaults** yet configurable
-* **es6+ compiled with [babel-preset-env](https://babeljs.io/docs/plugins/preset-env/)** without any need for `.bablerc`
-* **jsx is transpiled to `React.createElement` or `h`** depending on what's installed
-* **css with autoprefixing**
-* **css modules kick in if the file is named \*.module.css**
-* **hot reloading**
-* **automatic production bundle chunk splitting**
 * **close to the metal** - no framework here, what you write is what you get
-* **server code is reloaded with [nodemon](github.com/nodemon/nodemon)**
-* **server code is completely optional**
-* **built in lightweight express wrapper `jetpack/server`** for rapid prototypes
-* **use any server framework** - seamlessly handle client assets in dev and production with `jetpack/handle`
+* **sensible** yet configurable webpack defaults
+* **es6+ compiled** with @babel/preset-env without any need for `.bablerc`
+* **jsx compiled** to `React.createElement` or `h` depending on what's installed
+* **global css** with autoprefixing
+* **css modules** for files named `*.module.css`
+* **hot reloading** built in
+* **automatic chunk splitting** in production bundles
+* **nodemon** for server code reloading
+* **server code** is completely optional
+* built in **express wrapper** `jetpack/server` for rapid prototypes
+* use **any server framework** and seamlessly handle webpack assets in dev and production with `jetpack/handle`
 
 ## Architecture
 
