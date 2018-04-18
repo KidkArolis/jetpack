@@ -13,6 +13,7 @@ module.exports = function (options) {
       bundle: options.client
     },
     mode,
+    devtool: mode === 'development' ? 'source-map' : undefined,
     output: {
       path: mode === 'production' ? path.join(process.cwd(), options.dist, 'client') : path.join(process.cwd(), 'client'),
       filename: mode === 'production' ? '[name].[chunkhash].js' : '[name].js',
