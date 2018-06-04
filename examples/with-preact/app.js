@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import { h, Component, render } from 'preact'
 
 class App extends Component {
