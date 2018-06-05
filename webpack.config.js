@@ -10,7 +10,7 @@ module.exports = function (options) {
 
   let config = {
     entry: {
-      bundle: options.client
+      bundle: [require.resolve('@babel/polyfill'), options.client]
     },
     mode,
     devtool: mode === 'development' ? 'source-map' : undefined,
@@ -115,9 +115,8 @@ module.exports = function (options) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin())
     Object.keys(config.entry).forEach(e => {
       config.entry[e] = [
-        require.resolve('webpack-hot-middleware/client') + '?path=/client/__webpack_hmr&noInfo=true&reload=true',
-        config.entry[e]
-      ]
+        require.resolve('webpack-hot-middleware/client') + '?path=/client/__webpack_hmr&noInfo=true&reload=true'
+      ].concat(config.entry[e])
     })
   }
 
