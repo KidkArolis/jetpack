@@ -14,7 +14,7 @@ class App extends Component {
   render () {
     return (
       <div className='App'>
-        <h1 style={{color: '#111'}}>HMR!</h1>
+        <h1 style={{ color: '#111' }}>HMR!</h1>
         <img height='132' src='/static/file.png' />
         <p onClick={() => this.update()}>{this.state.now ? this.state.now : 'Loading...'}</p>
       </div>

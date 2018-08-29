@@ -23,7 +23,7 @@ class App extends React.Component {
     const { data } = this.state
     return (
       <div className='App'>
-        <h1 style={{color: '#111'}}>HMR!</h1>
+        <h1 style={{ color: '#111' }}>HMR!</h1>
         <img height='132' src='/static/file.png' />
         <p onClick={() => this.update()}>{data || 'Loading...'}</p>
       </div>
