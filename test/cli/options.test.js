@@ -18,7 +18,16 @@ const base = (pkg, extra = {}) => Object.assign({
   static: 'static',
   jsx: 'h',
   port: 3000,
-  pkg: { name: 'jetpack' }
+  pkg: { name: 'jetpack' },
+  browsers: [
+    '>1%',
+    'last 4 versions',
+    'Firefox ESR',
+    'not ie < 9'
+  ],
+  css: {
+    features: {}
+  }
 }, extra)
 
 describe('options', () => {
@@ -30,7 +39,7 @@ describe('options', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
     const program = { args: [] }
     const opts = options('dev', program)
-    assert.deepEqual(opts, base('pkg-swoosh'))
+    assert.deepStrictEqual(opts, base('pkg-swoosh'))
   })
 
   it('handles custom options', () => {
@@ -43,7 +52,7 @@ describe('options', () => {
       static: 'public'
     }
     const opts = options('dev', program)
-    assert.deepEqual(opts, base('pkg-swoosh', {
+    assert.deepStrictEqual(opts, base('pkg-swoosh', {
       hot: false,
       client: 'some/path',
       port: 2800,
@@ -56,7 +65,7 @@ describe('options', () => {
     process.chdir(dir('fixtures', 'pkg-individual'))
     const program = { args: ['./module.js'] }
     const opts = options('dev', program)
-    assert.deepEqual(opts, base('pkg-individual', {
+    assert.deepStrictEqual(opts, base('pkg-individual', {
       client: './module.js'
     }))
   })
@@ -65,7 +74,7 @@ describe('options', () => {
     process.chdir(dir('fixtures', 'pkg-client-server'))
     const program = { args: ['.'] }
     const opts = options('dev', program)
-    assert.deepEqual(opts, base('pkg-client-server', {
+    assert.deepStrictEqual(opts, base('pkg-client-server', {
       client: './client',
       server: './server'
     }))
@@ -75,7 +84,7 @@ describe('options', () => {
     process.chdir(dir('fixtures', 'pkg-app-client-server'))
     const program = { args: ['.'] }
     const opts = options('dev', program)
-    assert.deepEqual(opts, base('pkg-app-client-server', {
+    assert.deepStrictEqual(opts, base('pkg-app-client-server', {
       client: './app/client',
       server: './app/server'
     }))
@@ -85,7 +94,7 @@ describe('options', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
     const program = { args: ['../pkg-client-server'] }
     const opts = options('dev', program)
-    assert.deepEqual(opts, base('pkg-client-server', {
+    assert.deepStrictEqual(opts, base('pkg-client-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: './client',
       server: './server'
@@ -96,7 +105,7 @@ describe('options', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
     const program = { args: ['../pkg-client'] }
     const opts = options('dev', program)
-    assert.deepEqual(opts, base('pkg-client', {
+    assert.deepStrictEqual(opts, base('pkg-client', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: './client',
       server: null
@@ -107,7 +116,7 @@ describe('options', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
     const program = { args: ['../pkg-server'] }
     const opts = options('dev', program)
-    assert.deepEqual(opts, base('pkg-server', {
+    assert.deepStrictEqual(opts, base('pkg-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: '.',
       server: './server'
@@ -122,7 +131,7 @@ describe('options', () => {
       server: '../pkg-custom-client-server/my-server'
     }
     const opts = options('dev', program)
-    assert.deepEqual(opts, base('pkg-custom-client-server', {
+    assert.deepStrictEqual(opts, base('pkg-custom-client-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: dir('fixtures', 'pkg-custom-client-server', './my-client'),
       server: '../pkg-custom-client-server/my-server'

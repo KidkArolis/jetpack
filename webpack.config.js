@@ -3,10 +3,18 @@ const webpack = require('webpack')
 const ManifestPlugin = require('webpack-manifest-plugin')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
+const rules = {
+  js: require('./webpack.js.js'),
+  css: require('./webpack.css.js'),
+  cssm: require('./webpack.cssm.js')
+}
+
 module.exports = function (options) {
   const mode = options.cmd === 'build' || options.cmd === 'inspect'
     ? 'production'
     : 'development'
+
+  options = Object.assign({}, options, { mode })
 
   let config = {
     entry: {
@@ -21,93 +29,10 @@ module.exports = function (options) {
     },
     module: {
       rules: [{
-        test: /\.js$/,
-        exclude: /(node_modules)/,
-        use: {
-          loader: require.resolve('babel-loader'),
-          options: {
-            plugins: [
-              require.resolve('@babel/plugin-syntax-dynamic-import')
-            ],
-            presets: [
-              [
-                require.resolve('@babel/preset-env'), {
-                  modules: false,
-                  targets: {
-                    'browsers': options.browsers
-                  }
-                }
-              ],
-              [
-                require.resolve('@babel/preset-react'), {
-                  pragma: options.jsx
-                }
-              ]
-            ]
-          }
-        }
-      }, {
-        test: /\.css$/,
-        exclude: /\.module\.css$/,
-        use: [
-          require.resolve('style-loader'),
-          {
-            loader: require.resolve('css-loader'),
-            options: {
-              import: false,
-              importLoaders: 1,
-              minimize: options.env === 'production',
-              sourceMap: false
-            }
-          },
-          {
-            loader: require.resolve('postcss-loader'),
-            options: {
-              sourceMap: options.env !== 'production',
-              ident: 'postcss',
-              plugins: {
-                [require.resolve('postcss-import')]: {
-                  features: options.css.features
-                },
-                [require.resolve('postcss-preset-env')]: {
-                  browsers: options.browsers
-                }
-              ]
-            }
-          }
-        ]
-      }, {
-        test: /\.module\.css$/,
-        use: [
-          require.resolve('style-loader'),
-          {
-            loader: require.resolve('css-loader'),
-            options: {
-              modules: true,
-              import: false,
-              importLoaders: 1,
-              minimize: options.env === 'production',
-              sourceMap: false,
-              localIdentName: mode === 'production'
-                ? '[name]--[local]___[hash:base64:5]'
-                : '[path][name]--[local]___[hash:base64:5]'
-            }
-          },
-          {
-            loader: require.resolve('postcss-loader'),
-            options: {
-              sourceMap: options.env !== 'production',
-              ident: 'postcss',
-              plugins: {
-                [require.resolve('postcss-import')]: {
-                  features: options.css.features
-                },
-                [require.resolve('postcss-preset-env')]: {
-                  browsers: options.browsers
-                }
-              ]
-            }
-          }
+        oneOf: [
+          rules.js(options),
+          rules.css(options),
+          rules.cssm(options)
         ]
       }]
     },
@@ -127,7 +52,9 @@ module.exports = function (options) {
   if (mode === 'production') {
     config.optimization = {
       splitChunks: {
-        chunks: 'all'
+        chunks: 'all',
+        maxSize: 200000,
+        minSize: 10000
       }
     }
   }
