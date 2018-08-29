@@ -21,20 +21,26 @@ Why use `jetpack`? To avoid rolling your own custom webpack config or copy pasti
 * **sensible** yet configurable webpack defaults
 * **es6+ compiled** with @babel/preset-env without any need for `.bablerc`
 * **jsx compiled** to `React.createElement` or `h` depending on what's installed
-* **global css** with autoprefixing
+* **css** compiled with postcss-preset-env
 * **css modules** for files named `*.module.css`
 * **hot reloading** built in
 * **automatic chunk splitting** in production bundles
 * **nodemon** for server code reloading
 * **server code** is completely optional
-* built in **express wrapper** `jetpack/server` for rapid prototypes
-* use **any server framework** and seamlessly handle webpack assets in dev and production with `jetpack/handle`
+* **express wrapper** built in `jetpack/server` for rapid prototyping
+* **use any server framework** and seamlessly handle webpack assets in dev and production with `jetpack/handle`
 
 ## Architecture
 
 Jetpack brings together a common pattern into a single command. It streamlines the dev and production flows for JavaScript projects.
 
-![architecture](https://user-images.githubusercontent.com/324440/34653944-29e868a2-f3ec-11e7-9a2e-994da2a2cda7.png)
+**Develop browser packages**. Compiles the specified file and all it's dependencies and serves it up using the dev server.
+
+    $ jetpack ./some/module.js
+
+**Develop browser packages**. Compiles the specified file and all it's dependencies and serves it up using the dev server.
+
+    $ jetpack ./some/module.js
 
 ## Reasoning
 
@@ -90,7 +96,23 @@ module.exports = {
   html: "./index.html", // if you want to change the default html served
   hot: true // toggle hot reloading,
   quiet: false, // no jetpack logs, only errors and logs from the app
-  verbose: false, // more detailed logs
+  verbose: false, // more detailed logs,
+
+  // specify browser list using https://github.com/browserslist/browserslist syntax
+  browsers: [
+    '>1%',
+    'last 4 versions',
+    'Firefox ESR',
+    'not ie < 9' // React doesn't support IE8 anyway
+  ],
+
+  css: {
+    features: {
+      // specify postcss-css-env rules to add,
+      // in addition to all of the stage 2 features
+      // e.g. "nesting-rules": true
+    }
+  }
 }
 ```
 

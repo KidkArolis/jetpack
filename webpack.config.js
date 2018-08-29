@@ -34,7 +34,7 @@ module.exports = function (options) {
                 require.resolve('@babel/preset-env'), {
                   modules: false,
                   targets: {
-                    'browsers': 'last 2 versions'
+                    'browsers': options.browsers
                   }
                 }
               ],
@@ -51,15 +51,28 @@ module.exports = function (options) {
         exclude: /\.module\.css$/,
         use: [
           require.resolve('style-loader'),
-          require.resolve('css-loader'),
+          {
+            loader: require.resolve('css-loader'),
+            options: {
+              import: false,
+              importLoaders: 1,
+              minimize: options.env === 'production',
+              sourceMap: false
+            }
+          },
           {
             loader: require.resolve('postcss-loader'),
             options: {
-              plugins: function () {
-                return [
-                  require('autoprefixer')
-                ]
-              }
+              sourceMap: options.env !== 'production',
+              ident: 'postcss',
+              plugins: {
+                [require.resolve('postcss-import')]: {
+                  features: options.css.features
+                },
+                [require.resolve('postcss-preset-env')]: {
+                  browsers: options.browsers
+                }
+              ]
             }
           }
         ]
@@ -71,7 +84,10 @@ module.exports = function (options) {
             loader: require.resolve('css-loader'),
             options: {
               modules: true,
+              import: false,
               importLoaders: 1,
+              minimize: options.env === 'production',
+              sourceMap: false,
               localIdentName: mode === 'production'
                 ? '[name]--[local]___[hash:base64:5]'
                 : '[path][name]--[local]___[hash:base64:5]'
@@ -80,11 +96,16 @@ module.exports = function (options) {
           {
             loader: require.resolve('postcss-loader'),
             options: {
-              plugins: function () {
-                return [
-                  require('autoprefixer')
-                ]
-              }
+              sourceMap: options.env !== 'production',
+              ident: 'postcss',
+              plugins: {
+                [require.resolve('postcss-import')]: {
+                  features: options.css.features
+                },
+                [require.resolve('postcss-preset-env')]: {
+                  browsers: options.browsers
+                }
+              ]
             }
           }
         ]
