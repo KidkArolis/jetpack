@@ -1,6 +1,6 @@
 {
   "name": "jetpack",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "main": "index.js",
   "description": "Jetpack wraps webpack and nodemon to give you the best development workflow.",
   "license": "MIT",
