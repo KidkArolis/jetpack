@@ -137,4 +137,22 @@ describe('options', () => {
       server: '../pkg-custom-client-server/my-server'
     }))
   })
+
+  it('creates options object from jetpack.config.js', () => {
+    process.chdir(dir('fixtures', 'pkg-with-config'))
+    const program = { args: [] }
+    const opts = options('dev', program)
+    assert.deepStrictEqual(opts, base('pkg-with-config', {
+      port: 1234,
+      verbose: true,
+      browsers: [
+        'latest'
+      ],
+      css: {
+        features: {
+          'nesting-rules': true
+        }
+      }
+    }))
+  })
 })
