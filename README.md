@@ -2,84 +2,54 @@
   <img src="https://user-images.githubusercontent.com/324440/36952908-871e050c-200d-11e8-83eb-12d29fef261f.jpg" alt="jetpack" title="jetpack">
 </h1>
 
-<h5 align="center">Start building browser apps with zero config</h5>
+<h5 align="center">A more convenient webpack dev server</h5>
 <br />
 
-Rapidly **start**, **develop**, **build** and **release** production ready apps. Jetpack makes running browser JavaScript as easy as running `node script.js`. Jetpack wraps webpack and nodemon to give you the quickest development workflow.
+Jetpack wraps webpack to make running browser JavaScript as easy as running `node script.js`.
 
 Use `jetpack` to:
 
-* run a bit of JavaScript in the browser
-* build production ready client only apps
-* build production ready client/server apps
+* quickly run any bit of JavaScript in the browser
+* build production ready web apps
 
-Why use `jetpack`? To avoid rolling your own custom webpack config or copy pasting it from another project. Jetpack has a good set of defaults that should get you off the ground immediately. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server - everything _just works_.
+Why use `jetpack`? To avoid rolling your own custom webpack config or copy pasting it from another project. Jetpack has a good set of defaults that should get you off the ground quickly. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server - everything _just works_.
 
 ## Features
 
-* **close to the metal** - no framework here, what you write is what you get
-* **sensible** yet configurable webpack defaults
-* **es6+ compiled** with @babel/preset-env without any need for `.bablerc`
-* **jsx compiled** to `React.createElement` or `h` depending on what's installed
-* **css** compiled with postcss-preset-env
-* **css modules** for files named `*.module.css`
+* **sensible** webpack defaults
+* **es6+ compiled** with `@babel/preset-env` without any need for `.babelrc`
+* **jsx compiled** to `React.createElement` or `h` depending on what npm packages are installed
+* **css** compiled with `postcss-preset-env`
 * **hot reloading** built in
 * **automatic chunk splitting** in production bundles
-* **nodemon** for server code reloading
-* **server code** is completely optional
-* **express wrapper** built in `jetpack/server` for rapid prototyping
 * **use any server framework** and seamlessly handle webpack assets in dev and production with `jetpack/handle`
-
-## Architecture
-
-Jetpack brings together a common pattern into a single command. It streamlines the dev and production flows for JavaScript projects.
-
-**Develop browser packages**. Compiles the specified file and all it's dependencies and serves it up using the dev server.
-
-    $ jetpack ./some/module.js
-
-**Develop browser packages**. Compiles the specified file and all it's dependencies and serves it up using the dev server.
-
-    $ jetpack ./some/module.js
-
-## Reasoning
-
-One way to think about `jetpack` is as a better `webpack-dev-server`. Jetpack useful for both `dev` and `production` and requires no configuration to get you started.
-
-Node is very cool in it's flexibility and very large ecosystem of approaches and libraries. But whenever someone new to node asked me - "how do you build a web app?", I sigh. Even as an experienced JavaScripter I get frustrated when starting new projects, since it's not very clear how to best arrange `webpack-dev-server`/`webpack-dev-middleware`/`express` server such that it's both convenient to develop and easy to deploy.
-
-The 2 goals of `jetpack` are:
-
-* Enable anyone to run any client side bit of code in the browser immediately with `jetpack script.js` the way you'd run a server side script with `node script.js`.
-* Enable anyone to build a web app that has client side code and server side bits (which are so often useful) without having to learn or remember anything about best practises of setting up JS projects.
-
-I built `jetpack`, because I think there's a gap in the ecosystem for a sensible default web app project setup.
+* **close to the metal** - unlike create-react-app, next.js or gatsby – there's no framework here
 
 ## Usage
 
 Install globally:
 
-    npm install -g jetpack
+    $ npm install -g jetpack
 
-In your project with `package.json` or `index.js`, start your app on `http://localhost:3000`:
+In your project with `package.json` or `index.js`, start your app on `http://localhost:3030`:
 
-    jetpack
+    $ jetpack
 
 Alternatively, point `jetpack` to any js file on your machine:
 
-    jetpack ~/Desktop/magic.js
+    $ jetpack ~/Desktop/magic.js
 
 To build the app for production to `dist` directory:
 
-    jetpack build
+    $ jetpack build
 
 To serve the app in production after it's been built, run:
 
-    jetpack start
+    $ jetpack serve
 
 If you've reached a point where you want to switch away from using jetpack and jump into raw webpack (*coming soon*):
 
-    jetpack unstrap
+    $ jetpack unstrap
 
 ## Configuration
 
@@ -89,8 +59,7 @@ You can change config by using `jetpack.config.js` or command line arguments:
 module.exports = {
   port: 3000,
   jsx: "React.createElement" | "h", // if react is installed, h otherwise
-  client: "./app/client", // the directory with the client code, ignored by nodemon
-  server: "./app/server", // the directory with the server code
+  client: "./app/client", // the directory with the client code
   static: "./static", // if you want to serve assets like images
   dist: "dist", // the dir for building production client side code
   html: "./index.html", // if you want to change the default html served
@@ -115,24 +84,6 @@ module.exports = {
   }
 }
 ```
-
-## jetpack/server
-
-For realy simple prototypes of initial versions of your app, jetpack comes with a small express wrapper:
-
-```js
-const server = require('jetpack/server')
-
-const app = server()
-
-app.get('/api/data', (req, res) => {
-  res.send({ data: Date.now() })
-})
-
-app.listen()
-```
-
-See [examples/basic-client-and-server](examples/basic-client-and-server) for a working example.
 
 ## jetpack/handle
 
@@ -216,6 +167,35 @@ module.exports = {
   }
 }
 ```
+
+## Workflow
+
+### Aproach 1 – client and server separate – JAMStack approach
+
+Jetpack is just for your client app. Serves all the things.
+
+jetpack dev server running on 3030
+  in dev -> connect to api at localhost:3000 with CORS
+  in prd -> connect to api at api.service.com with CORS
+
+### Aproach – your server serves clientside assets via jetpack-handle
+
+When you're building a node server as your main entry point and want to handle assets too.
+Separate, optional package for serving up jetpack assets in dev and and prod.
+
+  in dev -> proxies to 3030
+  in prd -> serves build assets
+
+### Development experience
+
+In both cases, in development you need to run jetpack and your api server. You can run them in 2 separate terminals, which is good for clear separation of the log output and independent watching with nodemon.
+
+Alternatively, if you want to run both at the same time, use something like `nf` with Procfile.
+
+Alternatively, jetpack has a flag to run `npm start` or command configured in `jetpack.config.js` under `server`, which runs both jetpack and server. 
+
+jetpack --server
+
 
 ## FAQ
 
