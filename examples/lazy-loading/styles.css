@@ -1,0 +1,12 @@
+html, body {
+  font-family: serif;
+  font-size: 16px;
+}
+
+#root {
+  margin: 100px;
+}
+
+h1 {
+  color: blue;
+}
