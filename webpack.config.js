@@ -18,7 +18,7 @@ module.exports = function (options) {
 
   let config = {
     entry: {
-      bundle: [require.resolve('@babel/polyfill'), options.client]
+      bundle: options.client
     },
     mode,
     devtool: mode === 'development' ? 'source-map' : undefined,

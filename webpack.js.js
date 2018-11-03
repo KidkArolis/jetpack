@@ -10,6 +10,7 @@ module.exports = (options) => ({
       presets: [
         [
           require.resolve('@babel/preset-env'), {
+            useBuiltIns: 'usage',
             modules: false,
             targets: {
               'browsers': options.browsers
