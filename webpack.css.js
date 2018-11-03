@@ -1,9 +1,10 @@
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+
 module.exports = (options) => ({
   test: /\.css$/,
-  exclude: /\.module\.css$/,
   use: [
     {
-      loader: require.resolve('style-loader')
+      loader: options.env === 'production' ? MiniCssExtractPlugin.loader : require.resolve('style-loader')
     },
     {
       loader: require.resolve('css-loader'),
