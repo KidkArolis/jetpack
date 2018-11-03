@@ -52,9 +52,7 @@ module.exports = function (options) {
   if (mode === 'production') {
     config.optimization = {
       splitChunks: {
-        chunks: 'all',
-        maxSize: 200000,
-        minSize: 10000
+        chunks: 'all'
       }
     }
   }
