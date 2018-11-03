@@ -62,7 +62,12 @@ module.exports = {
   client: "./app/client", // the directory with the client code
   static: "./static", // if you want to serve assets like images
   dist: "dist", // the dir for building production client side code
-  html: "./index.html", // if you want to change the default html served
+
+  title: "pkg name", title of the html page
+  html: "custom ejs template string", // if you want to change the default html served
+  head: "", // string of html to add to head, e.g. analytics script
+  body: `<div id="root"></div>, // string of html to add to top of the body
+
   hot: true // toggle hot reloading,
   quiet: false, // no jetpack logs, only errors and logs from the app
   verbose: false, // more detailed logs,
