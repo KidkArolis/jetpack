@@ -6,3 +6,7 @@ html, body {
 #root {
   margin: 100px;
 }
+
+h1 {
+  color: blue;
+}
