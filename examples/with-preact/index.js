@@ -1,1 +1,4 @@
-console.log('This shouldn\'t be used')
+import Preact, { h } from 'preact'
+import App from './src'
+
+Preact.render(<App />, document.querySelector('#root'))
