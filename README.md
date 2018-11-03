@@ -76,6 +76,7 @@ module.exports = {
   ],
 
   css: {
+    modules: false, // set true to use css modules
     features: {
       // specify postcss-css-env rules to add,
       // in addition to all of the stage 2 features
