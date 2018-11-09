@@ -72,6 +72,8 @@ module.exports = {
   quiet: false, // no jetpack logs, only errors and logs from the app
   verbose: false, // more detailed logs,
 
+  proxy: {}, // e.g. { '/api/*': 'http://localhost:3000' }
+
   // specify browser list using https://github.com/browserslist/browserslist syntax
   browsers: [
     '>1%',
