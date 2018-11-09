@@ -55,9 +55,14 @@
   "devDependencies": {
     "mocha": "^5.2.0",
     "np": "^3.0.4",
-    "standard": "^12.0.1"
+    "standard": "^11.0.1"
   },
   "standard": {
+    "ignore": [
+      "examples/app-using-api",
+      "examples/with-preact",
+      "examples/basic-client-and-server"
+    ],
     "global": [
       "describe",
       "it",
