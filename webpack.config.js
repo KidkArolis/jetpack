@@ -7,7 +7,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const rules = {
   js: require('./webpack.js'),
   css: require('./webpack.css'),
-  cssm: require('./webpack.cssm')
+  cssm: require('./webpack.cssm'),
+  img: require('./webpack.img')
 }
 
 module.exports = function (options) {
@@ -33,7 +34,8 @@ module.exports = function (options) {
       rules: [{
         oneOf: [
           rules.js(options),
-          options.css.modules ? rules.cssm(options) : rules.css(options)
+          options.css.modules ? rules.cssm(options) : rules.css(options),
+          rules.img(options)
         ]
       }]
     },
