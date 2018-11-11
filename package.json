@@ -65,6 +65,7 @@
     "ignore": [
       "examples/app-using-api",
       "examples/with-preact",
+      "examples/deploy-to-netlify",
       "examples/basic-client-and-server",
       "test/fixtures/pkg-with-everything"
     ],

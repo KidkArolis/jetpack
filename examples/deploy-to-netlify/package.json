@@ -1,0 +1,19 @@
+{
+  "name": "deploy-to-netlify",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "jetpack",
+    "build": "jetpack build",
+    "serve": "serve dist"
+  },
+  "private": true,
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "jetpack": "file:../..",
+    "preact": "^8.2.6",
+    "preact-compat": "^3.17.0",
+    "preact-router": "^2.5.7",
+    "serve": "^10.0.2"
+  }
+}
