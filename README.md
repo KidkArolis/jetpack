@@ -30,6 +30,10 @@ Alternatively, point `jetpack` to any js file on your machine:
 
     $ jetpack ~/Desktop/magic.js
 
+Or any project on your machine:
+
+    $ jetpack --dir ~/projects/manyverse
+
 To build the app for production to a `dist` directory:
 
     $ jetpack build
@@ -38,7 +42,7 @@ Run your API server in addition to jebpack dev server:
 
     $ jetpack --server 'node ./api'
 
-If you've reached a point where you want to switch away from using jetpack and jump into raw webpack (*coming soon*):
+If you want to switch away from using jetpack and jump into raw webpack (*coming soon*):
 
     $ jetpack unstrap
 
@@ -65,7 +69,7 @@ module.exports = {
   title: "pkg name", title of the html page
   html: "custom ejs template string", // if you want to change the default html served
   head: "", // string of html to add to head, e.g. analytics script
-  body: `<div id="root"></div>, // string of html to add to top of the body
+  body: `<div id="root"></div>`, // string of html to add to top of the body
 
   hot: true // toggle hot reloading,
   quiet: false, // no jetpack logs, only errors and logs from the app
