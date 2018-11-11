@@ -64,7 +64,8 @@
     "ignore": [
       "examples/app-using-api",
       "examples/with-preact",
-      "examples/basic-client-and-server"
+      "examples/basic-client-and-server",
+      "test/fixtures/pkg-with-everything"
     ],
     "global": [
       "describe",
