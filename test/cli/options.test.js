@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const assert = require('assert')
 const options = require('../../lib/options')
@@ -9,15 +10,15 @@ const base = (pkg, extra = {}) => Object.assign({
   cmd: 'dev',
   owd: dir('fixtures', pkg),
   dir: dir('fixtures', pkg),
-  assets: ['/client/bundle.js'],
-  entry: '.',
-  server: 'node .',
+  assets: { js: ['/client/bundle.js'], css: [], other: [] },
+  client: '.',
   dist: 'dist',
   static: 'static',
   jsx: 'h',
   port: 3030,
   title: 'jetpack',
   body: "<div id='root'></div>",
+  html: fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'template.ejs')).toString(),
   head: false,
   pkg: { name: 'jetpack' },
   proxy: {},
@@ -28,11 +29,12 @@ const base = (pkg, extra = {}) => Object.assign({
     'not ie < 9'
   ],
   css: {
+    modules: false,
     features: {}
   }
 }, extra)
 
-describe.skip('options', () => {
+describe('options', () => {
   afterEach(() => {
     process.chdir(dir('..'))
   })
@@ -74,32 +76,32 @@ describe.skip('options', () => {
 
   it('handles projects that have both client and server', () => {
     process.chdir(dir('fixtures', 'pkg-client-server'))
-    const program = { args: ['.'] }
+    const program = { server: 'node ./server', args: ['.'] }
     const opts = options('dev', program)
     assert.deepStrictEqual(opts, base('pkg-client-server', {
       client: './client',
-      server: './server'
+      server: 'node ./server'
     }))
   })
 
   it('handles projects that have both client and server in app', () => {
     process.chdir(dir('fixtures', 'pkg-app-client-server'))
-    const program = { args: ['.'] }
+    const program = { server: 'node ./app/server', args: ['.'] }
     const opts = options('dev', program)
     assert.deepStrictEqual(opts, base('pkg-app-client-server', {
       client: './app/client',
-      server: './app/server'
+      server: 'node ./app/server'
     }))
   })
 
   it('handles projects that have both client and server in different target dir', () => {
     process.chdir(dir('fixtures', 'pkg-swoosh'))
-    const program = { args: ['../pkg-client-server'] }
+    const program = { server: 'node ./server', args: ['../pkg-client-server'] }
     const opts = options('dev', program)
     assert.deepStrictEqual(opts, base('pkg-client-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: './client',
-      server: './server'
+      server: 'node ./server'
     }))
   })
 
@@ -109,20 +111,7 @@ describe.skip('options', () => {
     const opts = options('dev', program)
     assert.deepStrictEqual(opts, base('pkg-client', {
       owd: dir('fixtures', 'pkg-swoosh'),
-      client: './client',
-      server: null
-    }))
-  })
-
-  it('handles projects that only have server dir', () => {
-    process.chdir(dir('fixtures', 'pkg-swoosh'))
-    const program = { args: ['../pkg-server'] }
-    const opts = options('dev', program)
-    assert.deepStrictEqual(opts, base('pkg-server', {
-      owd: dir('fixtures', 'pkg-swoosh'),
-      dir: dir('fixtures', 'pkg-server'),
-      client: null,
-      server: './server'
+      client: './client'
     }))
   })
 
@@ -131,13 +120,13 @@ describe.skip('options', () => {
     const program = {
       args: ['../pkg-custom-client-server'],
       client: dir('fixtures', 'pkg-custom-client-server', 'my-client'),
-      server: '../pkg-custom-client-server/my-server'
+      server: 'node ../pkg-custom-client-server/my-server'
     }
     const opts = options('dev', program)
     assert.deepStrictEqual(opts, base('pkg-custom-client-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
       client: dir('fixtures', 'pkg-custom-client-server', './my-client'),
-      server: '../pkg-custom-client-server/my-server'
+      server: 'node ../pkg-custom-client-server/my-server'
     }))
   })
 
@@ -152,6 +141,7 @@ describe.skip('options', () => {
         'latest'
       ],
       css: {
+        modules: false,
         features: {
           'nesting-rules': true
         }

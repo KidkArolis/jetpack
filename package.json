@@ -18,7 +18,7 @@
     "jetpack": "./bin/jetpack"
   },
   "scripts": {
-    "test": "standard",
+    "test": "mocha && standard",
     "release": "np"
   },
   "dependencies": {
