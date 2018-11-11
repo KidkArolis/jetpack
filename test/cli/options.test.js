@@ -118,7 +118,8 @@ describe('options', () => {
     const opts = options('dev', program)
     assert.deepStrictEqual(opts, base('pkg-server', {
       owd: dir('fixtures', 'pkg-swoosh'),
-      client: '.',
+      dir: dir('fixtures', 'pkg-server'),
+      client: null,
       server: './server'
     }))
   })
