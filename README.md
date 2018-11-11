@@ -1,29 +1,19 @@
-<h1 align="center">
+<p align="center">
   <img src="https://user-images.githubusercontent.com/324440/36952908-871e050c-200d-11e8-83eb-12d29fef261f.jpg" alt="jetpack" title="jetpack">
-</h1>
+</p>
 
-<h5 align="center">A more convenient webpack dev server</h5>
-<br />
+<h3 align="center">Jetpack – a more convenient webpack dev server</h3>
 
-Jetpack wraps webpack to make running browser JavaScript as easy as running `node script.js`.
+**Jetpack wraps webpack** to create a smoother developer experience. Jetpack can be used instead of webpack, webpack-cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, so it's possible to use any webpack configuration to extend it if necessary.
 
-Use `jetpack` to:
-
-* quickly run any bit of JavaScript in the browser
-* build production ready web apps
+- **Sensible webpack defaults** to handle bundling modern JavaScript, CSS and images.
+- **Preconfigured babel** with `@babel/preset-env` and `@babel/preset-react`, extend with `.babelrc`.
+- **Automatic JSX detection** toggling between `React.createElement` or `h` depending on whether `preact` is installed.
+- **Use modern CSS** with `postcss-preset-env` and autoprefixing preconfigured.
+- **Hot reloading built in** not just for React but also for general use cases.
+- **Automatic chunk splitting** with inlined runtime.
 
 Why use `jetpack`? To avoid rolling your own custom webpack config or copy pasting it from another project. Jetpack has a good set of defaults that should get you off the ground quickly. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server - everything _just works_.
-
-## Features
-
-* **sensible** webpack defaults
-* **es6+ compiled** with `@babel/preset-env` without any need for `.babelrc`
-* **jsx compiled** to `React.createElement` or `h` depending on what npm packages are installed
-* **css** compiled with `postcss-preset-env`
-* **hot reloading** built in
-* **automatic chunk splitting** in production bundles
-* **use any server framework** and seamlessly handle webpack assets in dev and production with `jetpack/handle`
-* **close to the metal** - unlike create-react-app, next.js or gatsby – there's no framework here
 
 ## Usage
 
@@ -39,17 +29,25 @@ Alternatively, point `jetpack` to any js file on your machine:
 
     $ jetpack ~/Desktop/magic.js
 
-To build the app for production to `dist` directory:
+To build the app for production to a `dist` directory:
 
     $ jetpack build
 
-To serve the app in production after it's been built, run:
+Run your API server in addition to jebpack dev server:
 
-    $ jetpack serve
+    $ jetpack --server 'node ./api'
 
 If you've reached a point where you want to switch away from using jetpack and jump into raw webpack (*coming soon*):
 
     $ jetpack unstrap
+
+## Flexible Deployment
+
+When it's time to deploy your application to production, jetpack doesn't leave you stranded. Several common strategies are available for how to deploy your full application:
+
+- For purely static client side only applications, deploy the `dist` folder to something like Netlify
+- For quick prototypes or internal tools that use api, use `jetpack/handle` middleware and serve everything from a single server
+- For best practise production setup, deploy your client side application to something like Netlify and your API to a server – in development, use the `proxy` configuration or connect by calling a separate server.
 
 ## Configuration
 
@@ -79,7 +77,7 @@ module.exports = {
     '>1%',
     'last 4 versions',
     'Firefox ESR',
-    'not ie < 9' // React doesn't support IE8 anyway
+    'not ie < 9'
   ],
 
   css: {

@@ -1,3 +1,7 @@
+body {
+  background-color: aliceblue;
+}
+
 .unicorn {
   display: flex;
   flex-direction: column;

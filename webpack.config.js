@@ -56,7 +56,8 @@ module.exports = function (options) {
     config.optimization = {
       splitChunks: {
         chunks: 'all'
-      }
+      },
+      runtimeChunk: true
     }
   }
 
