@@ -11,6 +11,7 @@
 - **Preconfigured babel** with `@babel/preset-env` and `@babel/preset-react`, configurable via `.babelrc`.
 - **Automatic JSX detection** toggling between `React.createElement` or `h` depending on whether `preact` is installed.
 - **Use modern CSS** with `postcss-preset-env` and autoprefixing, configurable via `postcss.config.js`.
+- **Opt into CSS modules** by toggling one config option on.
 - **Hot reloading built in** for React or vanilla JavaScript and CSS.
 - **Automatic chunk splitting** with inlined runtime.
 
@@ -159,21 +160,28 @@ You can extend the default webpack config using `jetpack.config.js`:
 ```js
 // jetpack exposes it's webpack so you could use webpack's plugins
 const webpack = require('jetpack/webpack')
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
 
 module.exports = {
   webpack: (config, options) => {
-    // perform customizations to webpack config
-
     config.module.rules.push({
-      test: /\.png|\.svg$/,
-      use: 'file-loader'
+      test: /\.svg$/,
+      use: ['@svgr/webpack']
     })
 
     config.plugins.push(
-      new webpack.NamedModulesPlugin()
+     new webpack.NamedModulesPlugin()
     )
 
-    // important: return the modified config
+    if (options.mode === 'production') {
+      config.plugins.push(
+        new WorkboxWebpackPlugin.GenerateSW({
+          clientsClaim: true,
+          exclude: [/\.map$/, /asset-manifest\.json$/]
+        })
+      )
+    }
+
     return config
   }
 }
