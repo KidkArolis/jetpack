@@ -43,9 +43,38 @@ Run your API server in addition to jebpack dev server:
 
     $ jetpack --server 'node ./api'
 
+Inspect the bundle make up:
+
+    $ jetpack inspect
+
 If you want to switch away from using jetpack and jump into raw webpack (*coming soon*):
 
     $ jetpack unstrap
+
+## CLI Documentation
+
+```
+$ jetpack --help
+
+Usage: jetpack [options] [command] [path]
+
+Options:
+  -V, --version        output the version number
+  -p, --port <n>       Port, defaults to 3030
+  -d, --dir [path]     Run jetpack in the context of this directory
+  -e, --exec [path]    Execute an additional process, e.g. an api server
+  -j, --jsx <pragma>   Specify jsx pragma, defaults to React.createElement or Preact.h if preact is installed
+  -h, --no-hot         Disable hot reloading
+  -c, --config        Config file to use, defaults to jetpack.config.js
+  -q, --quiet          Log no output
+  -v, --verbose        Log verbose output
+  -h, --help           output usage information
+
+Commands:
+  build                build for production
+  inspect              show dependencies
+  clean                remove the dist dir
+```
 
 ## Flexible Deployment
 
