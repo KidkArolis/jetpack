@@ -19,7 +19,8 @@
   },
   "scripts": {
     "test": "ava && standard",
-    "release": "np"
+    "release": "np",
+    "release-alpha": "np --tag=alpha --any-branch --no-cleanup"
   },
   "dependencies": {
     "@babel/core": "^7.1.5",
