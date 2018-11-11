@@ -2,18 +2,18 @@
   <img src="https://user-images.githubusercontent.com/324440/48316964-697d7780-e5e2-11e8-8ab9-981499385bf5.png" alt="jetpack" title="jetpack">
 </p>
 
-<h3>Jetpack – a more convenient webpack dev server</h3>
+<h4 align="center">A more convenient webpack dev server.</h4>
 
-**Jetpack wraps webpack** to create a smoother developer experience. Jetpack can be used instead of webpack, webpack-cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, so it's possible to use any webpack configuration to extend it if necessary.
+**Jetpack wraps webpack** to create a smoother developer experience. Jetpack can be used instead of webpack, webpack-cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, and can be extended with any of the webpack options.
 
 - **Sensible webpack defaults** to handle bundling modern JavaScript, CSS and images.
-- **Preconfigured babel** with `@babel/preset-env` and `@babel/preset-react`, extend with `.babelrc`.
+- **Preconfigured babel** with `@babel/preset-env` and `@babel/preset-react`, configurable via `.babelrc`.
 - **Automatic JSX detection** toggling between `React.createElement` or `h` depending on whether `preact` is installed.
-- **Use modern CSS** with `postcss-preset-env` and autoprefixing preconfigured.
-- **Hot reloading built in** not just for React but also for general use cases.
+- **Use modern CSS** with `postcss-preset-env` and autoprefixing, configurable via `postcss.config.js`.
+- **Hot reloading built in** for React or vanilla JavaScript and CSS.
 - **Automatic chunk splitting** with inlined runtime.
 
-Why use `jetpack`? To avoid rolling your own custom webpack config or copy pasting it from another project. Jetpack has a good set of defaults that should get you off the ground quickly. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server - everything _just works_.
+**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from a previous project. Jetpack has a good set of defaults that should get you off the ground quickly. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
 
 ## Usage
 
