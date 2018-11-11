@@ -10,12 +10,12 @@
 - **Sensible webpack defaults** to handle bundling modern JavaScript, CSS and images.
 - **Preconfigured babel** with `@babel/preset-env` and `@babel/preset-react`, configurable via `.babelrc`.
 - **Automatic JSX detection** toggling between `React.createElement` or `h` depending on whether `preact` is installed.
-- **Use modern CSS** with `postcss-preset-env` and autoprefixing, configurable via `postcss.config.js`.
+- **Modern CSS** with `postcss-preset-env` and autoprefixing, configurable via `postcss.config.js`.
 - **Opt into CSS modules** by toggling one config option on.
-- **Hot reloading built in** for React or vanilla JavaScript and CSS.
-- **Automatic chunk splitting** with inlined runtime.
+- **Hot reloading built in** for React and for vanilla JavaScript and CSS.
+- **Automatic chunk splitting** with inlined runtime and HTML generation.
 
-**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from a previous project. Jetpack has a good set of defaults that should get you off the ground quickly. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
+**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from previous project. Jetpack has a good set of defaults that should get you off the ground quickly. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
 
 ## Usage
 

@@ -4,9 +4,9 @@ import rimraf from 'rimraf-then'
 import fs from 'fs-extra'
 import klaw from 'klaw'
 
-test('build', async t => {
+test('build with all the features', async t => {
   await rimraf('./test/fixtures/pkg-with-everything/dist')
-  await execa.shell('./bin/jetpack build ./test/fixtures/pkg-with-everything', {
+  await execa.shell('./bin/jetpack build --dir ./test/fixtures/pkg-with-everything', {
     env: {},
     extendEnv: false
   })
