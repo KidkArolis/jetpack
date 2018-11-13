@@ -42,7 +42,7 @@ To build the app for production to a `dist` directory:
 
 Run your API server in addition to jetpack dev server:
 
-    $ jetpack --server 'node ./api'
+    $ jetpack -x 'node ./api'
 
 Inspect the bundle size and make up:
 
@@ -63,7 +63,7 @@ Options:
   -V, --version       output the version number
   -p, --port <n>      Port, defaults to 3030
   -d, --dir [path]    Run jetpack in the context of this directory
-  -e, --exec [path]   Execute an additional process, e.g. an api server
+  -x, --exec [path]   Execute an additional process, e.g. an api server
   -j, --jsx <pragma>  Specify jsx pragma, defaults to React.createElement or Preact.h if preact is installed
   -h, --no-hot        Disable hot reloading
   -c, --config        Config file to use, defaults to jetpack.config.js
