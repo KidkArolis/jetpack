@@ -1,0 +1,10 @@
+{
+  "name": "pkg-with-postcss-config",
+  "version": "1.0.0",
+  "private": true,
+  "browserslist": [
+    "last 4 versions",
+    "> 1%",
+    "not dead"
+  ]
+}

@@ -3,9 +3,6 @@ module.exports = {
   entry: './app/client',
   exec: 'node ./app/server',
   verbose: true,
-  browsers: [
-    'latest'
-  ],
   css: {
     features: {
       'nesting-rules': true

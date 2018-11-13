@@ -23,12 +23,7 @@ const base = (pkg, extra = {}) => Object.assign({
   head: null,
   exec: false,
   proxy: {},
-  browsers: [
-    '>1%',
-    'last 4 versions',
-    'Firefox ESR',
-    'not ie < 9'
-  ],
+  minify: true,
   css: {
     modules: false,
     features: {}
@@ -82,9 +77,6 @@ test('creates options object from jetpack.config.js', t => {
     verbose: true,
     entry: './app/client',
     exec: 'node ./app/server',
-    browsers: [
-      'latest'
-    ],
     css: {
       modules: false,
       features: {

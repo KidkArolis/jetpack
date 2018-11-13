@@ -10,3 +10,9 @@ body {
     flex-direction: row;
   }
 }
+
+@custom-media --wide-window (min-width: 30em);
+
+@media (--wide-window) {
+  background: yellow;
+}
