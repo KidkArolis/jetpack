@@ -5,12 +5,12 @@
   "scripts": {
     "start": "jetpack",
     "build": "jetpack build",
-    "serve": "serve dist"
+    "serve": "serve dist",
+    "deploy": "jetpack build && cp _redirects dist && netlifyctl deploy"
   },
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "jetpack": "file:../..",
     "preact": "^8.2.6",
     "preact-compat": "^3.17.0",
     "preact-router": "^2.5.7",
