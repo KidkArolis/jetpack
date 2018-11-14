@@ -38,7 +38,7 @@ Inspect the bundle size and make up:
 
 ## Use jetpack anywhere, anytime
 
-One of the goals jetpack has is to help you run any piece of JavaScript in the browsers in the same way that it is easy to run some JavaScript in node. If you have jetpack installed globally, simply point it to any file or directory on your machine and jetpack will start the dev server. It's meant to be an alternative to jsfiddle, codepen, codesandbox style of trying things out.
+One of jetpack goals is to help you run any piece of JavaScript in a browser as easily as it it to run node scripts. Install jetpack globally and point it to any file on your machine. This is an alternative to jsfiddle / codepen / codesandbox style of trying things out.
 
     $ jetpack ~/Desktop/magic.js
 
