@@ -1,6 +1,6 @@
 // @flow
 
-function square(n: number): number {
+function square (n: number): number {
   return n * n;
 }
 
