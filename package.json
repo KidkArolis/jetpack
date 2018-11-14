@@ -32,7 +32,6 @@
     "chalk": "^2.1.0",
     "commander": "^2.19.0",
     "css-loader": "^1.0.1",
-    "cssnano": "^4.1.7",
     "ejs": "^2.6.1",
     "execa": "^1.0.0",
     "express": "^4.16.4",
@@ -63,7 +62,6 @@
     "ava": "^1.0.0-rc.1",
     "klaw": "^3.0.0",
     "np": "^3.0.4",
-    "postcss-glitch": "^1.1.1",
     "standard": "^12.0.1"
   },
   "standard": {
