@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/324440/48317009-22dc4d00-e5e3-11e8-8eb3-520321b3d41a.png" alt="jetpack" title="jetpack">
+  <img src="https://user-images.githubusercontent.com/324440/48484676-a1690280-e80e-11e8-9835-14c6b0c5bb98.png" alt="jetpack" title="jetpack">
 </p>
 
 <h4 align="center">A more convenient webpack dev server.</h4>
