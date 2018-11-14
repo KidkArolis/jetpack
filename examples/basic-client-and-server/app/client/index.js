@@ -24,7 +24,7 @@ class App extends React.Component {
     return (
       <div className='App'>
         <h1 style={{ color: '#111' }}>HMR!</h1>
-        <img height='132' src='/static/file.png' />
+        <img height='132' src='/assets/file.png' />
         <p onClick={() => this.update()}>{data || 'Loading...'}</p>
       </div>
     )
