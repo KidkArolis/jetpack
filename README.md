@@ -7,16 +7,16 @@
 
 **Jetpack wraps webpack** to create a smoother developer experience. Jetpack can be used instead of webpack, webpack-cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, and can be extended with any of the webpack options.
 
-- **Sensible webpack defaults** to handle bundling modern JavaScript, CSS and images.
-- **Preconfigured babel** with `@babel/preset-env` and `@babel/preset-react`, configurable via `.babelrc`.
-- **Automatic JSX detection** toggling between `React.createElement` or `h` depending on whether `preact` is installed.
-- **Modern CSS** with `postcss-preset-env` and autoprefixing, configurable via `postcss.config.js`.
-- **Opt into CSS modules** by toggling one config option on.
+- **Sensible defaults** to handle modern JavaScript, CSS and images.
+- **Preconfigured Babel** with `@babel/preset-env` and `@babel/preset-react`, configurable via `.babelrc`.
+- **Preconfigured PostCSS** with `postcss-preset-env` including autoprefixing, configurable via `postcss.config.js`.
+- **Use CSS modules** by toggling a single config option on.
+- **Automatic JSX detection** switches between `React.createElement` or `h` depending on dependencies.
 - **Hot reloading built in** for React and for vanilla JavaScript and CSS.
 - **Automatic chunk splitting** with inlined runtime and HTML generation.
 - **Single dependency** with hassle-free updates.
 
-**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from previous project. Jetpack has a good set of defaults that should get you off the ground quickly. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
+**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from previous project. Jetpack has a set of defaults that should get you off the ground quickly. And with the universal `jetpack/handle` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
 
 ## Usage
 
@@ -28,7 +28,17 @@ In your project with `package.json` or `index.js`, start your app on `http://loc
 
     $ jetpack
 
-Alternatively, point `jetpack` to any js file on your machine:
+To build the app for production to a `dist` directory:
+
+    $ jetpack build
+
+Inspect the bundle size and make up:
+
+    $ jetpack inspect
+
+## Use jetpack anywhere, anytime
+
+One of the goals jetpack has is to help you run any piece of JavaScript in the browsers in the same way that it is easy to run some JavaScript in node. If you have jetpack installed globally, simply point it to any file or directory on your machine and jetpack will start the dev server. It's meant to be an alternative to jsfiddle, codepen, codesandbox style of trying things out.
 
     $ jetpack ~/Desktop/magic.js
 
@@ -36,21 +46,17 @@ Or any project on your machine:
 
     $ jetpack --dir ~/projects/manyverse
 
-To build the app for production to a `dist` directory:
+## Use jetpack with an API
 
-    $ jetpack build
+Another goal of jetpack is to help you build real, useful, production apps end to end. Very often in addition to developing the clientside application, you are also developing some sort of an API. Jetpack has a few features to make building such apps easier.
 
-Run your API server in addition to jetpack dev server:
+First, you can run your API server in addition to jetpack dev server using a single command:
 
-    $ jetpack -x 'node ./api'
+    $ jetpack -x                  // defaults to executing `node .`
+    $ jetpack -x 'nodemon ./api'  // provide any command to execute
+    $ jetpack -x 'rails s'        // doesn't even have to be done
 
-Inspect the bundle size and make up:
-
-    $ jetpack inspect
-
-If you want to switch away from using jetpack and jump into raw webpack (*coming soon*):
-
-    $ jetpack unstrap
+Jetpack also provides an ability to proxy requests to your api or mount the development server to your application server using the `jetpack/handle` middleware.
 
 ## CLI Documentation
 
@@ -60,7 +66,7 @@ $ jetpack --help
 Usage: jetpack [options] [command] [path]
 
 Options:
-  -V, --version       output the version number
+  -V, --version       Output the version number
   -p, --port <n>      Port, defaults to 3030
   -d, --dir [path]    Run jetpack in the context of this directory
   -x, --exec [path]   Execute an additional process, e.g. an api server
@@ -69,7 +75,7 @@ Options:
   -c, --config        Config file to use, defaults to jetpack.config.js
   -q, --quiet         Log no output
   -v, --verbose       Log verbose output
-  -h, --help          output usage information
+  -h, --help          Output usage information
 
 Commands:
   build               build for production
