@@ -59,11 +59,11 @@ test('accepts individual js module as entry', t => {
   }))
 })
 
-test('defaults to ./app if available', t => {
-  const program = { args: [], dir: dir('fixtures', 'pkg-app') }
+test('defaults to ./src if available', t => {
+  const program = { args: [], dir: dir('fixtures', 'pkg-src') }
   const opts = options('dev', program)
-  t.deepEqual(opts, base('pkg-app', {
-    entry: './app'
+  t.deepEqual(opts, base('pkg-src', {
+    entry: './src'
   }))
 })
 
