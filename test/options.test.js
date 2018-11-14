@@ -17,7 +17,7 @@ const base = (pkg, extra = {}) => Object.assign({
   sourceMaps: 'source-map',
   title: 'jetpack',
   body: "<div id='root'></div>",
-  html: fs.readFileSync(path.join(__dirname, '..', 'lib', 'template.ejs')).toString(),
+  html: fs.readFileSync(path.join(__dirname, '..', 'lib', 'template.hbs')).toString(),
   head: null,
   exec: false,
   proxy: {},
