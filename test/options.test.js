@@ -7,8 +7,6 @@ const dir = (...subdir) => path.join(__dirname, ...subdir)
 
 const base = (pkg, extra = {}) => Object.assign({
   production: false,
-  pkg: { name: 'jetpack' },
-  cmd: 'dev',
   dir: dir('fixtures', pkg),
   assets: { js: ['/assets/bundle.js'], css: [], other: [], runtime: null },
   entry: '.',
@@ -47,7 +45,7 @@ test('accepts cli flags', t => {
   const opts = options('dev', program)
   t.deepEqual(opts, base('pkg-swoosh', {
     hot: false,
-    entry: 'some/path',
+    entry: './some/path',
     port: 2800,
     jsx: 'React.createElement'
   }))
