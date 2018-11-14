@@ -48,7 +48,6 @@
     "prepend-transform": "0.0.1018",
     "prompt-confirm": "^2.0.4",
     "require-relative": "^0.8.7",
-    "rimraf-then": "^1.0.1",
     "send": "^0.16.2",
     "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^1.1.0",

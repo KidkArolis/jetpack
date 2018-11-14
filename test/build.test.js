@@ -1,7 +1,6 @@
 import test from 'ava'
 import path from 'path'
 import execa from 'execa'
-import rimraf from 'rimraf-then'
 import fs from 'fs-extra'
 import klaw from 'klaw'
 
@@ -24,7 +23,7 @@ async function build (t, pkg) {
   console.log(base)
   console.log(dist)
 
-  await rimraf(dist)
+  await fs.remove(dist)
 
   await execa.shell(`./bin/jetpack build --dir ${base}`, {
     env: {},
