@@ -14,7 +14,7 @@
 - **Automatic JSX detection** switches between `React.createElement` or `h` depending on dependencies.
 - **Hot reloading built in** for React and for vanilla JavaScript and CSS.
 - **Automatic chunk splitting** with inlined runtime and HTML generation.
-- **Good support for** simultaneously developing client and server applications
+- **Smooth workflow** for simultaneously developing client and server applications
 - **Single dependency** with hassle-free updates.
 
 **Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from previous project. Jetpack has a set of defaults that should get you off the ground quickly. And with the universal `jetpack/serve` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
