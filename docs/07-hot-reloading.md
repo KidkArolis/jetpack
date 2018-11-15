@@ -2,9 +2,26 @@
 
 Hot reloading is turned on by default in jetpack. You can turn it off by passing `-h` arg or setting `hot: false` in the `jetpack.config.js` file.
 
+## CSS
+
 CSS is hot reloaded automatically with no extra steps.
 
-So are React components if you wrap your root component in the `Hot` component.
+## React
+
+So are React components if you wrap your root component in the `Hot` component:
+
+```js
+import React from 'react'
+import { hot } from 'jetpack/react-hot-loader'
+
+const App = () => <div>Hello World!</div>
+
+export default hot(module)(App)
+```
+
+Note: importing `react-hot-loader` from jetpack will only work if jetpack is installed locally into the project. You can alternatively just install `react-hot-loader` locally if you'd like to keep jetpack global.
+
+## Other JS
 
 However, you can also hot reloading for any vanilla JavaScript even if you're not using React. That's something that webpack has always supported. All you need to do is add the following bit of code somewhere in your application, preferably in the entry module.
 
