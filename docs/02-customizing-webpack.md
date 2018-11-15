@@ -13,7 +13,7 @@ module.exports = {
   webpack: (config, options) => {
     // unshift to run before other loaders, since
     // we're overriding the preconfigured svg loader
-    config.module.rules.oneOf[0].unshift({
+    config.module.rules[0].oneOf.unshift({
       test: /\.svg$/,
       use: ['@svgr/webpack']
     })

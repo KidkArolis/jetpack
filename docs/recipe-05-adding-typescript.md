@@ -11,11 +11,11 @@ To add Typescript to a jetpack project, follow these steps:
 module.exports = {
   webpack (config) {
     config.resolve.extensions = ['.tsx', '.ts', '.js', '.json']
-    config.module.rules.oneOf[0].push({
+    config.module.rules[0].oneOf.push({
       test: /\.tsx?$/,
       loader: 'ts-loader',
       exclude: /node_modules/,
-    }
+    })
   }
 }
 ```
