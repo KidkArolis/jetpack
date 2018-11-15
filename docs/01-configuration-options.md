@@ -1,41 +1,159 @@
-## Configuration
+# Configuration Options
 
-You can change config by using `jetpack.config.js` or command line arguments:
+## CLI
+
+Jetpack accepts some configuration via CLI.
+
+```
+$ jetpack --help
+
+Usage: jetpack [options] [command] [path]
+
+Options:
+  -V, --version       output the version number
+  -p, --port <n>      port, defaults to 3030
+  -d, --dir [path]    run jetpack in the context of this directory
+  -x, --exec [path]   execute an additional process, e.g. an api server
+  -j, --jsx <pragma>  specify jsx pragma, defaults to React.createElement or Preact.h if preact is installed
+  -h, --no-hot        disable hot reloading
+  -c, --config        config file to use, defaults to jetpack.config.js
+  -q, --quiet         log no output
+  -v, --verbose       log verbose output
+  -h, --help          output usage information
+
+Commands:
+  build               build for production
+  inspect             analyze bundle
+  clean               remove the dist dir
+```
+
+## Configuration File
+
+Jetpack can also be configured using `jetpack.config.js` file. Here are all of the available options.
 
 ```js
 module.exports = {
-  port: 3000,
-  jsx: "React.createElement" | "h", // if react is installed, h otherwise
-  client: "./app/client", // the directory with the client code
-  static: "./static", // if you want to serve assets like images
-  dist: "dist", // the dir for building production client side code
+    // directory to run jetpack in
+    dir: '.',
 
-  title: "pkg name", title of the html page
-  html: "custom ejs template string", // if you want to change the default html served
-  head: "", // string of html to add to head, e.g. analytics script
-  body: `<div id="root"></div>`, // string of html to add to top of the body
+    // entry module path relative to dir
+    // defaults to which ever is found first:
+    //   index.js
+    //   package.json#main
+    //   src/index.js
+    entry: '.',
 
-  hot: true // toggle hot reloading,
-  quiet: false, // no jetpack logs, only errors and logs from the app
-  verbose: false, // more detailed logs,
+    // port of the dev server
+    port: 3030,
 
-  proxy: {}, // e.g. { '/api/*': 'http://localhost:3000' }
+    // relative path to static assets file dir
+    // these are files that you don't want to process via webpack
+    // but want to serve as part of your application, these
+    // will get exposed under /assets/*
+    static: options.static || 'assets',
 
-  // specify browser list using https://github.com/browserslist/browserslist syntax
-  browsers: [
-    '>1%',
-    'last 4 versions',
-    'Firefox ESR',
-    'not ie < 9'
-  ],
+    // build output path relative to dir
+    dist: 'dist',
 
-  css: {
-    modules: false, // set true to use css modules
-    features: {
-      // specify postcss-css-env rules to add,
-      // in addition to all of the stage 2 features
-      // e.g. "nesting-rules": true
+    // jsx pragma
+    // defaults to `React.createElement` if react is installed, `h` otherwise
+    jsx: 'React.createElement',
+
+    // hot reloading
+    hot: true,
+
+    // unified flag for source maps for js and css
+    // follows webpack naming, but can also be simply set to true
+    // it's true by default in development and false in production
+    sourceMaps: true,
+
+    // in you need to turn off minification in production for any reason
+    minify: false,
+
+    // command executed to run the server/api process
+    // this command is exucuted only if `-x` arg is passed to jetpack
+    // even if this option is configured
+    exec: 'node .',
+
+    // used for proxying certain requests to a different server
+    // e.g. { '/api/*': 'http://localhost:3000',
+    //        '/api2/*': 'http://localhost:3001/:splat',
+    //        '/api3/*': 'http://localhost:3002/custom/:splat' }
+    proxy: options.proxy || {},
+
+    // disable any logging
+    quiet: false,
+
+    // enable more detailed logs
+    verbose: false,
+
+    // the index.html template generation
+    // defaults to package.json#name or 'jetpack' if not available
+    title: 'jetpack',
+
+    // useful for adding meta tags or scripts
+    // can be specified in handlebars template syntax
+    head: null,
+
+    // body
+    // can be specified in handlebars template syntax
+    body: `<div id='root'></div>`,
+
+    // the html template
+    // can be specified in handlebars template syntax
+    html: `see lib/template.hbs`,
+
+    // css options
+    css: {
+      // css modules
+      modules: false,
+
+      // a shortcut for setting postcss-preset-env features
+      // by default postcss-preset-env already autoprefixes your css
+      // and enables stage 2 features https://preset-env.cssdb.org/features#stage-2
+      // this allows you to turn on extra features
+      // e.g. { 'nesting-rules': true, 'custom-media-queries': true }
+      features: {}
+    },
+
+    // webpack transform fn
+    webpack: (config, options) => {
+      // config is the webpack config generated by jetpack
+      // options is this jetpack options object including defaults,
+      // but also includes a very handy options.production flag
+      // see 02-customizing-webpack.md for more details
     }
-  }
 }
 ```
+
+## HTML Template
+
+The default html template is the following:
+
+```hbs
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
+    <title>{{{title}}}</title>
+    {{#each assets.css}}
+    <link rel="stylesheet" href='{{{.}}}' />
+    {{/each}}
+    {{{head}}}
+  </head>
+  <body>
+    {{{body}}}
+    {{#if assets.runtime}}
+    <script type='text/javascript'>
+    {{{assets.runtime}}}
+    </script>
+    {{/if}}
+    {{#each assets.js}}
+    <script type='text/javascript' src='{{{.}}}' async></script>
+    {{/each}}
+  </body>
+</html>
+```
+
+You can override it completely using the `html` option or extend it by using `head` and `body` options.

@@ -4,11 +4,10 @@ Flow is a static type checker that helps you write code with fewer bugs. Check o
 
 To add Flow to a jetpack project, follow these steps:
 
-1. Run `npm install --save-dev flow-bin`.
+1. Run `npm install --save-dev flow-bin @babel/preset-flow`.
 2. Run `npx flow init` to create a [`.flowconfig` file].
-4. Add `// @flow` to any files you want to type check (for example, to `src/App.js`).
-5. Run `npm install --save-dev @babel/preset-flow`.
-6. Create `.babelrc` with the following contents
+3. Add `// @flow` to any files you want to type check (for example, to `src/App.js`).
+4. Create `.babelrc` with the following contents
 
 ```
 {
