@@ -1,3 +1,9 @@
+# 0.10.2
+
+* Fix `jetpack inspect` command
+* Fix `proxy` to properly handle node's req and res
+* Fix compatibility
+
 # 0.10.1
 
 * Fix `react-hot-loader` to work even when jetpack not installed locally
