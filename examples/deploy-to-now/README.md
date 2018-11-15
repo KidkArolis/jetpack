@@ -1,4 +1,4 @@
-# deploy-to-netlify
+# deploy-to-now
 
 ```js
 {
@@ -6,7 +6,8 @@
     "start": "jetpack",
     "build": "jetpack build",
     "serve": "serve dist",
-    "deploy": "jetpack build && cp _redirects dist && netlifyctl deploy"
+    "now-build": "jetpack build",
+    "deploy": "now"
   }
 }
 ```

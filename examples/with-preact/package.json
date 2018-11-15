@@ -1,8 +1,8 @@
 {
-  "private": true,
-  "name": "jetpack-with-preact",
+  "name": "with-preact",
   "version": "0.0.0",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "start": "jetpack",
     "build": "jetpack build",

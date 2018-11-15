@@ -1,5 +1,5 @@
 {
-  "name": "basic-client",
+  "name": "lazy-loading",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",

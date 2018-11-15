@@ -1,5 +1,4 @@
 const express = require('express')
-const options = require('../../options')
 const jetpack = require('../../serve')
 
 const app = express()
@@ -10,4 +9,6 @@ app.get('/api/data', (req, res) => {
 
 app.get('*', jetpack)
 
-app.listen(options.port)
+app.listen(3000, function () {
+  console.log('Running server on http://localhost:3000')
+})

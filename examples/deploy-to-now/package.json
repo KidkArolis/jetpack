@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "main": "server",
+  "browser": "client",
   "scripts": {
     "start": "jetpack",
     "build": "jetpack build",
@@ -12,21 +13,14 @@
     "test": "jest",
     "now-build": "jetpack build"
   },
-  "eslintConfig": {
-    "extends": "eslint-config-synacor"
-  },
-  "eslintIgnore": [
-    "build/*"
-  ],
-  "devDependencies": {
-    "jetpack": "github:KidkArolis/jetpack#serverless"
-  },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "express": "^4.16.4",
-    "morgan": "^1.9.1",
+    "polka": "^0.5.1",
     "preact": "^8.2.6",
     "preact-compat": "^3.17.0",
     "preact-router": "^2.5.7"
   },
+  "devDependencies": {
+    "jetpack": "^0.10.1"
+  }
 }

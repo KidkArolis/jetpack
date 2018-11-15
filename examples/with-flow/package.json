@@ -1,5 +1,5 @@
 {
-  "name": "basic-client",
+  "name": "with-flow",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -7,5 +7,9 @@
     "@babel/preset-flow": "^7.0.0",
     "flow-bin": "^0.86.0",
     "serve": "^10.0.2"
+  },
+  "scripts": {
+    "start": "jetpack",
+    "flow": "flow"
   }
 }

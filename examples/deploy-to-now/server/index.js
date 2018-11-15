@@ -1,12 +1,9 @@
 const polka = require('polka')
-const morgan = require('morgan')
 
-const app = express()
-
-app.use(morgan('short'))
+const app = polka()
 
 app.get('/api/unicorn', function (req, res) {
-  res.send('🦄')
+  res.end('🦄')
 })
 
 app.listen(3040, function () {
