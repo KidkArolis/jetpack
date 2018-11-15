@@ -57,7 +57,7 @@ First, you can run your API server in addition to jetpack dev server using a sin
     $ jetpack -x 'nodemon ./api'  // provide any command to execute
     $ jetpack -x 'rails s'        // doesn't even have to be done
 
-Jetpack also provides an ability to proxy requests to your api or mount the development server to your application server using the `jetpack/handle` middleware. Read more about it in [Workflow and deployment](./docs/05-workflow-and-deployment.md) docs.
+Jetpack also provides an ability to proxy requests to your api or mount the development server to your application server using the `jetpack/handle` middleware. Read more about it in [Workflow and deployment](./docs/06-workflow-and-deployment.md) docs.
 
 ## Documentation
 
@@ -85,4 +85,4 @@ This project is an exploration of some ideas accumulated over a few years using 
 
 Jetpack is an exploration of how using webpack could be made easier if the defaults, the CLI usage patterns and the configuration would be different.
 
-I would be very interested in hearing your feedback. You might be new to JavaScript development, tried jetpack and got stuck with something – I'd like to fix that. Or perhaps you're a seasoned webpacker in which case I _know_ you saw some specific aspect you probably didn't like, and I'd like to hear about that too.
+I would be very interested in hearing your feedback. You might be new to JavaScript development, you tried jetpack and got stuck with something – I'd like to fix that. Or perhaps you're a seasoned webpacker in which case I _know_ you saw some specific aspect you probably didn't like, and I'd like to hear about that too.
