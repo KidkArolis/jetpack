@@ -1,0 +1,15 @@
+{
+  "name": "basic-client-and-server",
+  "version": "1.0.0",
+  "description": "A jetpack example",
+  "main": "app/server",
+  "license": "MIT",
+  "scripts": {
+    "start": "node app/server"
+  },
+  "dependencies": {
+    "morgan": "^1.9.1",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1"
+  }
+}

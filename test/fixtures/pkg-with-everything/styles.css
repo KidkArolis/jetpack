@@ -1,0 +1,18 @@
+body {
+  background-color: aliceblue;
+}
+
+.unicorn {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: 767px) {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+@custom-media --wide-window (min-width: 30em);
+
+@media (--wide-window) {
+  background: yellow;
+}

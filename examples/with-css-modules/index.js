@@ -1,4 +1,4 @@
-const styles = require('./styles.module.css')
+const styles = require('./styles.css')
 
 function main () {
   document.querySelector('#root').innerHTML = `
