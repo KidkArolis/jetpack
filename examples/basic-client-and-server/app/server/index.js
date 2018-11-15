@@ -1,6 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-const jetpack = require('../../../../handle')
+const jetpack = require('../../../../serve')
 
 const app = express()
 

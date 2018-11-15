@@ -50,7 +50,7 @@ module.exports = {
     // these are files that you don't want to process via webpack
     // but want to serve as part of your application, these
     // will get exposed under /assets/*
-    static: options.static || 'assets',
+    static: 'assets',
 
     // build output path relative to dir
     dist: 'dist',
@@ -79,7 +79,9 @@ module.exports = {
     // e.g. { '/api/*': 'http://localhost:3000',
     //        '/api2/*': 'http://localhost:3001/:splat',
     //        '/api3/*': 'http://localhost:3002/custom/:splat' }
-    proxy: options.proxy || {},
+    // it can also be a function that receives an express app
+    // e.g. (app) => app.get('/api/foo', (req, res) => {...})
+    proxy: {},
 
     // disable any logging
     quiet: false,
@@ -157,3 +159,62 @@ The default html template is the following:
 ```
 
 You can override it completely using the `html` option or extend it by using `head` and `body` options.
+
+## Modules
+
+Jetpack exports the following modules:
+
+### jetpack/serve
+
+It's a middleware that can serve your assets in development and production. It proxies to jetpack dev server in development and serves files from `dist` in production. For example:
+
+```js
+const express = require('express')
+const jetpack = require('jetpack/serve')
+
+const app = express();
+
+app.get('/api/unicorns', (req, res) => {...})
+app.get('*', jetpack)
+```
+
+### jetpack/options
+
+Receive all of the jepack config. Might be useful if you want to look at the port, dist, or generated assets in production if you're say generating your HTML server side, e.g.:
+
+```
+const options = require('jetpack/options')
+
+options.production
+options.entry
+options.port
+options.assets
+
+options.assets.js.forEach(script => console.log(script))
+options.assets.css.forEach(script => console.log(script))
+options.assets.other
+options.assets.runtime
+```
+
+### jetpack/proxy
+
+A simple proxy helper, useful if you want to customize your proxy behaviour using a function. E.g.
+
+```js
+const proxy = require('jetpack/proxy')
+
+module.exports = {
+  proxy: (app) => {
+    app.post('/custom', (req, res) => res.send(422))
+    app.get('/api/*', proxy('http://localhost:3000'))
+  }
+}
+```
+
+### jetpack/webpack
+
+An export of the webpack module used by jetpack. Useful to access webpack's plugins, etc.
+
+### jetpack/postcss-*
+
+Several PostCSS modules useful if you're overriding PostCSS config. See [Customizing PostCSS](./04-customizing-postcss.md) for more details
