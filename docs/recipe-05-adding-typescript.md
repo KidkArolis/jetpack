@@ -5,7 +5,7 @@
 To add Typescript to a jetpack project, follow these steps:
 
 1. Run `npm install --save-dev typescript ts-loader`.
-2. Create `jetpack.config.js` with the following contents
+2. Create `jetpack.config.js` with the following contents:
 
 ```js
 module.exports = {
@@ -17,6 +17,30 @@ module.exports = {
       exclude: /node_modules/,
     })
   }
+}
+```
+
+3. Create `tsconfig.json` with something like:
+
+```js
+{
+  "compilerOptions": {
+    "target": "es5",
+    "allowJs": true,
+    "skipLibCheck": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react"
+  },
+  "include": [
+    "src"
+  ]
 }
 ```
 
