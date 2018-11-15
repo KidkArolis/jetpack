@@ -5,6 +5,6 @@
     { "src": "package.json", "use": "@now/static-build" }
   ],
   "routes": [
-    { "src": "/api/*", "dest": "server/index.js" }
+    { "src": "/api/*", "dest": "/server/index.js" }
   ]
 }
