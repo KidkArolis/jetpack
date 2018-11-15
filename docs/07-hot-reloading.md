@@ -19,8 +19,6 @@ const App = () => <div>Hello World!</div>
 export default hot(module)(App)
 ```
 
-Note: importing `react-hot-loader` from jetpack will only work if jetpack is installed locally into the project. You can alternatively just install `react-hot-loader` locally if you'd like to keep jetpack global.
-
 ## Other JS
 
 However, you can also hot reloading for any vanilla JavaScript even if you're not using React. That's something that webpack has always supported. All you need to do is add the following bit of code somewhere in your application, preferably in the entry module.

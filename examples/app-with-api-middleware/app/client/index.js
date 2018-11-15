@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './styles.css'
+import { hot } from '../../../../react-hot-loader'
 
 class App extends React.Component {
   constructor () {
@@ -31,6 +32,10 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.querySelector('#root'))
+const HApp = hot(module)(App)
 
-module.hot.accept()
+ReactDOM.render(<HApp />, document.querySelector('#root'))
+
+// if (module.hot) {
+//   module.hot.accept()
+// }

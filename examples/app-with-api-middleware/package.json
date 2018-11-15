@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "A jetpack example",
   "main": "app/server",
+  "browser": "app/client",
   "license": "MIT",
   "scripts": {
     "start": "node app/server"
   },
   "dependencies": {
+    "express": "^4.16.4",
     "morgan": "^1.9.1",
+    "polka": "^0.5.1",
     "react": "^16.1.1",
     "react-dom": "^16.1.1"
   }
