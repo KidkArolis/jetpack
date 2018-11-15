@@ -11,7 +11,7 @@ Jetpack uses the following PostCSS plugins and presets:
 - `postcss-flexbugs-fixes`
 - `postcss-preset-env`
 
-See [/lib/webpack.css.js](../lib/webpack.css.js) for the exact configuration.
+See [lib/webpack.css.js](../lib/webpack.css.js) for the exact configuration.
 
 It's a bit more difficult to extend PostCSS than say Babel. There are 2 options that jetpack provides here.
 
