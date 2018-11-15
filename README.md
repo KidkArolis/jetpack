@@ -17,7 +17,7 @@
 - **Smooth workflow** for simultaneously developing client and server applications
 - **Single dependency** with hassle-free updates.
 
-**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from previous project. Jetpack has a set of defaults that should get you off the ground quickly. And with the universal `jetpack/serve` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
+**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from old projects. Jetpack has a set of defaults that should get you off the ground quickly. And with the `proxy` config or universal `jetpack/serve` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
 
 ## Usage
 
@@ -51,13 +51,20 @@ Or any project on your machine:
 
 Another goal of jetpack is to assist you in building complete, production apps. Very often in addition to developing the clientside application, you are also developing an API. Jetpack has a few features to make building such apps easier.
 
-First, you can run your API server in addition to jetpack dev server using a single command:
+Point your `package.json#main` to your server entry and `package.json#browser` to your client entry.
 
-    $ jetpack -x                  // defaults to executing `node .`
-    $ jetpack -x 'nodemon ./api'  // provide any command to execute
-    $ jetpack -x 'rails s'        // doesn't even have to be done
+Now you can run your API server together with jetpack in a single command:
 
-Jetpack also provides an ability to proxy requests to your api or mount the development server to your application server using the `jetpack/handle` middleware. Read more about it in [Workflow and deployment](./docs/06-workflow-and-deployment.md) docs.
+    $ jetpack -x
+
+Alternatively, specify any command to execute:
+    $ jetpack -x 'nodemon ./api'
+
+Use this even if your server is not written in node
+
+    $ jetpack -x 'rails s'
+
+Jetpack provides an ability to proxy requests to your api by specifying `proxy` configuration in `jetpack.config.js` or mounting the dev server to your application server using the `jetpack/serve` middleware. Read more about it in [Workflow and deployment](./docs/06-workflow-and-deployment.md) docs.
 
 ## Documentation
 
