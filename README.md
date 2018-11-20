@@ -86,7 +86,7 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 * [Adding Typescript](./docs/recipe-05-adding-typescript.md)
 * [Server side rendering](./docs/recipe-06-server-side-rendering.md)
 
-## Your fedback!
+## Your feedback!
 
 This project is an exploration of some ideas accumulated over a few years using webpack in a variety of projects. Webpack is a very powerful and flexible tool. It applies to a lot of use cases and that is one of the reasons it has so many configuration options. Webpack also evolved over the years but preserved backwards compatibility as much as possible to support the large ecosystem built around it.
 
