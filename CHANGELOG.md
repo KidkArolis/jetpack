@@ -1,3 +1,7 @@
+# 0.10.3
+
+* Remove console.log from the jetpack/serve module
+
 # 0.10.2
 
 * Fix `jetpack inspect` command
