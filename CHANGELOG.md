@@ -1,3 +1,7 @@
+# 0.10.4
+
+* Fix `jetpack/serve` production mode, serve index.html if requested pathname does not exist in dist
+
 # 0.10.3
 
 * Remove console.log from the jetpack/serve module
