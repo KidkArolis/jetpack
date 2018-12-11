@@ -20,9 +20,6 @@ async function build (t, pkg) {
   const base = path.join('.', 'test', 'fixtures', pkg)
   const dist = path.join(base, 'dist')
 
-  console.log(base)
-  console.log(dist)
-
   await fs.remove(dist)
 
   await execa.shell(`./bin/jetpack build --dir ${base}`, {
