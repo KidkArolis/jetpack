@@ -12,11 +12,11 @@ So are React components if you wrap your root component in the `Hot` component:
 
 ```js
 import React from 'react'
-import { hot } from 'jetpack/react-hot-loader'
+import { hot } from 'jetpack/react-hot-loader/root'
 
 const App = () => <div>Hello World!</div>
 
-export default hot(module)(App)
+export default hot(App)
 ```
 
 ## Other JS
