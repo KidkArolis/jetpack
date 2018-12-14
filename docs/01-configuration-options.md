@@ -15,7 +15,7 @@ Options:
   -d, --dir [path]    run jetpack in the context of this directory
   -x, --exec [path]   execute an additional process, e.g. an api server
   -j, --jsx <pragma>  specify jsx pragma, defaults to React.createElement or Preact.h if preact is installed
-  -h, --no-hot        disable hot reloading
+  -r, --no-hot        disable hot reloading
   -c, --config        config file to use, defaults to jetpack.config.js
   -q, --quiet         log no output
   -v, --verbose       log verbose output
