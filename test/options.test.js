@@ -13,6 +13,7 @@ const base = (pkg, extra = {}) => Object.assign({
   dist: 'dist',
   static: 'assets',
   jsx: 'h',
+  hot: true,
   port: 3030,
   sourceMaps: 'source-map',
   title: 'jetpack',
