@@ -1,8 +1,5 @@
 import React, { useState } from 'react'
-import { hot, setConfig } from 'react-hot-loader'
-
-// to make hooks work with RHL
-setConfig({ pureSFC: true })
+import { hot } from 'react-hot-loader'
 
 function HooksCounter () {
   const [count, setCount] = useState(0)
