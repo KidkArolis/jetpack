@@ -1,3 +1,7 @@
+# 0.12.1
+
+* Fix where `react-hot-loader` is loaded from, it should be loaded from the target dir
+
 # 0.12.0
 
 * Rename the `--no-hot` shorthand from `-h` to `-r`, to reclaim `-h` for help info
