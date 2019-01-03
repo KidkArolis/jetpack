@@ -2,7 +2,7 @@
   <img src="https://user-images.githubusercontent.com/324440/48484676-a1690280-e80e-11e8-9835-14c6b0c5bb98.png" alt="jetpack" title="jetpack">
 </p>
 
-<h4 align="center">A more convenient webpack dev server.</h4>
+<h4 align="center">Webpack made more convenient.</h4>
 <br />
 
 **Jetpack wraps webpack** to create a smoother developer experience. Jetpack can be used instead of webpack, webpack-cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, and can be extended with any of the webpack configuration.
