@@ -2,7 +2,7 @@
 
 * Rename the `--no-hot` shorthand from `-h` to `-r`, to reclaim `-h` for help info
 * Fix `jetpack.config.js#hot` option, it wasn't being read from options since cli arg was always defaulting to `false`
-* No longer refresh the page if webpack hot patch is not accepted, I find that to be a nicer experience. It's still possible to configure that with manual config override using `jetpack.config.js#webpack`.
+* No longer refresh the page if webpack hot patch is not accepted, for nicer user experience. It's still possible to configure page reloading with manual config override using `jetpack.config.js#webpack`.
 * Improve hot reloading support. `react-hot-loader` has been removed from jetpack. User's of jetpack now need to install `react-hot-loader` to opt into using it. Webpack config has been updated to work with `react-hot-loader@4.6.0` which supports React Hooks out of the box and improves the overall experience.
 
 To use this you first need to install `react-hot-loader` with `npm i -D react-hot-loader` and then update the code from:
