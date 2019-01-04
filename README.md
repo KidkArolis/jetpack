@@ -14,7 +14,7 @@
 - **Automatic JSX detection** switches between `React.createElement` or `h` depending on dependencies.
 - **Hot reloading built in** for React as well as vanilla JavaScript and CSS.
 - **Automatic chunk splitting** with inlined runtime and HTML generation.
-- **Smooth workflow** for simultaneously developing client and server applications
+- **Smooth workflow** for simultaneously developing client and server applications.
 - **Single dependency** with hassle-free updates.
 - **Run anywhere** without installing locally, just like `nodemon`.
 
@@ -40,7 +40,7 @@ Inspect the bundle size and make up:
 
 ## Use jetpack anywhere, anytime
 
-One of jetpack goals is to help you run any piece of JavaScript in a browser as easily as it it to run node scripts. Install jetpack globally and point it to any file on your machine. This is an alternative to jsfiddle / codepen / codesandbox style of hacking on things.
+One of jetpack goals is to help you run any piece of JavaScript in a browser as easily as it is to run node scripts. Install jetpack globally and point it to any file on your machine. This is an alternative to jsfiddle / codepen / codesandbox style of hacking on things.
 
     $ jetpack ~/Desktop/magic.js
 
