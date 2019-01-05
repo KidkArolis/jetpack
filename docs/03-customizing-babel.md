@@ -5,7 +5,7 @@ Jetpack uses Babel by default, because:
 - this way you get JSX support out of the box
 - you can be sure that the code you write will run in all the browsers you support
 
-Jetpack uses the following PostCSS plugins and presets:
+Jetpack uses the following Babel plugins and presets:
 
 - `@babel/plugin-syntax-dynamic-import`
 - `@babel/preset-env`
