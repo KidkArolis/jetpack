@@ -1,10 +1,10 @@
-# Customizing browserlist
+# Customizing browserslist
 
 Jetpack compiles your code using `babel-preset-env` and `postcss-preset-env` plugins to ensure the code is ready for all the browsers you support. Those projects follow the lovely [browserlist](https://github.com/browserslist/browserslist) convention.
 
-By default, jetpack uses the defaults that [browserlist](https://github.com/browserslist/browserslist) recommends.
+By default, jetpack uses the defaults that [browserslist](https://github.com/browserslist/browserslist) recommends.
 
-To configure the list of browsers, you can use any of method supported by browserlist:
+To configure the list of browsers, you can use any of method supported by browserslist:
 
 #### package.json
 
@@ -22,7 +22,7 @@ To configure the list of browsers, you can use any of method supported by browse
 }
 ```
 
-#### .browserlist config file
+#### .browserslist config file
 
 ```
 # Browsers that we support
@@ -32,4 +32,4 @@ last 1 version
 IE 10 # sorry
 ```
 
-See [browserlist docs](https://github.com/browserslist/browserslist) for full details.
+See [browserslist docs](https://github.com/browserslist/browserslist) for full details.
