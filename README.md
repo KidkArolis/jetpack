@@ -73,7 +73,7 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 * [Customizing Webpack](./docs/02-customizing-webpack.md)
 * [Customizing Babel](./docs/03-customizing-babel.md)
 * [Customizing PostCSS](./docs/04-customizing-postcss.md)
-* [Customizing Browserlist](./docs/05-customizing-browserlist.md)
+* [Customizing Browserslist](./docs/05-customizing-browserslist.md)
 * [Workflow and deployment](./docs/06-workflow-and-deployment.md)
 * [Hot reloading](./docs/07-hot-reloading.md)
 * [Comparison to cra, pwa-cli, parcel, etc.](./docs/08-comparison.md)
