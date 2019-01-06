@@ -32,4 +32,4 @@ last 1 version
 IE 10 # sorry
 ```
 
-See [browserlist docs](https://github.com/browserslist/browserslist) for full details.
+See [browserslist docs](https://github.com/browserslist/browserslist) for full details.
