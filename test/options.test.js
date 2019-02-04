@@ -74,6 +74,7 @@ test('creates options object from jetpack.config.js', t => {
   t.deepEqual(opts, base('pkg-with-config', {
     port: 1234,
     verbose: true,
+    title: 'testing',
     entry: './app/client',
     exec: 'node ./app/server',
     css: {

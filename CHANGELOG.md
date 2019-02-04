@@ -1,3 +1,7 @@
+# 0.12.2
+
+* Fix reading `title` from config file
+
 # 0.12.1
 
 * Fix where `react-hot-loader` is loaded from, it should be loaded from the target dir
