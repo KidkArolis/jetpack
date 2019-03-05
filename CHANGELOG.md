@@ -1,3 +1,8 @@
+# 0.13.0
+
+* Upgrade all deps
+* Fix `react-hot-loader` webpack plugin config
+
 # 0.12.2
 
 * Fix reading `title` from config file
