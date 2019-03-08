@@ -21,7 +21,7 @@ test('build with cjs modules and core-js polyfill', async t => {
   const manifest = JSON.parse(output['/assets/manifest.json'])
   const bundle = output[manifest['bundle.js']]
   t.true(bundle.includes('21.1.3.25 String.prototype.trim()'))
-  t.notThrows(() => eval(bundle))
+  t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
 test('build with esm modules and core-js polyfill', async t => {
@@ -29,7 +29,7 @@ test('build with esm modules and core-js polyfill', async t => {
   const manifest = JSON.parse(output['/assets/manifest.json'])
   const bundle = output[manifest['bundle.js']]
   t.true(bundle.includes('21.1.3.25 String.prototype.trim()'))
-  t.notThrows(() => eval(bundle))
+  t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
 async function build (t, pkg) {
@@ -47,7 +47,7 @@ async function build (t, pkg) {
     console.log('Failed to build')
     console.log(result.stdout)
     console.log(result.stderr)
-    assert(false)
+    t.true(false)
   }
 
   const files = []
