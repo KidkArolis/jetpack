@@ -16,16 +16,39 @@ test('build with postcss config', async t => {
   await build(t, 'pkg-with-postcss-config')
 })
 
+test('build with cjs modules and core-js polyfill', async t => {
+  const output = await build(t, 'pkg-with-cjs')
+  const manifest = JSON.parse(output['/assets/manifest.json'])
+  const bundle = output[manifest['bundle.js']]
+  t.true(bundle.includes('21.1.3.25 String.prototype.trim()'))
+  t.notThrows(() => eval(bundle))
+})
+
+test('build with esm modules and core-js polyfill', async t => {
+  const output = await build(t, 'pkg-with-esm')
+  const manifest = JSON.parse(output['/assets/manifest.json'])
+  const bundle = output[manifest['bundle.js']]
+  t.true(bundle.includes('21.1.3.25 String.prototype.trim()'))
+  t.notThrows(() => eval(bundle))
+})
+
 async function build (t, pkg) {
   const base = path.join('.', 'test', 'fixtures', pkg)
-  const dist = path.join(base, 'dist')
+  const dist = path.join(process.cwd(), base, 'dist')
 
   await fs.remove(dist)
 
-  await execa.shell(`./bin/jetpack build --dir ${base}`, {
+  const result = await execa.shell(`./bin/jetpack build --dir ${base}`, {
     env: {},
     extendEnv: false
   })
+
+  if (result.code !== 0) {
+    console.log('Failed to build')
+    console.log(result.stdout)
+    console.log(result.stderr)
+    assert(false)
+  }
 
   const files = []
   await new Promise((resolve, reject) => {
@@ -42,8 +65,11 @@ async function build (t, pkg) {
       .on('end', () => resolve())
   })
 
+  const output = {}
   for (const file of files) {
     const contents = (await fs.readFile(file)).toString()
     t.snapshot(contents, file.replace(path.join(__dirname, '..'), ''))
+    output[file.replace(dist, '')] = contents
   }
+  return output
 }

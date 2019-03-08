@@ -1,3 +1,8 @@
+# 0.14.0
+
+* Upgrade all deps
+* Fix how `babel` and `@babel/preset-env` detects module types when deciding how to inject polyfills, by using `sourceType: 'unambiguous'`, we ensure that no matter if you use CJS or ESM in your modules, jetpack will bundle them correctly and inject core-js polyfills correctly (most of the time anyway..).
+
 # 0.13.0
 
 * Upgrade all deps
