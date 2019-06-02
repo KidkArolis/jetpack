@@ -1,3 +1,10 @@
+# 0.15
+
+* Add support for Sass! Simply install `node-sass` or `sass` and import '.scss' files. Works with css modules, allows specifying `resources: []` that become available to each scss file.
+* Fix an issue where jetpack/serve was running command line arg parsing, preventing ability to require apps that import jetpack/serve. This is useful when you try and require your app for debugging and tests.
+* Upgrade to core-js@3
+* Upgrade all dependencies
+
 # 0.14.2
 
 * Fix compiler error handling
