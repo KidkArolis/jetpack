@@ -115,7 +115,13 @@ module.exports = {
       // and enables stage 2 features https://preset-env.cssdb.org/features#stage-2
       // this allows you to turn on extra features
       // e.g. { 'nesting-rules': true, 'custom-media-queries': true }
-      features: {}
+      features: {},
+
+      // when using Sass, you can specify paths to your global scss resources
+      // so that you can use your shared variables & mixins across all Sass styles
+      // without manually importing them in each file. Works with CSS Modules.
+      // See further tips: https://github.com/shakacode/sass-resources-loader#tips
+      resources: []
     },
 
     // webpack transform fn
