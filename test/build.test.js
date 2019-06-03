@@ -16,11 +16,15 @@ test('build with postcss config', async t => {
   await build(t, 'pkg-with-postcss-config')
 })
 
+test('build with scss', async t => {
+  await build(t, 'pkg-with-scss')
+})
+
 test('build with cjs modules and core-js polyfill', async t => {
   const output = await build(t, 'pkg-with-cjs')
   const manifest = JSON.parse(output['/assets/manifest.json'])
   const bundle = output[manifest['bundle.js']]
-  t.true(bundle.includes('21.1.3.25 String.prototype.trim()'))
+  t.true(bundle.includes('// `String.prototype.trim` method'))
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
@@ -28,7 +32,7 @@ test('build with esm modules and core-js polyfill', async t => {
   const output = await build(t, 'pkg-with-esm')
   const manifest = JSON.parse(output['/assets/manifest.json'])
   const bundle = output[manifest['bundle.js']]
-  t.true(bundle.includes('21.1.3.25 String.prototype.trim()'))
+  t.true(bundle.includes('// `String.prototype.trim` method'))
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
