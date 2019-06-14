@@ -1,3 +1,7 @@
+# 0.15.1
+
+* Fix compiler error handling - catch build errors thoroughly and always exit with status 1 if compilation fails for any reason.
+
 # 0.15
 
 * Add support for Sass! Simply install `node-sass` or `sass` and import '.scss' files. Works with css modules, allows specifying `resources: []` that become available to each scss file.
