@@ -1,6 +1,8 @@
-# 0.15.1
+# 0.16
 
 * Fix compiler error handling - catch build errors thoroughly and always exit with status 1 if compilation fails for any reason.
+* Fix all security warnings
+* Upgrade all dependencies, brings in file-loader@4.0.0, url-loader@2.0.0, css-loader@3.0.0 that have some breaking changes
 
 # 0.15
 
