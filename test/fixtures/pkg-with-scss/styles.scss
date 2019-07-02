@@ -3,3 +3,7 @@ $primary-color: blue;
 body {
   background: $primary-color;
 }
+
+button {
+  appearance: none;
+}
