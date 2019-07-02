@@ -42,12 +42,12 @@ async function build (t, pkg) {
 
   await fs.remove(dist)
 
-  const result = await execa.shell(`./bin/jetpack build --dir ${base}`, {
+  const result = await execa.node('./bin/jetpack', ['build', '--dir', base], {
     env: {},
     extendEnv: false
   })
 
-  if (result.code !== 0) {
+  if (result.exitCode !== 0) {
     console.log('Failed to build')
     console.log(result.stdout)
     console.log(result.stderr)
