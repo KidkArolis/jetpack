@@ -1,3 +1,8 @@
+# 0.16.1
+
+* Run postcss over sass loader output, this fixes autoprefixing sass
+* Upgrade all dependencies
+
 # 0.16
 
 * Fix compiler error handling - catch build errors thoroughly and always exit with status 1 if compilation fails for any reason.
