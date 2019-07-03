@@ -12,6 +12,10 @@ const base = (pkg, extra = {}) => Object.assign({
   entry: '.',
   dist: 'dist',
   static: 'assets',
+  target: {
+    modern: true,
+    legacy: false
+  },
   jsx: 'h',
   hot: true,
   port: 3030,
