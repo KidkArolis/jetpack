@@ -236,4 +236,4 @@ Several PostCSS modules useful if you're overriding PostCSS config. See [Customi
 
 ### jetpack/react-hot-loader
 
-For hot reloading React. See [Hot reloading](./07-hot-reloading.md) for more details
+For hot reloading React. See [Hot reloading](./08-hot-reloading.md) for more details
