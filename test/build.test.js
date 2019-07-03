@@ -61,7 +61,7 @@ async function build (t, pkg) {
     extendEnv: false
   })
 
-  // console.log(result.all)
+  t.snapshot(result.all.replace(/^jetpack › Built in.*$/mg, ''), `jetpack output for compiling ${pkg}`)
 
   if (result.exitCode !== 0) {
     console.log('Failed to build')
