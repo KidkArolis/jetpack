@@ -5,11 +5,12 @@
 <h4 align="center">Webpack made more convenient.</h4>
 <br />
 
-**Jetpack wraps webpack** to create a smoother developer experience. Jetpack can be used instead of webpack, webpack-cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, and can be extended with any of the webpack configuration.
+**Jetpack wraps webpack** to create a smoother developer experience. Jetpack can be used instead of webpack, webpack-cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, and can be extended with any webpack configuration.
 
 - **Sensible defaults** to handle modern JavaScript, CSS and images.
 - **Preconfigured Babel** with `@babel/preset-env` and `@babel/preset-react`, configurable via `.babelrc`.
 - **Preconfigured PostCSS** with `postcss-preset-env` including autoprefixing, configurable via `postcss.config.js`.
+- **Differential builds and serving** with modern/legacy bundles served to browsers based on user agent headers.
 - **CSS modules available** by switching one config flag.
 - **Sass support** by installing `node-sass`.
 - **Automatic JSX detection** switches between `React.createElement` or `h` depending on dependencies.
@@ -38,6 +39,11 @@ To build the app for production to a `dist` directory:
 Inspect the bundle size and make up:
 
     $ jetpack inspect
+
+Print what browsers will be supported:
+
+    $ jetpack browsers
+    $ jetpack browsers --coverage=GB
 
 ## Use jetpack anywhere, anytime
 
@@ -76,8 +82,9 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 * [Customizing PostCSS](./docs/04-customizing-postcss.md)
 * [Customizing Browserslist](./docs/05-customizing-browserslist.md)
 * [Workflow and deployment](./docs/06-workflow-and-deployment.md)
-* [Hot reloading](./docs/07-hot-reloading.md)
-* [Comparison to cra, pwa-cli, parcel, etc.](./docs/08-comparison.md)
+* [Differential serving](./docs/07-differential-serving.md)
+* [Hot reloading](./docs/08-hot-reloading.md)
+* [Comparison to cra, pwa-cli, parcel, etc.](./docs/09-comparison.md)
 
 #### Recipes
 
@@ -88,10 +95,8 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 * [Adding Typescript](./docs/recipe-05-adding-typescript.md)
 * [Server side rendering](./docs/recipe-06-server-side-rendering.md)
 
-## Your feedback!
+## Motivation
 
 This project is an exploration of some ideas accumulated over a few years using webpack in a variety of projects. Webpack is a very powerful and flexible tool. It applies to a lot of use cases and that is one of the reasons it has so many configuration options. Webpack also evolved over the years but preserved backwards compatibility as much as possible to support the large ecosystem built around it.
 
 Jetpack is an exploration of how using webpack could be made easier if the defaults, the CLI usage patterns and the configuration would be different.
-
-I would be very interested in hearing your feedback. You might be new to JavaScript development, you tried jetpack and got stuck with something – I'd like to fix that. Or perhaps you're a seasoned webpacker in which case I _know_ you saw some specific aspect you probably didn't like, and I'd like to hear about that too.

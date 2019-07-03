@@ -48,3 +48,5 @@ module.exports = {
   }
 }
 ```
+
+**Note!** If you use custom `postcss.config.js`, by default, `postcss-preset-env` will use browserslist default browsers and no longer jetpack's browserslist. That might be ok for the most part, but you should take extra care.

@@ -1,3 +1,41 @@
+# 0.17
+
+**Big improvements! 🎉**
+
+* Add support for differential bundling - modern and legacy bundles can be outputted
+* Modern bundles are smaller and less transpiled compared to the previous version
+* Transpile node_modules ensuring modern packages from npm work as expected
+* Add content hashes to output file names to improve long term caching
+
+**Differential bundling**
+
+* By default, jetpack only compiles for modern browsers.
+* To see what browsers those are, jetpack provides a new command `jetpack browsers` that prints the browserslist query, list of browsers and coverage
+* To opt into legacy browser bundling you should configure a new option `options.target = { modern: true, legacy: true }`
+* Pass `--legacy`, `--modern` or both to `serve`, `build`, `inspect` and `browsers`, e.g.:
+
+    $ jetpack --legacy
+    $ jetpack inspect --legacy
+    $ jetpack browsers --legacy
+    $ jetpack browsers --modern
+    $ jetpack browsers --legacy --modern
+
+* Previously, jetpack would not always correctly transpile async/await (it depended on whether regenerator was available in target's node_modules). Now, jetpack ships with it's own copy of regenerator, but only uses it in legacy browsers by default. Modern browsers will do no async/await transpilation!
+* You can customize what browsers are considered modern and legacy using any of the methods supported by browserslist. Use `modern` and `legacy` environments to configure the browsers for each. Here's an example of `.browserslistrc` file:
+
+```
+[modern]
+> 10%
+
+[legacy]
+> 0.1%
+```
+
+* You can check that the configuration is taken into account by running `jetpack browsers` whenver you tweak your browserslist.
+
+* When it's time to serve the new bundles, jetpack opted to not use module/no module approach due to it's 2 limitations. The first one is that currently module/no module option in @babel/preset-env transpiles async/await into regenerator and that's not desired for modern browsers. The second limitation is that over time, the browsers that support modules will be old, and by using browser detection to serve the right bundle we can keep transpiling less and less over time. By default, if you only produce a modern bundle, the output is backwards compatible and can be served the same way as in previous versions, e.g. using `express.static` middleware or by uploading to a CDN. If you produce both modern and legacy bundles however, you will have to use `jetpack/serve` module or the new `jetpack-serve` package. Jetpack's serve middleware now detects if the browser is modern or not and serves the appropriate html file. See https://github.com/KidkArolis/jetpack-serve for more details on usage.
+
+
 # 0.16.1
 
 * Run postcss over sass loader output, this fixes autoprefixing sass

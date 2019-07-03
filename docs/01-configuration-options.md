@@ -16,7 +16,10 @@ Options:
   -x, --exec [path]   execute an additional process, e.g. an api server
   -j, --jsx <pragma>  specify jsx pragma, defaults to React.createElement or Preact.h if preact is installed
   -r, --no-hot        disable hot reloading
+  -u, --no-minify     disable minification
   -c, --config        config file to use, defaults to jetpack.config.js
+  -m, --modern        build a modern bundle
+  -l, --legacy        build a legacy bundle
   -q, --quiet         log no output
   -v, --verbose       log verbose output
   -h, --help          output usage information
@@ -24,6 +27,7 @@ Options:
 Commands:
   build               build for production
   inspect             analyze bundle
+  browsers [options]  print supported browsers
   clean               remove the dist dir
 ```
 
@@ -122,6 +126,11 @@ module.exports = {
       // without manually importing them in each file. Works with CSS Modules.
       // See further tips: https://github.com/shakacode/sass-resources-loader#tips
       resources: []
+    },
+
+    target: {
+      modern: true,
+      legacy: false
     },
 
     // webpack transform fn
