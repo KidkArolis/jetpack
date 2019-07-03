@@ -3,6 +3,7 @@ import path from 'path'
 import execa from 'execa'
 import fs from 'fs-extra'
 import klaw from 'klaw'
+import os from 'os'
 
 test('build basic', async t => {
   await build(t, 'pkg-basic')
@@ -51,12 +52,15 @@ test('build both modern and legacy bundles', async t => {
 })
 
 async function build (t, pkg) {
-  const base = path.join('.', 'test', 'fixtures', pkg)
-  const dist = path.join(process.cwd(), base, 'dist')
+  const base = path.join(__dirname, 'fixtures', pkg)
+  const dist = path.join(base, 'dist')
 
   await fs.remove(dist)
 
-  const result = await execa.node('./bin/jetpack', ['build', '--dir', base], {
+  const result = await execa.node(path.join(__dirname, '..', 'bin', 'jetpack'), ['build', '--dir', base], {
+    // on purpose do not run in root of jetpack to ensure we're not
+    // accidentally using something from node_modules
+    cwd: os.tmpdir(),
     env: {},
     extendEnv: false
   })
