@@ -97,6 +97,6 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 
 ## Motivation
 
-This project is an exploration of some ideas accumulated over a few years using webpack in a variety of projects. Webpack is a very powerful and flexible tool. It applies to a lot of use cases and that is one of the reasons it has so many configuration options. Webpack also evolved over the years but preserved backwards compatibility as much as possible to support the large ecosystem built around it.
+This project is an exploration of some ideas accumulated over a few years using webpack in a variety of projects. Webpack is a very powerful and flexible tool. It applies to a lot of use cases and that is one of the reasons it has so many configuration options. Webpack also evolved over the years but preserved backward compatibility as much as possible to support the large ecosystem built around it.
 
 Jetpack is an exploration of how using webpack could be made easier if the defaults, the CLI usage patterns and the configuration would be different.
