@@ -6,6 +6,8 @@
 * Modern bundles are smaller and less transpiled compared to the previous version
 * Transpile node_modules ensuring modern packages from npm work as expected
 * Add content hashes to output file names to improve long term caching
+* Add `-i, --print-config` option to dev and build commands
+* Upgrade all dependencies
 
 **Differential bundling**
 
@@ -35,6 +37,18 @@
 
 * When it's time to serve the new bundles, jetpack opted to not use module/no module approach due to it's 2 limitations. The first one is that currently module/no module option in @babel/preset-env transpiles async/await into regenerator and that's not desired for modern browsers. The second limitation is that over time, the browsers that support modules will be old, and by using browser detection to serve the right bundle we can keep transpiling less and less over time. By default, if you only produce a modern bundle, the output is backwards compatible and can be served the same way as in previous versions, e.g. using `express.static` middleware or by uploading to a CDN. If you produce both modern and legacy bundles however, you will have to use `jetpack/serve` module or the new `jetpack-serve` package. Jetpack's serve middleware now detects if the browser is modern or not and serves the appropriate html file. See https://github.com/KidkArolis/jetpack-serve for more details on usage.
 
+* You can now see the config that has been generated for your dev or production builds by running some of the following:
+
+```
+jetpack -i
+jetpack --print-config
+jetpack --print-config --legacy
+jetpack build --print-config
+jetpack build --print-config --modern
+jetpack build --print-config --legacy
+```
+
+This prints the config using Node's `util.inspect`, and since webpack config is a JavaScript data structure that might contain functions, classes, instances and other non easily serializable things, not everyhting might be easily inspectable in this output. This is not meant to be used as copy paste into `webpack.config.js` (althought it could be a good starting point), it's mostly meant for debugging any issues and understanding exactly what jetpack is doing in your project.
 
 # 0.16.1
 
