@@ -9,6 +9,7 @@ module.exports = {
 
   webpack: (config, options) => {
     config.resolve = {
+      ...config.resolve,
       extensions: ['.js', '.css']
     }
     return config

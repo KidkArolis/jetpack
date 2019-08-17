@@ -14,13 +14,13 @@
     "now-build": "jetpack build"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "polka": "^0.5.1",
-    "preact": "^8.2.6",
-    "preact-compat": "^3.17.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "polka": "^0.5.2",
+    "preact": "^8.5.1",
+    "preact-compat": "^3.19.0",
     "preact-router": "^2.5.7"
   },
   "devDependencies": {
-    "jetpack": "^0.10.1"
+    "jetpack": "^0.17.0"
   }
 }

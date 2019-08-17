@@ -10,10 +10,10 @@
   },
   "private": true,
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "preact": "^8.2.6",
-    "preact-compat": "^3.17.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "preact": "^8.5.1",
+    "preact-compat": "^3.19.0",
     "preact-router": "^2.5.7",
-    "serve": "^10.0.2"
+    "serve": "^11.1.0"
   }
 }
