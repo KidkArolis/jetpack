@@ -20,6 +20,7 @@ Options:
   -c, --config        config file to use, defaults to jetpack.config.js
   -m, --modern        build a modern bundle
   -l, --legacy        build a legacy bundle
+  -i, --print-config  print the config used
   -q, --quiet         log no output
   -v, --verbose       log verbose output
   -h, --help          output usage information
