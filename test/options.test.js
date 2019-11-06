@@ -28,6 +28,7 @@ const base = (pkg, extra = {}) => Object.assign({
   proxy: {},
   minify: true,
   coverage: false,
+  publicPath: '/assets/',
   css: {
     modules: false,
     features: {}

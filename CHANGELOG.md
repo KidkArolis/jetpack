@@ -1,3 +1,7 @@
+# 0.17.1
+
+* Add `options.publicPath` - allows to specify where assets will be served from, e.g. a CDN url.
+
 # 0.17
 
 **Big improvements! 🎉**
