@@ -1,3 +1,7 @@
+# 0.17.2
+
+* Allow removing `core-js` alias to allow for any version of `core-js`. See https://github.com/KidkArolis/jetpack/pull/69.
+
 # 0.17.1
 
 * Add `options.publicPath` - allows to specify where assets will be served from, e.g. a CDN url.
