@@ -1,0 +1,9 @@
+body {
+  background-image: url('./unicorn.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.more {
+  display: grid;
+}

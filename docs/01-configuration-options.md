@@ -75,6 +75,9 @@ module.exports = {
     // in you need to turn off minification in production for any reason
     minify: false,
 
+    // assets gzip compression + brotli compression
+    gzip: false,
+
     // command executed to run the server/api process
     // this command is exucuted only if `-x` arg is passed to jetpack
     // even if this option is configured

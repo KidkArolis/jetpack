@@ -27,6 +27,7 @@ const base = (pkg, extra = {}) => Object.assign({
   exec: false,
   proxy: {},
   minify: true,
+  gzip: false,
   coverage: false,
   publicPath: '/assets/',
   css: {

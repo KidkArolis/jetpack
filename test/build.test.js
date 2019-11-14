@@ -21,6 +21,10 @@ test('build with scss', async t => {
   await build(t, 'pkg-with-scss')
 })
 
+test('build with gzip', async t => {
+  await build(t, 'pkg-with-gzip')
+})
+
 test('build with cjs modules and core-js polyfill', async t => {
   const output = await build(t, 'pkg-with-cjs')
   const manifest = JSON.parse(output['/assets/manifest.json'])
