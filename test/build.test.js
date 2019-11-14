@@ -21,6 +21,10 @@ test('build with scss', async t => {
   await build(t, 'pkg-with-scss')
 })
 
+test('build with gzip', async t => {
+  await build(t, 'pkg-with-gzip')
+})
+
 test('build with cjs modules and core-js polyfill', async t => {
   const output = await build(t, 'pkg-with-cjs')
   const manifest = JSON.parse(output['/assets/manifest.json'])
@@ -65,7 +69,7 @@ async function build (t, pkg) {
     extendEnv: false
   })
 
-  t.snapshot(result.all.replace(/^jetpack › Built in.*$/mg, '').split('\n').sort().join('\n'), `jetpack output for compiling ${pkg}`)
+  t.snapshot(result.all.replace(/^jetpack › Built in.*$/mg, '').replace(/^warning: .*$/mg, '').split('\n').sort().join('\n'), `jetpack output for compiling ${pkg}`)
 
   if (result.exitCode !== 0) {
     console.log('Failed to build')
