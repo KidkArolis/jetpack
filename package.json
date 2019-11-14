@@ -40,7 +40,7 @@
     "express": "^4.17.1",
     "file-loader": "^4.2.0",
     "fs-extra": "^8.1.0",
-    "handlebars": "^4.1.2",
+    "handlebars": "^4.5.2",
     "inquirer-confirm": "^2.0.6",
     "mini-css-extract-plugin": "^0.8.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
