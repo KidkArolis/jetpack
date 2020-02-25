@@ -1,3 +1,7 @@
+# 0.18.1
+
+* Install caniuse-lite as a project dependency, to force install the latest version globally in the dependency tree. Previously, a message "Browserslist: caniuse-lite is outdated. Please run next command `npm update`" would show up to jetpack's users.
+
 # 0.18.0
 
 * Upgrade all dependencies
