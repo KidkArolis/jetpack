@@ -19,7 +19,6 @@ There also exist higher level frameworks for certain use cases:
 
 In general, where jetpack tries to be different is:
 
-- keep the [codebase small and simple](../lib), so that it's easy to understand how to extend the configuration
 - make it possible to run globally anywhere on your machine, just like you can run `node ~/Desktop/test.js`
 - have [good workflow](./06-workflow-and-deployment.md) for simultaneously developing the client and the server
 - make sure that if no configuration is touched, the application is bundled in the best possible way for production
