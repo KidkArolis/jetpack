@@ -1,9 +1,9 @@
-import test from 'ava'
-import path from 'path'
-import execa from 'execa'
-import fs from 'fs-extra'
-import klaw from 'klaw'
-import os from 'os'
+const test = require('ava')
+const path = require('path')
+const execa = require('execa')
+const fs = require('fs-extra')
+const klaw = require('klaw')
+const os = require('os')
 
 test('build basic', async t => {
   await build(t, 'pkg-basic')
@@ -42,11 +42,11 @@ test('build both modern and legacy bundles', async t => {
 
   const manifest = JSON.parse(output['/assets/manifest.json'])
   const bundle = output[manifest['bundle.js']]
-  t.true(bundle.includes(`const test = async () => 'test  '.trim();`))
+  t.true(bundle.includes('const test = async () => \'test  \'.trim();'))
 
   const legacyManifest = JSON.parse(output['/assets/manifest.legacy.json'])
   const legacyBundle = output[legacyManifest['bundle.js']]
-  t.true(legacyBundle.includes(`return _context.abrupt("return", 'test  '.trim());`))
+  t.true(legacyBundle.includes('return _context.abrupt("return", \'test  \'.trim());'))
 
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
@@ -62,7 +62,8 @@ async function build (t, pkg) {
     // accidentally using something from node_modules
     cwd: os.tmpdir(),
     env: {},
-    extendEnv: false
+    extendEnv: false,
+    all: true
   })
 
   t.snapshot(result.all.replace(/^jetpack › Built in.*$/mg, '').split('\n').sort().join('\n'), `jetpack output for compiling ${pkg}`)

@@ -1,3 +1,7 @@
+# 0.18.0
+
+* Upgrade all dependencies
+
 # 0.17.2
 
 * Allow removing `core-js` alias to allow for any version of `core-js`. See https://github.com/KidkArolis/jetpack/pull/69.
