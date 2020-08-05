@@ -5,7 +5,7 @@
   "browser": "client",
   "license": "MIT",
   "dependencies": {
-    "fastify": "^1.13.0"
+    "fastify": "^2.15.1"
   },
   "scripts": {
     "watch": "jetpack -x",
