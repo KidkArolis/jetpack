@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { hot } from 'react-hot-loader'
 
 export default function Counter () {
   const [count, setCount] = useState(0)

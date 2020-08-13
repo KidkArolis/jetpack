@@ -1,3 +1,7 @@
+# 0.19.0
+
+* Default to `fast-refresh` for React hot reloading if `react-hot-loader` is not installed in the project
+
 # 0.18.1
 
 * Install caniuse-lite as a project dependency, to force install the latest version globally in the dependency tree. Previously, a message "Browserslist: caniuse-lite is outdated. Please run next command `npm update`" would show up to jetpack's users.

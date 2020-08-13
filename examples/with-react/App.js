@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { hot } from 'react-hot-loader'
+import styles from './App.scss'
 
 function HooksCounter () {
   const [count, setCount] = useState(0)
@@ -32,4 +32,4 @@ function App () {
     
 }
 
-export default hot(module)(App)
+export default App

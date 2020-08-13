@@ -1,6 +1,6 @@
 # Hot reloading
 
-Hot reloading is turned on by default in jetpack. You can turn it off by passing `-r` arg or setting `hot: false` in the `jetpack.config.js` file.
+Hot reloading is turned on by default in jetpack when in development mode. You can turn it off by passing `-r` arg or setting `hot: false` in the `jetpack.config.js` file.
 
 ## CSS
 
@@ -8,7 +8,11 @@ CSS is hot reloaded automatically with no extra steps.
 
 ## React
 
-React components will get hot reloaded if you install `react-hot-loader` (`react` and `react-dom` also must be installed) and mark your root component as `hot`:
+React components are hot reloaded automatically using `fast-refresh` (via the [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin) plugin).
+
+### Support for react-hot-loader
+
+Alternatively, `react-hot-loader` is still supported in the current version and is used if `react-hot-loader` packaged is installed in your project. If you're using `react-hot-loader`, make sure to wrap your root component using as hot: 
 
 ```js
 import React from 'react'

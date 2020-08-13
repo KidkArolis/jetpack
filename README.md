@@ -14,7 +14,7 @@
 - **CSS modules available** by switching one config flag.
 - **Sass support** by installing `node-sass`.
 - **Automatic JSX detection** switches between `React.createElement` or `h` depending on dependencies.
-- **Hot reloading built in** for React as well as vanilla JavaScript and CSS.
+- **Hot reloading built in** for React (using `fast-refresh`) as well as vanilla JavaScript and CSS.
 - **Automatic chunk splitting** with inlined runtime and HTML generation.
 - **Smooth workflow** for simultaneously developing client and server applications.
 - **Single dependency** with hassle-free updates.
