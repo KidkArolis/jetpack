@@ -6,7 +6,7 @@
   "dependencies": {
     "@babel/preset-flow": "^7.0.0",
     "flow-bin": "^0.86.0",
-    "serve": "^10.0.2"
+    "serve": "^10.1.2"
   },
   "scripts": {
     "start": "jetpack",
