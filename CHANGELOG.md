@@ -1,3 +1,7 @@
+# 0.21.0
+
+* Upgrade all dependencies. Except do not upgrade to webpack 5 just yet and do not upgrade plugins that dropped webpack 4 support.
+
 # 0.20.1
 
 * Fix proxy feature - proxy the query params correctly (issue #89)
