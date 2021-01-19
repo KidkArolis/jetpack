@@ -12,7 +12,7 @@
 - **Preconfigured PostCSS** with `postcss-preset-env` including autoprefixing, configurable via `postcss.config.js`.
 - **Differential builds and serving** with modern/legacy bundles served to browsers based on user agent headers.
 - **CSS modules available** by switching one config flag.
-- **Sass support** by installing `sass`.
+- **Sass support** by installing `sass` or `node-sass`.
 - **Automatic JSX detection** switches between `React.createElement` or `h` depending on dependencies.
 - **Hot reloading built in** for React (using `fast-refresh`) as well as vanilla JavaScript and CSS.
 - **Automatic chunk splitting** with inlined runtime and HTML generation.
