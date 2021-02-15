@@ -1,3 +1,7 @@
+# 0.21.1
+
+* Fix graceful termination in `jetpack/serve`. In case the req is destroyed, make sure to also destroy the upstream proxyReq to the dev server, so that the request does not hold up the server from closing.
+
 # 0.21.0
 
 * Upgrade all dependencies. Except do not upgrade to webpack 5 just yet and do not upgrade plugins that dropped webpack 4 support.
