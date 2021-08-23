@@ -1,3 +1,8 @@
+# 0.22.0
+
+* Add support for optional chaining and nullish coalescing operator. This is supported by babel out of the box, but since jetpack is still on webpack 4 (it's faster?), we need to include the right plugins explicitly for this to work.
+* Upgrade all of the non breaking dependencies
+
 # 0.21.1
 
 * Fix graceful termination in `jetpack/serve`. In case the req is destroyed, make sure to also destroy the upstream proxyReq to the dev server, so that the request does not hold up the server from closing.
