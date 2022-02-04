@@ -1,6 +1,7 @@
 # 0.30.0
 
 * Upgrade to webpack 5!
+* Switch to swc-loader from babel for super fast build times!
 * Upgrade all (most) dependencies
 * Improve error handling, log unexpected errors when serving bundles in development instead of hanging
 * Remove the graceful termination fix introduced in 0.21.1 as it does not appear to work in node@16
