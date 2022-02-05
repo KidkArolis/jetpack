@@ -5,23 +5,23 @@ const fs = require('fs-extra')
 const klaw = require('klaw')
 const os = require('os')
 
-test('build basic', async t => {
+test('build basic', async (t) => {
   await build(t, 'pkg-basic')
 })
 
-test('build with all the features', async t => {
+test('build with all the features', async (t) => {
   await build(t, 'pkg-with-everything')
 })
 
-test('build with postcss config', async t => {
+test('build with postcss config', async (t) => {
   await build(t, 'pkg-with-postcss-config')
 })
 
-test('build with scss', async t => {
+test('build with scss', async (t) => {
   await build(t, 'pkg-with-scss')
 })
 
-test('build with cjs modules and core-js polyfill', async t => {
+test('build with cjs modules and core-js polyfill', async (t) => {
   const output = await build(t, 'pkg-with-cjs')
   const manifest = JSON.parse(output['/assets/manifest.json'])
   const bundle = output[manifest['bundle.js']]
@@ -29,7 +29,7 @@ test('build with cjs modules and core-js polyfill', async t => {
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
-test('build with esm modules and core-js polyfill', async t => {
+test('build with esm modules and core-js polyfill', async (t) => {
   const output = await build(t, 'pkg-with-esm')
   const manifest = JSON.parse(output['/assets/manifest.json'])
   const bundle = output[manifest['bundle.js']]
@@ -37,12 +37,12 @@ test('build with esm modules and core-js polyfill', async t => {
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
-test('build both modern and legacy bundles', async t => {
+test('build both modern and legacy bundles', async (t) => {
   const output = await build(t, 'pkg-with-legacy')
 
   const manifest = JSON.parse(output['/assets/manifest.json'])
   const bundle = output[manifest['bundle.js']]
-  t.true(bundle.includes('const test = async ()=>\'test  \'.trim()'))
+  t.true(bundle.includes("const test = async ()=>'test  '.trim()"))
 
   const legacyManifest = JSON.parse(output['/assets/manifest.legacy.json'])
   const legacyBundle = output[legacyManifest['bundle.js']]
@@ -51,7 +51,7 @@ test('build both modern and legacy bundles', async t => {
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
-async function build (t, pkg) {
+async function build(t, pkg) {
   const base = path.join(__dirname, 'fixtures', pkg)
   const dist = path.join(base, 'dist')
 
@@ -66,7 +66,14 @@ async function build (t, pkg) {
     all: true
   })
 
-  t.snapshot(result.all.replace(/^jetpack › Built in.*$/mg, '').split('\n').sort().join('\n'), `jetpack output for compiling ${pkg}`)
+  t.snapshot(
+    result.all
+      .replace(/^jetpack › Built in.*$/gm, '')
+      .split('\n')
+      .sort()
+      .join('\n'),
+    `jetpack output for compiling ${pkg}`
+  )
 
   if (result.exitCode !== 0) {
     console.log('Failed to build')

@@ -1,4 +1,4 @@
-module.exports = config => {
+module.exports = (config) => {
   /**
    * Webpack outputs the © symbol differently on a Mac and on Travis CI
    * which means the ava snapshots don't match up. This replaces the copyright

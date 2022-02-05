@@ -18,7 +18,8 @@
     "jetpack": "./bin/jetpack"
   },
   "scripts": {
-    "test": "ava && standard",
+    "test": "ava && healthier && prettier --check '**/*.{js,json,css,yml}'",
+    "format": "prettier --write '**/*.{js,json,css,yml}'",
     "release": "np",
     "release-alpha": "np --tag=alpha --any-branch --no-cleanup"
   },
@@ -66,13 +67,14 @@
   "devDependencies": {
     "ava": "^4.0.1",
     "execa": "^5.1.1",
+    "healthier": "^5.0.0",
     "klaw": "^4.0.1",
     "node-sass": "^7.0.1",
     "np": "^7.6.0",
-    "standard": "^16.0.4",
+    "prettier": "^2.5.1",
     "string-replace-loader": "^3.1.0"
   },
-  "standard": {
+  "healthier": {
     "ignore": [
       "examples",
       "test/fixtures/pkg-with-everything"
