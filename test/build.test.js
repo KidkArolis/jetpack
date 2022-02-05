@@ -42,11 +42,11 @@ test('build both modern and legacy bundles', async t => {
 
   const manifest = JSON.parse(output['/assets/manifest.json'])
   const bundle = output[manifest['bundle.js']]
-  t.true(bundle.includes('const test = async () => \'test  \'.trim();'))
+  t.true(bundle.includes('const test = async ()=>\'test  \'.trim()'))
 
   const legacyManifest = JSON.parse(output['/assets/manifest.legacy.json'])
   const legacyBundle = output[legacyManifest['bundle.js']]
-  t.true(legacyBundle.includes('return _context.abrupt("return", \'test  \'.trim());'))
+  t.true(legacyBundle.includes('return _ctx.abrupt("return", \'test  \'.trim());'))
 
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
