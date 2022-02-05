@@ -8,7 +8,7 @@
 **Jetpack wraps webpack** to create a smoother developer experience. Jetpack can be used instead of webpack, webpack-cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, and can be extended with any webpack configuration.
 
 - **Sensible defaults** to handle modern JavaScript, CSS and images.
-- **Preconfigured Babel** with `@babel/preset-env` and `@babel/preset-react`, configurable via `.babelrc`.
+- **Preconfigured swc-loader** for speedy compilation.
 - **Preconfigured PostCSS** with `postcss-preset-env` including autoprefixing, configurable via `postcss.config.js`.
 - **Differential builds and serving** with modern/legacy bundles served to browsers based on user agent headers.
 - **CSS modules available** by switching one config flag.
@@ -78,7 +78,7 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 
 * [All configuration options](./docs/01-configuration-options.md)
 * [Customizing Webpack](./docs/02-customizing-webpack.md)
-* [Customizing Babel](./docs/03-customizing-babel.md)
+* [Customizing SWC](./docs/03-customizing-swc.md)
 * [Customizing PostCSS](./docs/04-customizing-postcss.md)
 * [Customizing Browserslist](./docs/05-customizing-browserslist.md)
 * [Workflow and deployment](./docs/06-workflow-and-deployment.md)
