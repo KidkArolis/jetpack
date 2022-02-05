@@ -21,6 +21,7 @@ Options:
   -m, --modern        build a modern bundle
   -l, --legacy        build a legacy bundle
   -i, --print-config  print the config used
+  --no-progress       disable progress logging
   -q, --quiet         log no output
   -v, --verbose       log verbose output
   -h, --help          output usage information
@@ -38,115 +39,118 @@ Jetpack can also be configured using `jetpack.config.js` file. Here are all of t
 
 ```js
 module.exports = {
-    // directory to run jetpack in
-    dir: '.',
+  // directory to run jetpack in
+  dir: '.',
 
-    // entry module path relative to dir
-    // defaults to which ever is found first:
-    //   index.js
-    //   package.json#main
-    //   src/index.js
-    entry: '.',
+  // entry module path relative to dir
+  // defaults to which ever is found first:
+  //   index.js
+  //   package.json#main
+  //   src/index.js
+  entry: '.',
 
-    // port of the dev server
-    port: 3030,
+  // port of the dev server
+  port: 3030,
 
-    // relative path to static assets file dir
-    // these are files that you don't want to process via webpack
-    // but want to serve as part of your application, these
-    // will get exposed under /assets/*
-    static: 'assets',
+  // relative path to static assets file dir
+  // these are files that you don't want to process via webpack
+  // but want to serve as part of your application, these
+  // will get exposed under /assets/*
+  static: 'assets',
 
-    // build output path relative to dir
-    dist: 'dist',
+  // build output path relative to dir
+  dist: 'dist',
 
-    // jsx pragma
-    // defaults to `React.createElement` if react is installed, `h` otherwise
-    jsx: 'React.createElement',
+  // jsx pragma
+  // defaults to `React.createElement` if react is installed, `h` otherwise
+  jsx: 'React.createElement',
 
-    // hot reloading
-    hot: true,
+  // hot reloading
+  hot: true,
 
-    // unified flag for source maps for js and css
-    // follows webpack naming, but can also be simply set to true
-    // it's true by default in development and false in production
-    sourceMaps: true,
+  // unified flag for source maps for js and css
+  // follows webpack naming, but can also be simply set to true
+  // it's true by default in development and false in production
+  sourceMaps: true,
 
-    // in you need to turn off minification in production for any reason
-    minify: false,
+  // in you need to turn off minification in production for any reason
+  minify: false,
 
-    // command executed to run the server/api process
-    // this command is exucuted only if `-x` arg is passed to jetpack
-    // even if this option is configured
-    exec: 'node .',
+  // command executed to run the server/api process
+  // this command is exucuted only if `-x` arg is passed to jetpack
+  // even if this option is configured
+  exec: 'node .',
 
-    // used for proxying certain requests to a different server
-    // e.g. { '/api/*': 'http://localhost:3000',
-    //        '/api2/*': 'http://localhost:3001/:splat',
-    //        '/api3/*': 'http://localhost:3002/custom/:splat' }
-    // it can also be a function that receives an express app
-    // e.g. (app) => app.get('/api/foo', (req, res) => {...})
-    proxy: {},
+  // used for proxying certain requests to a different server
+  // e.g. { '/api/*': 'http://localhost:3000',
+  //        '/api2/*': 'http://localhost:3001/:splat',
+  //        '/api3/*': 'http://localhost:3002/custom/:splat' }
+  // it can also be a function that receives an express app
+  // e.g. (app) => app.get('/api/foo', (req, res) => {...})
+  proxy: {},
 
-    // disable any logging
-    quiet: false,
+  // disable any logging
+  quiet: false,
 
-    // enable more detailed logs
-    verbose: false,
+  // enable more detailed logs
+  verbose: false,
 
-    // the index.html template generation
-    // defaults to package.json#name or 'jetpack' if not available
-    title: 'jetpack',
+  // log build progress
+  progress: true,
 
-    // useful for adding meta tags or scripts
-    // can be specified in handlebars template syntax
-    head: null,
+  // the index.html template generation
+  // defaults to package.json#name or 'jetpack' if not available
+  title: 'jetpack',
 
-    // body
-    // can be specified in handlebars template syntax
-    body: `<div id='root'></div>`,
+  // useful for adding meta tags or scripts
+  // can be specified in handlebars template syntax
+  head: null,
 
-    // the html template
-    // can be specified in handlebars template syntax
-    html: `see lib/template.hbs`,
+  // body
+  // can be specified in handlebars template syntax
+  body: `<div id='root'></div>`,
 
-    // css options
-    css: {
-      // css modules
-      modules: false,
+  // the html template
+  // can be specified in handlebars template syntax
+  html: `see lib/template.hbs`,
 
-      // a shortcut for setting postcss-preset-env features
-      // by default postcss-preset-env already autoprefixes your css
-      // and enables stage 2 features https://preset-env.cssdb.org/features#stage-2
-      // this allows you to turn on extra features
-      // e.g. { 'nesting-rules': true, 'custom-media-queries': true }
-      features: {},
+  // css options
+  css: {
+    // css modules
+    modules: false,
 
-      // when using Sass, you can specify paths to your global scss resources
-      // so that you can use your shared variables & mixins across all Sass styles
-      // without manually importing them in each file. Works with CSS Modules.
-      // See further tips: https://github.com/shakacode/sass-resources-loader#tips
-      resources: []
-    },
+    // a shortcut for setting postcss-preset-env features
+    // by default postcss-preset-env already autoprefixes your css
+    // and enables stage 2 features https://preset-env.cssdb.org/features#stage-2
+    // this allows you to turn on extra features
+    // e.g. { 'nesting-rules': true, 'custom-media-queries': true }
+    features: {},
 
-    target: {
-      modern: true,
-      legacy: false
-    },
+    // when using Sass, you can specify paths to your global scss resources
+    // so that you can use your shared variables & mixins across all Sass styles
+    // without manually importing them in each file. Works with CSS Modules.
+    // See further tips: https://github.com/shakacode/sass-resources-loader#tips
+    resources: []
+  },
 
-    // use when uploading assets to CDN, e.g. 'https://storage.googleapis.com/humaans-static/assets/'
-    // or when serving from a different path than the jetpack default. Note: this doesn't affect
-    // the build output structure, you will still get dist/index.html and dist/assets/*, but
-    // manifest.json and index.html will be pointing to this publicPath instead of the default /assets
-    publicPath: '/assets/',
+  target: {
+    modern: true,
+    legacy: false
+  },
 
-    // webpack transform fn
-    webpack: (config, options) => {
-      // config is the webpack config generated by jetpack
-      // options is this jetpack options object including defaults,
-      // but also includes a very handy options.production flag
-      // see 02-customizing-webpack.md for more details
-    }
+  // use when uploading assets to CDN, e.g. 'https://storage.googleapis.com/humaans-static/assets/'
+  // or when serving from a different path than the jetpack default. Note: this doesn't affect
+  // the build output structure, you will still get dist/index.html and dist/assets/*, but
+  // manifest.json and index.html will be pointing to this publicPath instead of the default /assets
+  publicPath: '/assets/',
+
+  // webpack transform fn
+  webpack: (config, options) => {
+    // config is the webpack config generated by jetpack
+    // options is this jetpack options object including defaults,
+    // but also includes a very handy options.production flag
+    // see 02-customizing-webpack.md for more details
+  }
 }
 ```
 
@@ -237,7 +241,7 @@ module.exports = {
 
 An export of the webpack module used by jetpack. Useful to access webpack's plugins, etc.
 
-### jetpack/postcss-*
+### jetpack/postcss-\*
 
 Several PostCSS modules useful if you're overriding PostCSS config. See [Customizing PostCSS](./04-customizing-postcss.md) for more details
 

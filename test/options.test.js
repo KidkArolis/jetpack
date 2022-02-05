@@ -9,6 +9,7 @@ const base = (pkg, extra = {}) =>
   Object.assign(
     {
       production: false,
+      progress: true,
       dir: dir('fixtures', pkg),
       assets: { js: ['/assets/bundle.js'], css: [], other: [], runtime: null },
       entry: '.',
