@@ -40,7 +40,7 @@ const base = (pkg, extra = {}) =>
   )
 
 test('creates options object from cli flags and jetpack.config.js', (t) => {
-  const program = { args: [], dir: dir('fixtures', 'pkg-swoosh') }
+  const program = { args: [], opts: () => ({ dir: dir('fixtures', 'pkg-swoosh') }) }
   const opts = options('dev', program)
   t.deepEqual(opts, base('pkg-swoosh'))
 })
@@ -48,10 +48,12 @@ test('creates options object from cli flags and jetpack.config.js', (t) => {
 test('accepts cli flags', (t) => {
   const program = {
     args: ['some/path'],
-    dir: dir('fixtures', 'pkg-swoosh'),
-    hot: false,
-    port: 2800,
-    jsx: 'React.createElement'
+    opts: () => ({
+      dir: dir('fixtures', 'pkg-swoosh'),
+      hot: false,
+      port: 2800,
+      jsx: 'React.createElement'
+    })
   }
   const opts = options('dev', program)
   t.deepEqual(
@@ -68,7 +70,7 @@ test('accepts cli flags', (t) => {
 test('accepts individual js module as entry', (t) => {
   const program = {
     args: ['./module.js'],
-    dir: dir('fixtures', 'pkg-individual')
+    opts: () => ({ dir: dir('fixtures', 'pkg-individual') })
   }
   const opts = options('dev', program)
   t.deepEqual(
@@ -80,7 +82,7 @@ test('accepts individual js module as entry', (t) => {
 })
 
 test('defaults to ./src if available', (t) => {
-  const program = { args: [], dir: dir('fixtures', 'pkg-src') }
+  const program = { args: [], opts: () => ({ dir: dir('fixtures', 'pkg-src') }) }
   const opts = options('dev', program)
   t.deepEqual(
     opts,
@@ -93,8 +95,10 @@ test('defaults to ./src if available', (t) => {
 test('creates options object from jetpack.config.js', (t) => {
   const program = {
     args: [],
-    exec: true,
-    dir: dir('fixtures', 'pkg-with-config')
+    opts: () => ({
+      exec: true,
+      dir: dir('fixtures', 'pkg-with-config')
+    })
   }
   const opts = options('dev', program)
   t.deepEqual(
