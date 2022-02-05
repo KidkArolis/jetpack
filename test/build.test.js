@@ -1,6 +1,5 @@
 const test = require('ava')
 const path = require('path')
-const execa = require('execa')
 const fs = require('fs-extra')
 const klaw = require('klaw')
 const os = require('os')
@@ -57,7 +56,8 @@ async function build(t, pkg) {
 
   await fs.remove(dist)
 
-  const result = await execa.node(path.join(__dirname, '..', 'bin', 'jetpack'), ['build', '--dir', base], {
+  const { execaNode } = await import('execa')
+  const result = await execaNode(path.join(__dirname, '..', 'bin', 'jetpack'), ['build', '--dir', base], {
     // on purpose do not run in root of jetpack to ensure we're not
     // accidentally using something from node_modules
     cwd: os.tmpdir(),
