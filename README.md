@@ -9,18 +9,18 @@
 
 - **Sensible defaults** to handle modern JavaScript, CSS and images.
 - **Preconfigured swc-loader** for speedy compilation.
-- **Preconfigured PostCSS** with `postcss-preset-env` including autoprefixing, configurable via `postcss.config.js`.
-- **Differential builds and serving** with modern/legacy bundles served to browsers based on user agent headers.
-- **CSS modules available** by switching one config flag.
-- **Sass support** by installing `sass` or `node-sass`.
-- **Automatic JSX detection** switches between `React.createElement` or `h` depending on dependencies.
-- **Hot reloading built in** for React (using `fast-refresh`) as well as vanilla JavaScript and CSS.
+- **Preconfigured core-js** for polyfilling missing browser features.
+- **Preconfigured postcss-loader** with `postcss-preset-env` including autoprefixing.
+- **Modern bundles by default** with no async/await transpilation.
+- **Differential builds** with modern/legacy bundles served based on user agent headers.
+- **CSS modules** one config flag away.
+- **Sass** auto enabled by installing `node-sass`.
+- **JSX detection** with `React.createElement` or `h` depending on dependencies.
+- **Hot reloading** using `fast-refresh` for React as well as for vanilla JavaScript and CSS.
 - **Automatic chunk splitting** with inlined runtime and HTML generation.
-- **Smooth workflow** for simultaneously developing client and server applications.
 - **Single dependency** with hassle-free updates.
-- **Optionally run anywhere** without installing locally, just like `nodemon`.
 
-**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from old projects. Jetpack has a set of defaults that should get you off the ground quickly. And with the `proxy` config or universal `jetpack/serve` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
+**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from old projects. Jetpack has a set of defaults that should get you off the ground quickly. And with the `proxy` config or the universal `jetpack/serve` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
 
 ## Usage
 
@@ -55,7 +55,7 @@ Or any project on your machine:
 
     $ jetpack --dir ~/projects/manyverse
 
-## Use jetpack with an API
+## Use jetpack with a server API
 
 Another goal of jetpack is to assist you in building complete, production apps. Very often in addition to developing the clientside application, you are also developing an API. Jetpack has a few features to make building such apps easier.
 
@@ -66,7 +66,7 @@ Now you can run your API server together with jetpack in a single command:
     $ jetpack -x
 
 Alternatively, specify any command to execute:
-    $ jetpack -x 'nodemon ./api'
+$ jetpack -x 'nodemon ./api'
 
 Use this even if your server is not written in node
 
@@ -76,24 +76,24 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 
 ## Documentation
 
-* [All configuration options](./docs/01-configuration-options.md)
-* [Customizing Webpack](./docs/02-customizing-webpack.md)
-* [Customizing SWC](./docs/03-customizing-swc.md)
-* [Customizing PostCSS](./docs/04-customizing-postcss.md)
-* [Customizing Browserslist](./docs/05-customizing-browserslist.md)
-* [Workflow and deployment](./docs/06-workflow-and-deployment.md)
-* [Differential serving](./docs/07-differential-serving.md)
-* [Hot reloading](./docs/08-hot-reloading.md)
-* [Comparison to cra, pwa-cli, parcel, etc.](./docs/09-comparison.md)
+- [All configuration options](./docs/01-configuration-options.md)
+- [Customizing Webpack](./docs/02-customizing-webpack.md)
+- [Customizing SWC](./docs/03-customizing-swc.md)
+- [Customizing PostCSS](./docs/04-customizing-postcss.md)
+- [Customizing Browserslist](./docs/05-customizing-browserslist.md)
+- [Workflow and deployment](./docs/06-workflow-and-deployment.md)
+- [Differential serving](./docs/07-differential-serving.md)
+- [Hot reloading](./docs/08-hot-reloading.md)
+- [Comparison to cra, pwa-cli, parcel, etc.](./docs/09-comparison.md)
 
 #### Recipes
 
-* [Deploying to Netlify](./docs/recipe-01-deploying-to-netlify.md) – static apps
-* [Deploying to Now](./docs/recipe-02-deploying-to-now.md) – client and server all in one
-* [Deploying to Netlify + Now](./docs/recipe-03-deploying-to-netlify-plus-now.md) – client and server separated
-* [Adding Flow](./docs/recipe-04-adding-flow.md)
-* [Adding Typescript](./docs/recipe-05-adding-typescript.md)
-* [Server side rendering](./docs/recipe-06-server-side-rendering.md)
+- [Deploying to Netlify](./docs/recipe-01-deploying-to-netlify.md) – static apps
+- [Deploying to Now](./docs/recipe-02-deploying-to-now.md) – client and server all in one
+- [Deploying to Netlify + Now](./docs/recipe-03-deploying-to-netlify-plus-now.md) – client and server separated
+- [Adding Flow](./docs/recipe-04-adding-flow.md)
+- [Adding Typescript](./docs/recipe-05-adding-typescript.md)
+- [Server side rendering](./docs/recipe-06-server-side-rendering.md)
 
 ## Motivation
 
