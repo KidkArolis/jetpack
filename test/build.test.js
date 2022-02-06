@@ -53,18 +53,14 @@ async function build(t, pkg) {
   await fs.remove(dist)
 
   const { execaNode } = await import('execa')
-  const result = await execaNode(
-    path.join(__dirname, '..', 'bin', 'jetpack'),
-    ['build', '--no-progress', '--dir', base],
-    {
-      // on purpose do not run in root of jetpack to ensure we're not
-      // accidentally using something from node_modules
-      cwd: os.tmpdir(),
-      env: {},
-      extendEnv: false,
-      all: true
-    }
-  )
+  const result = await execaNode(path.join(__dirname, '..', 'bin', 'jetpack'), ['build', '--log=info', '--dir', base], {
+    // on purpose do not run in root of jetpack to ensure we're not
+    // accidentally using something from node_modules
+    cwd: os.tmpdir(),
+    env: {},
+    extendEnv: false,
+    all: true
+  })
 
   t.snapshot(
     result.all

@@ -9,7 +9,7 @@ const base = (pkg, extra = {}) =>
   Object.assign(
     {
       production: false,
-      progress: true,
+      logLevels: { info: false, progress: false, none: false },
       dir: dir('fixtures', pkg),
       assets: { js: ['/assets/bundle.js'], css: [], other: [], runtime: [] },
       runtime: null,
@@ -99,6 +99,7 @@ test('creates options object from jetpack.config.js', (t) => {
     args: [],
     opts: () => ({
       exec: true,
+      log: 'info',
       dir: dir('fixtures', 'pkg-with-config')
     })
   }
@@ -107,7 +108,7 @@ test('creates options object from jetpack.config.js', (t) => {
     opts,
     base('pkg-with-config', {
       port: 1234,
-      verbose: true,
+      logLevels: { info: true, progress: false, none: false },
       title: 'testing',
       entry: './app/client',
       exec: 'node ./app/server',

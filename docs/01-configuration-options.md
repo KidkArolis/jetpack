@@ -10,27 +10,27 @@ $ jetpack --help
 Usage: jetpack [options] [command] [path]
 
 Options:
-  -V, --version       output the version number
+  -v, --version       print the version of jetpack and webpack
   -p, --port <n>      port, defaults to 3030
   -d, --dir [path]    run jetpack in the context of this directory
-  -x, --exec [path]   execute an additional process, e.g. an api server
-  -j, --jsx <pragma>  specify jsx pragma, defaults to React.createElement or Preact.h if preact is installed
+  -c, --config        config file to use, defaults to jetpack.config.js
+  --jsx <pragma>      specify jsx pragma, defaults to React.createElement or Preact.h if preact is installed
   -r, --no-hot        disable hot reloading
   -u, --no-minify     disable minification
-  -c, --config        config file to use, defaults to jetpack.config.js
   -m, --modern        build a modern bundle
   -l, --legacy        build a legacy bundle
-  -i, --print-config  print the config used
-  --no-progress       disable progress logging
-  -q, --quiet         log no output
-  -v, --verbose       log verbose output
-  -h, --help          output usage information
+  -x, --exec [path]   execute an additional process, e.g. an api server
+  -i, --print-config  print the webpack config object used in the current command
+  --log [levels]      select log levels: info, progress, none (default: "info,progress")
+  -h, --help          display help for command
 
 Commands:
+  dev                 run the dev server
   build               build for production
   inspect             analyze bundle
   browsers [options]  print supported browsers
   clean               remove the dist dir
+  help [command]      display help for command
 ```
 
 ## Configuration File
@@ -61,6 +61,12 @@ module.exports = {
   // build output path relative to dir
   dist: 'dist',
 
+  // use when uploading assets to CDN, e.g. 'https://storage.googleapis.com/humaans-static/assets/'
+  // or when serving from a different path than the jetpack default. Note: this doesn't affect
+  // the build output structure, you will still get dist/index.html and dist/assets/*, but
+  // manifest.json and index.html will be pointing to this publicPath instead of the default /assets
+  publicPath: '/assets/',
+
   // jsx pragma
   // defaults to `React.createElement` if react is installed, `h` otherwise
   jsx: 'React.createElement',
@@ -89,14 +95,8 @@ module.exports = {
   // e.g. (app) => app.get('/api/foo', (req, res) => {...})
   proxy: {},
 
-  // disable any logging
-  quiet: false,
-
-  // enable more detailed logs
-  verbose: false,
-
-  // log build progress
-  progress: true,
+  // configure logging
+  log: 'info,progress',
 
   // the index.html template generation
   // defaults to package.json#name or 'jetpack' if not available
@@ -137,12 +137,6 @@ module.exports = {
     modern: true,
     legacy: false
   },
-
-  // use when uploading assets to CDN, e.g. 'https://storage.googleapis.com/humaans-static/assets/'
-  // or when serving from a different path than the jetpack default. Note: this doesn't affect
-  // the build output structure, you will still get dist/index.html and dist/assets/*, but
-  // manifest.json and index.html will be pointing to this publicPath instead of the default /assets
-  publicPath: '/assets/',
 
   // webpack transform fn
   webpack: (config, options) => {
