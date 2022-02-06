@@ -245,7 +245,3 @@ An export of the webpack module used by jetpack. Useful to access webpack's plug
 ### jetpack/postcss-\*
 
 Several PostCSS modules useful if you're overriding PostCSS config. See [Customizing PostCSS](./04-customizing-postcss.md) for more details
-
-### jetpack/react-hot-loader
-
-For hot reloading React. See [Hot reloading](./08-hot-reloading.md) for more details

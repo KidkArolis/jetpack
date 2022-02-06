@@ -7,6 +7,7 @@
 - Improve error handling, log unexpected errors when serving bundles in development instead of hanging
 - Remove the graceful termination fix introduced in 0.21.1 as it does not appear to work in node@16
 - **Breaking:** the runtime content is now referenced via `runtime` instead of `assets.runtime` in the template
+- **Breaking:** removed support for react-hot-loader, you can still tweak your config to pull it in, but it is no longer automatically configured, use `react-refresh` instead!
 
 # 0.22.0
 

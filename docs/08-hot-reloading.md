@@ -10,19 +10,6 @@ CSS is hot reloaded automatically with no extra steps.
 
 React components are hot reloaded automatically using `fast-refresh` (via the [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin) plugin).
 
-### Support for react-hot-loader
-
-Alternatively, `react-hot-loader` is still supported in the current version and is used if `react-hot-loader` packaged is installed in your project. If you're using `react-hot-loader`, make sure to wrap your root component using as hot: 
-
-```js
-import React from 'react'
-import { hot } from 'react-hot-loader/root'
-
-const App = () => <div>Hello World!</div>
-
-export default hot(App)
-```
-
 ## Vanilla JS
 
 If you're not using React, hot reloading can still be used. That's something that webpack supports natively. All you need to do is add the following bit of code somewhere in your application, preferably in the entry module.
