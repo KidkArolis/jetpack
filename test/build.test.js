@@ -22,16 +22,14 @@ test('build with scss', async (t) => {
 
 test('build with cjs modules and core-js polyfill', async (t) => {
   const output = await build(t, 'pkg-with-cjs')
-  const manifest = JSON.parse(output['/assets/manifest.json'])
-  const bundle = output[manifest['bundle.js']]
+  const bundle = output['/assets/bundle.js']
   t.true(bundle.includes('// `String.prototype.trim` method'))
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
 test('build with esm modules and core-js polyfill', async (t) => {
   const output = await build(t, 'pkg-with-esm')
-  const manifest = JSON.parse(output['/assets/manifest.json'])
-  const bundle = output[manifest['bundle.js']]
+  const bundle = output['/assets/bundle.js']
   t.true(bundle.includes('// `String.prototype.trim` method'))
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
@@ -39,12 +37,10 @@ test('build with esm modules and core-js polyfill', async (t) => {
 test('build both modern and legacy bundles', async (t) => {
   const output = await build(t, 'pkg-with-legacy')
 
-  const manifest = JSON.parse(output['/assets/manifest.json'])
-  const bundle = output[manifest['bundle.js']]
+  const bundle = output['/assets/bundle.js']
   t.true(bundle.includes("const test = async ()=>'test  '.trim()"))
 
-  const legacyManifest = JSON.parse(output['/assets/manifest.legacy.json'])
-  const legacyBundle = output[legacyManifest['bundle.js']]
+  const legacyBundle = output['/assets/bundle.legacy.js']
   t.true(legacyBundle.includes('return _ctx.abrupt("return", \'test  \'.trim());'))
 
   t.notThrows(() => eval(bundle)) // eslint-disable-line
@@ -103,9 +99,17 @@ async function build(t, pkg) {
 
   const output = {}
   for (const file of files) {
+    const relativeFile = file.replace(dist, '')
     const contents = (await fs.readFile(file)).toString()
     t.snapshot(contents, file.replace(path.join(__dirname, '..'), ''))
-    output[file.replace(dist, '')] = contents
+    output[relativeFile] = contents
+    if (relativeFile.startsWith('/assets/bundle.') && relativeFile.endsWith('.js')) {
+      if (relativeFile.endsWith('.legacy.js')) {
+        output['/assets/bundle.legacy.js'] = contents
+      } else {
+        output['/assets/bundle.js'] = contents
+      }
+    }
   }
   return output
 }

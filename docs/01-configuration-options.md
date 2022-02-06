@@ -172,9 +172,9 @@ The default html template is the following:
   </head>
   <body>
     {{{body}}}
-    {{#if assets.runtime}}
+    {{#if runtime}}
     <script type='text/javascript'>
-    {{{assets.runtime}}}
+    {{{runtime}}}
     </script>
     {{/if}}
     {{#each assets.js}}
@@ -219,7 +219,8 @@ options.assets
 options.assets.js.forEach(script => console.log(script))
 options.assets.css.forEach(script => console.log(script))
 options.assets.other
-options.assets.runtime
+options.assets.runtime // the path to the runtime
+options.runtime // the content of the runtime script
 ```
 
 ### jetpack/proxy
