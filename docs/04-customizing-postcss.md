@@ -13,7 +13,7 @@ Jetpack uses the following PostCSS plugins and presets:
 
 See [lib/webpack.css.js](../lib/webpack.css.js) for the exact configuration.
 
-It's a bit more difficult to extend PostCSS than say Babel. There are 2 options that jetpack provides here.
+There are 2 ways to cusotmize postcss config.
 
 ## Specify extra postcss-preset-env features
 
@@ -43,8 +43,8 @@ module.exports = {
     'jetpack/postcss-preset-env': {
       autoprefixer: { grid: true }
     },
-    'colorguard': {},
-    'stylelint': {}
+    colorguard: {},
+    stylelint: {}
   }
 }
 ```

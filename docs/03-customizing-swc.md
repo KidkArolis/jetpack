@@ -1,4 +1,4 @@
-# Customizing Babel
+# Customizing SWC
 
 Jetpack uses SWC via swc-loader by default, because:
 

@@ -53,8 +53,7 @@ test('accepts cli flags', (t) => {
     opts: () => ({
       dir: dir('fixtures', 'pkg-swoosh'),
       hot: false,
-      port: 2800,
-      jsx: 'React.createElement'
+      port: 2800
     })
   }
   const opts = options('dev', program)
@@ -63,8 +62,7 @@ test('accepts cli flags', (t) => {
     base('pkg-swoosh', {
       hot: false,
       entry: './some/path',
-      port: 2800,
-      jsx: 'React.createElement'
+      port: 2800
     })
   )
 })

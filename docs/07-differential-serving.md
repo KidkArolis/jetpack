@@ -76,12 +76,12 @@ app.get('/api/data', (req, res) => {
 // or legacy and serve an appropriate entry point
 app.get('*', jetpack)
 
-app.listen(3000, function() {
+app.listen(3000, function () {
   console.log('Running server on http://localhost:3000')
 })
 ```
 
-This is the most convenient option, but can be undesirable if you'd like to avoid shipping the entire jetpack package with all of it's dependencies (i.e. `webpack`, `babel`, `postcss`, etc.) to your production apps. To avoid that, consider installing `jetpack` as a dev dependency and using the standalone `jetpack-serve` package instead.
+This is the most convenient option, but can be undesirable if you'd like to avoid shipping the entire jetpack package with all of it's dependencies (i.e. `webpack`, `swc`, `postcss`, etc.) to your production apps. To avoid that, consider installing `jetpack` as a dev dependency and using the standalone `jetpack-serve` package instead.
 
 ### jetpack-serve package
 
@@ -103,7 +103,7 @@ app.get('/api/data', (req, res) => {
 // express.static for the actual assets
 app.use(jetpack())
 
-app.listen(3000, function() {
+app.listen(3000, function () {
   console.log('Running server on http://localhost:3000')
 })
 ```
@@ -113,7 +113,7 @@ Or if you're using something other than express or want to customise the behavio
 ```js
 const jetpack = require('jetpack-serve')
 
-module.exports = function handle (req, res) {
+module.exports = function handle(req, res) {
   const isModern = jetpack.regexp({ modern: true }).test(req.headers['user-agent'])
   if (isModern) {
     // serve modern

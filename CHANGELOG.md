@@ -9,6 +9,7 @@
 - **Breaking:** the runtime content is now referenced via `runtime` instead of `assets.runtime` in the template
 - **Breaking:** simplified logging behind `--log` flag, choose between `info`, `progress` or `none`, with default being `info,progress`
 - **Breaking:** removed support for react-hot-loader, you can still tweak your config to pull it in, but it is no longer automatically configured, use `react-refresh` instead!
+- **Breaking:** remove --jsx command line flag, use config instead
 
 # 0.22.0
 

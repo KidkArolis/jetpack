@@ -14,7 +14,6 @@ Options:
   -p, --port <n>      port, defaults to 3030
   -d, --dir [path]    run jetpack in the context of this directory
   -c, --config        config file to use, defaults to jetpack.config.js
-  --jsx <pragma>      specify jsx pragma, defaults to React.createElement or Preact.h if preact is installed
   -r, --no-hot        disable hot reloading
   -u, --no-minify     disable minification
   -m, --modern        build a modern bundle
