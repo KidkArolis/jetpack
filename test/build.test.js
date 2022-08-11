@@ -38,10 +38,10 @@ test('build both modern and legacy bundles', async (t) => {
   const output = await build(t, 'pkg-with-legacy')
 
   const bundle = output['/assets/bundle.js']
-  t.true(bundle.includes("const test = async ()=>'test  '.trim()"))
+  t.true(bundle.includes('const test = async ()=>"test  ".trim();'))
 
   const legacyBundle = output['/assets/bundle.legacy.js']
-  t.true(legacyBundle.includes('return _ctx.abrupt("return", \'test  \'.trim());'))
+  t.true(legacyBundle.includes('return _ctx.abrupt("return", "test  ".trim());'))
 
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
