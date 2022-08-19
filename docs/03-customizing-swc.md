@@ -33,9 +33,11 @@ These options can be modified via `jetpack.config.js`:
 module.exports = {
   webpack: (config, options) => {
     for (const rule of config.module.rules[0].oneOf) {
-      for (const loader of rule.use) {
-        if (loader.loader.includes('/swc-loader')) {
-          loader.options.env.mode = 'usage'
+      if (rule.use) {
+          for (const loader of rule.use) {
+          if (loader.loader.includes('/swc-loader')) {
+            loader.options.env.mode = 'usage'
+          }
         }
       }
     }
