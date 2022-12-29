@@ -41,7 +41,11 @@ test('build both modern and legacy bundles', async (t) => {
   t.true(bundle.includes('const test = async ()=>"test  ".trim();'))
 
   const legacyBundle = output['/assets/bundle.legacy.js']
-  t.true(legacyBundle.includes('return _ctx.abrupt("return", "test  ".trim());'))
+  t.true(
+    legacyBundle.includes(`var _ref = _asyncToGenerator(function*() {
+        return "test  ".trim();
+    });`)
+  )
 
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })

@@ -2,24 +2,22 @@
 
 Jetpack compiles your code using `swc-loader` and `postcss-preset-env` plugins to ensure the code is ready for all the browsers you support. Those projects follow the lovely [browserlist](https://github.com/browserslist/browserslist) convention.
 
-Jetpack supports differential serving, that is it can produce 2 bundles - modern and legacy. By default jetpack only builds a modern bundle using the following browserslist query:
+Jetpack supports differential serving, that is it can produce 2 bundles - modern and legacy. By default jetpack only builds a modern bundle using the `defaults` [browserslist query](https://browsersl.ist/#q=defaults):
 
 ```
-> 0.5% and last 2 versions
+defaults
+```
+
+Which is shortcut for:
+
+```
+> 0.5%
+last 2 versions
 Firefox ESR
 not dead
-not edge < 16
-not firefox < 60
-not chrome < 61
-not safari < 12
-not opera < 48
-not ios_saf < 11.4
-not and_chr < 71
-not and_ff < 64
-not ie <= 11
 ```
 
-This query ensures that only modern browsers with full support for async/await are targeted. This removes the need to transpiled async/await and many other features.
+This query ensures that only modern browsers with full support for async/await are targeted. This removes the need to transpiled async/await and many other modern JavaScript features.
 
 To configure the list of browsers, you can use any of methods supported by browserslist, but make sure to use `modern` and `legacy` environments:
 
@@ -41,7 +39,7 @@ To configure the list of browsers, you can use any of methods supported by brows
 }
 ```
 
-#### .browserslist config file
+#### .browserslistrc config file
 
 ```
 # Browsers that we support
