@@ -3,10 +3,11 @@
 - Upgrade to webpack 5!
 - Switch to swc-loader from babel for super fast build times!
 - Log build progress (disable with `--no-progress` or `progress: false` in the config
-- Upgrade all dependencies
 - Improve error handling, log unexpected errors when serving bundles in development instead of hanging
 - Remove the graceful termination fix introduced in 0.21.1 as it does not appear to work in node@16
 - Replace url-loader and file-loader with webpack 5 native asset support
+- Upgrade all dependencies
+- **Breaking:** switch to the latest browserslist defaults - this makes both `modern` and `legacy` builds the same by default, but you can still configure each one independently
 - **Breaking:** the runtime content is now referenced via `runtime` instead of `assets.runtime` in the template
 - **Breaking:** simplified logging behind `--log` flag, choose between `info`, `progress` or `none`, with default being `info,progress`
 - **Breaking:** removed support for react-hot-loader, you can still tweak your config to pull it in, but it is no longer automatically configured, use `react-refresh` instead!
