@@ -1,3 +1,7 @@
+# 1.1.0
+
+- Upgrade all dependencies
+
 # 1.0.0
 
 - Jetpack has been used in prod for years now and deserves a 1.0.0 🥳
