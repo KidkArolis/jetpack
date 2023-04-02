@@ -1,6 +1,0 @@
-[Settings]
-  ID = "7ef4fe77-d4cf-4192-bd72-dc1560a82c32"
-
-[Build]
-  Publish = "dist"
-  Functions = ""

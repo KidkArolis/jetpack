@@ -88,9 +88,6 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 
 #### Recipes
 
-- [Deploying to Netlify](./docs/recipe-01-deploying-to-netlify.md) – static apps
-- [Deploying to Now](./docs/recipe-02-deploying-to-now.md) – client and server all in one
-- [Deploying to Netlify + Now](./docs/recipe-03-deploying-to-netlify-plus-now.md) – client and server separated
 - [Adding Flow](./docs/recipe-04-adding-flow.md)
 - [Adding Typescript](./docs/recipe-05-adding-typescript.md)
 - [Server side rendering](./docs/recipe-06-server-side-rendering.md)
