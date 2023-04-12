@@ -66,7 +66,6 @@
     "execa": "^7.1.1",
     "healthier": "^6.3.0",
     "klaw": "^4.1.0",
-    "np": "^7.7.0",
     "prettier": "^2.8.7",
     "sass": "^1.62.0",
     "string-replace-loader": "^3.1.0"
