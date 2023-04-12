@@ -42,7 +42,7 @@ test('build both modern and legacy bundles', async (t) => {
 
   const legacyBundle = output['/assets/bundle.legacy.js']
   t.true(
-    legacyBundle.includes(`var _ref = _asyncToGenerator(function*() {
+    legacyBundle.includes(`var _ref = _async_to_generator(function*() {
         return "test  ".trim();
     });`)
   )

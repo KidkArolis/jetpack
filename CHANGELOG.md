@@ -1,3 +1,8 @@
+# 1.2.0
+
+- Upgrade all dependencies
+- Remove preact example, since the example was out of date
+
 # 1.1.0
 
 - Upgrade all dependencies
