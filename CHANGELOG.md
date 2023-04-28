@@ -1,6 +1,7 @@
 # 1.2.1
 
 - Fix: Correctly parse the `--config` command line arg.
+- Patch dependencies via npm audit
 
 # 1.2.0
 
