@@ -1,3 +1,7 @@
+# 1.2.1
+
+- Fix: Correctly parse the `--config` command line arg.
+
 # 1.2.0
 
 - Upgrade all dependencies
