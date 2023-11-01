@@ -4,6 +4,7 @@
   "main": "index.js",
   "description": "Jetpack wraps webpack and nodemon to give you the best development workflow.",
   "license": "MIT",
+  "author": "Karolis Narkevicius",
   "repository": {
     "type": "git",
     "url": "git://github.com/KidkArolis/jetpack.git"
@@ -13,7 +14,9 @@
     "jetpack",
     "build"
   ],
-  "author": "Karolis Narkevicius",
+  "engines": {
+    "node": ">=16"
+  },
   "bin": {
     "jetpack": "./bin/jetpack"
   },
