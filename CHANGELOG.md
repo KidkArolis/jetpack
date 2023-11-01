@@ -1,6 +1,7 @@
 # 1.3.0
 
-- Upgrade all dependencies
+- Upgrade all dependenciesc
+- Fix the `-x, -exec` command
 
 # 1.2.1
 
