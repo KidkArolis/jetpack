@@ -8,8 +8,8 @@
     "fastify": "^4.15.0"
   },
   "scripts": {
-    "watch": "jetpack -x",
+    "watch": "../../bin/jetpack -x",
     "start": "node .",
-    "build": "jetpack build"
+    "build": "../../bin/jetpack build"
   }
 }

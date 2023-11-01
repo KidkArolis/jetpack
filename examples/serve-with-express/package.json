@@ -8,8 +8,8 @@
     "express": "^4.18.2"
   },
   "scripts": {
-    "watch": "jetpack -x",
+    "watch": "../../bin/jetpack -x",
     "start": "node .",
-    "build": "jetpack build"
+    "build": "../../bin/jetpack build"
   }
 }
