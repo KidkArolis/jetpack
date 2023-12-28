@@ -1,6 +1,11 @@
+# 1.4.0
+
+- Upgrade all dependencies
+- Add support for `jetpack.config.cjs` in addition to `jetpack.config.js` - helps in ESM native Node.js projects
+
 # 1.3.0
 
-- Upgrade all dependenciesc
+- Upgrade all dependencies
 - Fix the `-x, -exec` command
 
 # 1.2.1
