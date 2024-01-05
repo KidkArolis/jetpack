@@ -21,6 +21,9 @@ const base = (pkg, extra = {}) =>
         legacy: false
       },
       jsx: 'h',
+      localEnvs: [
+        'development'
+      ],
       hot: true,
       port: 3030,
       sourceMaps: 'source-map',
