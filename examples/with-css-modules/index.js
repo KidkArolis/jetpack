@@ -1,6 +1,6 @@
-const styles = require('./styles.css')
+import * as styles from './styles.css'
 
-function main () {
+function main() {
   document.querySelector('#root').innerHTML = `
     <div class="${styles.container}">
       <h1>HMR!</h1>

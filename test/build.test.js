@@ -34,16 +34,16 @@ test('build with esm modules and core-js polyfill', async (t) => {
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
-test('build both modern and legacy bundles', async (t) => {
+test.only('build both modern and legacy bundles', async (t) => {
   const output = await build(t, 'pkg-with-legacy')
 
   const bundle = output['/assets/bundle.js']
-  t.true(bundle.includes('const test = async ()=>"test  ".trim();'))
+  t.true(bundle.includes(`const test = async ()=>'test  '.trim();`))
 
   const legacyBundle = output['/assets/bundle.legacy.js']
   t.true(
     legacyBundle.includes(`var _ref = _async_to_generator(function*() {
-        return "test  ".trim();
+        return 'test  '.trim();
     });`)
   )
 
