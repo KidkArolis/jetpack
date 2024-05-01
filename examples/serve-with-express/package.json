@@ -5,7 +5,7 @@
   "browser": "client",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.19.2"
   },
   "scripts": {
     "watch": "../../bin/jetpack -x",
