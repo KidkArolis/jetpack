@@ -1,6 +1,7 @@
 # 2.1.0
 
 - Adds `chunkLoadRetry` option for reloading chunks
+- Upgrade all dependencies
 
 # 2.0.0
 
