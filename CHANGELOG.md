@@ -1,3 +1,7 @@
+# 2.1.0
+
+- Adds `chunkLoadRetry` option for reloading chunks
+
 # 2.0.0
 
 - Breaking change: styles are exported as named exports, so you must now write `import * as style from "./style.css"`, see https://github.com/webpack-contrib/css-loader/releases/tag/v7.0.0 for further details

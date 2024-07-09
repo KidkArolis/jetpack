@@ -81,8 +81,12 @@ module.exports = {
   // in you need to turn off minification in production for any reason
   minify: false,
 
+  // set to `true` to enable retries on chunk loads
+  // defaults to trying 5 times with exponential backoff
+  chunkLoadRetry: false,
+
   // command executed to run the server/api process
-  // this command is exucuted only if `-x` arg is passed to jetpack
+  // this command is executed only if `-x` arg is passed to jetpack
   // even if this option is configured
   exec: 'node .',
 
