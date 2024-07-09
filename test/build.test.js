@@ -34,7 +34,7 @@ test('build with esm modules and core-js polyfill', async (t) => {
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
-test.only('build both modern and legacy bundles', async (t) => {
+test('build both modern and legacy bundles', async (t) => {
   const output = await build(t, 'pkg-with-legacy')
 
   const bundle = output['/assets/bundle.js']
