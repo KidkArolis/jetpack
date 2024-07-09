@@ -31,6 +31,7 @@ const base = (pkg, extra = {}) =>
       exec: false,
       proxy: {},
       minify: true,
+      chunkLoadRetry: false,
       coverage: false,
       publicPath: '/assets/',
       css: {
