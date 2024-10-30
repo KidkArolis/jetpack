@@ -10,7 +10,7 @@ $ jetpack --help
 Usage: jetpack [options] [command] [path]
 
 Options:
-  -v, --version       print the version of jetpack and webpack
+  -v, --version       print the version of jetpack and rspack
   -p, --port <n>      port, defaults to 3030
   -d, --dir [path]    run jetpack in the context of this directory
   -c, --config        config file to use, defaults to jetpack.config.js
@@ -19,7 +19,7 @@ Options:
   -m, --modern        build a modern bundle
   -l, --legacy        build a legacy bundle
   -x, --exec [path]   execute an additional process, e.g. an api server
-  -i, --print-config  print the webpack config object used in the current command
+  -i, --print-config  print the rspack config object used in the current command
   --log [levels]      select log levels: info, progress, none (default: "info,progress")
   -h, --help          display help for command
 
@@ -235,9 +235,9 @@ module.exports = {
 }
 ```
 
-### jetpack/webpack
+### jetpack/rspack
 
-An export of the webpack module used by jetpack. Useful to access webpack's plugins, etc.
+An export of the rspack module used by jetpack. Useful to access rspack's plugins, etc.
 
 ### jetpack/postcss-\*
 

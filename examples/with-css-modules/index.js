@@ -1,4 +1,4 @@
-import * as styles from './styles.css'
+import styles from './styles.css'
 
 function main() {
   document.querySelector('#root').innerHTML = `
