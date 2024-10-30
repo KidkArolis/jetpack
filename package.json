@@ -27,7 +27,6 @@
     "release-alpha": "np --tag=alpha --any-branch --no-cleanup"
   },
   "dependencies": {
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@rspack/core": "^1.0.14",
     "@rspack/plugin-react-refresh": "^1.0.0",
     "@swc/core": "^1.6.13",
