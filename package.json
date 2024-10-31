@@ -52,6 +52,7 @@
     "react-refresh": "^0.14.2",
     "regenerator-runtime": "^0.14.1",
     "require-relative": "^0.8.7",
+    "sass-embedded": "^1.80.5",
     "sass-loader": "^14.2.1",
     "sass-resources-loader": "^2.2.5",
     "send": "^0.18.0",
