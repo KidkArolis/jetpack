@@ -2,10 +2,10 @@
   <img src="https://user-images.githubusercontent.com/324440/48484676-a1690280-e80e-11e8-9835-14c6b0c5bb98.png" alt="jetpack" title="jetpack">
 </p>
 
-<h4 align="center">Webpack made more convenient.</h4>
+<h4 align="center">Rspack made more convenient.</h4>
 <br />
 
-**Jetpack wraps webpack** to create a smoother developer experience. Jetpack can be used instead of webpack, webpack-cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, and can be extended with any webpack configuration.
+**Jetpack wraps rspack** to create a smoother developer experience. Jetpack can be used instead of @rspack/core, @rspack/cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, and can be extended with any webpack configuration.
 
 - **Sensible defaults** to handle modern JavaScript, CSS and images.
 - **Preconfigured swc-loader** for speedy compilation.
@@ -20,7 +20,7 @@
 - **Automatic chunk splitting** with inlined runtime and HTML generation.
 - **Single dependency** with hassle-free updates.
 
-**Why use jetpack?** To avoid rolling your own custom webpack config or having to paste it from old projects. Jetpack has a set of defaults that should get you off the ground quickly. And with the `proxy` config or the universal `jetpack/serve` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
+**Why use jetpack?** To avoid rolling your own custom rspack config or having to paste it from old projects. Jetpack has a set of defaults that should get you off the ground quickly. And with the `proxy` config or the universal `jetpack/serve` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
 
 ## Usage
 
@@ -96,4 +96,4 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 
 This project is an exploration of some ideas accumulated over a few years using webpack in a variety of projects. Webpack is a very powerful and flexible tool. It applies to a lot of use cases and that is one of the reasons it has so many configuration options. Webpack also evolved over the years but preserved backward compatibility as much as possible to support the large ecosystem built around it.
 
-Jetpack is an exploration of how using webpack could be made easier if the defaults, the CLI usage patterns and the configuration would be different.
+Jetpack is an exploration of how using rspack could be made easier if the defaults, the CLI usage patterns and the configuration would be different.
