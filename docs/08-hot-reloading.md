@@ -8,11 +8,11 @@ CSS is hot reloaded automatically with no extra steps.
 
 ## React
 
-React components are hot reloaded automatically using `fast-refresh` (via the [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin) plugin).
+React components are hot reloaded automatically using `fast-refresh` (via the [@rspack/plugin-react-refresh](https://github.com/rspack-contrib/rspack-plugin-react-refresh) plugin).
 
 ## Vanilla JS
 
-If you're not using React, hot reloading can still be used. That's something that webpack supports natively. All you need to do is add the following bit of code somewhere in your application, preferably in the entry module.
+If you're not using React, hot reloading can still be used. That's something that webpack/rspack supports natively. All you need to do is add the following bit of code somewhere in your application, preferably in the entry module.
 
 ```js
 if (module.hot) {
@@ -23,7 +23,7 @@ if (module.hot) {
 }
 ```
 
-Now webpack will re execute the changed code. If you built your application in a way where it can be unrendered in dispose() and rendered again, you'll get a nice hot reloading behaviour. Note, you'll want to store the state on window or in localStorage if you want the app to remain in the same state after rerendering.
+Now rspack will re execute the changed code. If you built your application in a way where it can be unrendered in dispose() and rendered again, you'll get a nice hot reloading behaviour. Note, you'll want to store the state on window or in localStorage if you want the app to remain in the same state after rerendering.
 
 If `module.hot.accept` is not called by your code, you'll only get hot reloading behaviour for your css and will have to manually refresh the page for any other changes.
 

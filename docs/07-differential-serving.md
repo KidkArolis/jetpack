@@ -81,7 +81,7 @@ app.listen(3000, function () {
 })
 ```
 
-This is the most convenient option, but can be undesirable if you'd like to avoid shipping the entire jetpack package with all of it's dependencies (i.e. `webpack`, `swc`, `postcss`, etc.) to your production apps. To avoid that, consider installing `jetpack` as a dev dependency and using the standalone `jetpack-serve` package instead.
+This is the most convenient option, but can be undesirable if you'd like to avoid shipping the entire jetpack package with all of it's dependencies (i.e. `rspack`, `swc`, `postcss`, etc.) to your production apps. To avoid that, consider installing `jetpack` as a dev dependency and using the standalone `jetpack-serve` package instead.
 
 ### jetpack-serve package
 

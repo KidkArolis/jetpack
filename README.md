@@ -5,7 +5,7 @@
 <h4 align="center">Rspack made more convenient.</h4>
 <br />
 
-**Jetpack wraps rspack** to create a smoother developer experience. Jetpack can be used instead of @rspack/core, @rspack/cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around webpack, and can be extended with any webpack configuration.
+**Jetpack wraps rspack** to create a smoother developer experience. Jetpack can be used instead of @rspack/core, @rspack/cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around rspack, and can be extended with any rspack configuration.
 
 - **Sensible defaults** to handle modern JavaScript, CSS and images.
 - **Preconfigured swc-loader** for speedy compilation.
@@ -77,7 +77,7 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 ## Documentation
 
 - [All configuration options](./docs/01-configuration-options.md)
-- [Customizing Webpack](./docs/02-customizing-webpack.md)
+- [Customizing Rspack](./docs/02-customizing-rspack.md)
 - [Customizing SWC](./docs/03-customizing-swc.md)
 - [Customizing PostCSS](./docs/04-customizing-postcss.md)
 - [Customizing Browserslist](./docs/05-customizing-browserslist.md)
@@ -96,4 +96,6 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 
 This project is an exploration of some ideas accumulated over a few years using webpack in a variety of projects. Webpack is a very powerful and flexible tool. It applies to a lot of use cases and that is one of the reasons it has so many configuration options. Webpack also evolved over the years but preserved backward compatibility as much as possible to support the large ecosystem built around it.
 
-Jetpack is an exploration of how using rspack could be made easier if the defaults, the CLI usage patterns and the configuration would be different.
+Rspack is a webpack compatible Rust rewrite that offers a significant performance boost over webpack.
+
+Jetpack is an exploration of how using webpack/rspack could be made easier if the defaults, the CLI usage patterns and the configuration came with good defaults.

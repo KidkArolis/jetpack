@@ -1,3 +1,10 @@
+# 3.0.0
+
+**Replacing webpack with rspack! 🎉**
+
+- Breaking change: Replaces `webpack` with `rspack` - this adds a significant performance boost to jetpack. This is largely backwards compatible. However, if you customise your webpack in jetpack.config.js you might need to read the rspack [migration guides](https://rspack.dev/guide/migration/webpack).
+- Upgrade `sass-loader` to use the modern `sass-embedded` which is significantly faster, this should be backwards compatible, but expect sass warnings if you're using older sass syntax.
+
 # 2.1.0
 
 - Adds `chunkLoadRetry` option for reloading chunks
