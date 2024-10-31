@@ -1,11 +1,11 @@
 ## Comparison
 
-There exist many tools that try and make working with webpack easier:
+There exist many tools that try and make working with webpack/rspack easier:
 
 * **create-react-app** – a great and powerful tool. I personally tend not to use, because I find it slightly big and intimidating with a large codebase, it's overly React specific and brings in opinionated tools such as `jest` testing framework. But it's a very comprehensive tool with great documentation, so keep using it if it works for you!
 * **pwa-cli** – very similar to what jetpack is trying to do. Has a neat plugin system for extending its functionality beyond what the core provides. Why jetpack and not pwa-cli? Not sure, you'll have to try both and see what you prefer.
 
-There are also alternatives to webpack:
+There are also alternatives to webpack/rspack:
 
 * **Parcel** is making 🌊. Let's see what version 2.0 brings to the table. It has very similar goals to that of jetpack's – most things should just work and be convenient without configuration.
 * **Browserify** – probably still has a hard core fan base ;) with dev servers similar to jetpack, e.g. [budo](https://github.com/mattdesl/budo) and [bankai](https://github.com/choojs/bankai) to mention a couple.

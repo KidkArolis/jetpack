@@ -1,4 +1,4 @@
-# Customizing Webpack
+# Customizing Rspack
 
 You can extend the default webpack config using `jetpack.config.js`.
 
@@ -6,7 +6,7 @@ Here's an example of using an extra loader and a couple plugins.
 
 ```js
 // jetpack exposes it's own copy of webpack so that you can use webpack plugins
-const webpack = require('jetpack/webpack')
+const rspack = require('jetpack/rspack')
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
 
 module.exports = {
@@ -21,7 +21,7 @@ module.exports = {
     // reference jetpack's webpack to use the
     // plugins that ship with webpack
     config.plugins.push(
-     new webpack.NamedModulesPlugin()
+     new rspack.DefinePlugin()
     )
 
     // in production, add the lovely Workbox plugin
