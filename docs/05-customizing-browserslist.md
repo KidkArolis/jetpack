@@ -1,6 +1,6 @@
 # Customizing browserslist
 
-Jetpack compiles your code using `swc-loader` and `postcss-preset-env` plugins to ensure the code is ready for all the browsers you support. Those projects follow the lovely [browserlist](https://github.com/browserslist/browserslist) convention.
+Jetpack compiles your code using `swc-loader` and rspack's `builtin:lightningcss-loader` plugins to ensure the code is ready for all the browsers you support. Those projects follow the lovely [browserlist](https://github.com/browserslist/browserslist) convention.
 
 Jetpack supports differential serving, that is it can produce 2 bundles - modern and legacy. By default jetpack only builds a modern bundle using the `defaults` [browserslist query](https://browsersl.ist/#q=defaults):
 

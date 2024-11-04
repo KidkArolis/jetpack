@@ -3,6 +3,7 @@
 **Replacing webpack with rspack! 🎉**
 
 - Breaking change: Replaces `webpack` with `rspack` - this adds a significant performance boost to jetpack. This is largely backwards compatible. However, if you customise your webpack in jetpack.config.js you might need to read the rspack [migration guides](https://rspack.dev/guide/migration/webpack).
+- Breaking change: Replaces `postcss` with the faster `lightningcss` via rspack's builtin loaders. It serves the same purpose of lowering css syntax for older browsers.
 - Upgrade `sass-loader` to use the modern `sass-embedded` which is significantly faster, this should be backwards compatible, but expect sass warnings if you're using older sass syntax.
 
 # 2.1.0

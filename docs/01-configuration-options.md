@@ -122,12 +122,14 @@ module.exports = {
     // css modules
     modules: false,
 
-    // a shortcut for setting postcss-preset-env features
-    // by default postcss-preset-env already autoprefixes your css
-    // and enables stage 2 features https://preset-env.cssdb.org/features#stage-2
-    // this allows you to turn on extra features
-    // e.g. { 'nesting-rules': true, 'custom-media-queries': true }
-    features: {},
+    // a shortcut for setting lightningcss feature flags
+    // e.g. { 'nesting': true, colorFunction: true }
+    // see https://rspack.dev/guide/features/builtin-lightningcss-loader#options
+    // and https://lightningcss.dev/transpilation.html
+    features: {
+      include: {},
+      exclude: {},
+    },
 
     // when using Sass, you can specify paths to your global scss resources
     // so that you can use your shared variables & mixins across all Sass styles
@@ -238,7 +240,3 @@ module.exports = {
 ### jetpack/rspack
 
 An export of the rspack module used by jetpack. Useful to access rspack's plugins, etc.
-
-### jetpack/postcss-\*
-
-Several PostCSS modules useful if you're overriding PostCSS config. See [Customizing PostCSS](./04-customizing-postcss.md) for more details

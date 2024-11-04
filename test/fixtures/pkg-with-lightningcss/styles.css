@@ -1,0 +1,28 @@
+.foo {
+  flex: 1;
+}
+.bar {
+  flex: 1 1;
+}
+.foz {
+  flex: 1 1 0;
+}
+.baz {
+  flex: 1 1 0px;
+}
+
+@custom-media --wide-window (min-width: 30em);
+
+@media (--wide-window) {
+  background: yellow;
+}
+
+.logo {
+  backdrop-filter: blur(10px);
+}
+
+.button {
+  -webkit-transition: background 200ms;
+  -moz-transition: background 200ms;
+  transition: background 200ms;
+}
