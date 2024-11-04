@@ -1,4 +1,4 @@
-const webpackConfigForTests = require('../../helpers/webpackConfigForTests')
+const rspackConfigForTests = require('../../helpers/rspackConfigForTests')
 
 module.exports = {
   minify: false,
@@ -8,7 +8,7 @@ module.exports = {
       'nesting-rules': true
     }
   },
-  webpack(config) {
-    webpackConfigForTests(config)
+  rspack(config) {
+    rspackConfigForTests(config)
   }
 }

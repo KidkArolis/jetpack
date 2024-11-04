@@ -12,7 +12,7 @@ React components are hot reloaded automatically using `fast-refresh` (via the [@
 
 ## Vanilla JS
 
-If you're not using React, hot reloading can still be used. That's something that webpack/rspack supports natively. All you need to do is add the following bit of code somewhere in your application, preferably in the entry module.
+If you're not using React, hot reloading can still be used. That's something that rspack supports natively. All you need to do is add the following bit of code somewhere in your application, preferably in the entry module.
 
 ```js
 if (module.hot) {

@@ -1,16 +1,16 @@
 # Customizing Rspack
 
-You can extend the default webpack config using `jetpack.config.js`.
+You can extend the default rspack config using `jetpack.config.js`.
 
 Here's an example of using an extra loader and a couple plugins.
 
 ```js
-// jetpack exposes it's own copy of webpack so that you can use webpack plugins
+// jetpack exposes it's own copy of rspack so that you can use rspack plugins
 const rspack = require('jetpack/rspack')
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
 
 module.exports = {
-  webpack: (config, options) => {
+  rspack: (config, options) => {
     // unshift to run before other loaders, since
     // we're overriding the preconfigured svg loader
     config.module.rules[0].oneOf.unshift({
@@ -18,8 +18,8 @@ module.exports = {
       use: ['@svgr/webpack']
     })
 
-    // reference jetpack's webpack to use the
-    // plugins that ship with webpack
+    // reference jetpack's rspack to use the
+    // plugins that ship with rspack
     config.plugins.push(
      new rspack.DefinePlugin()
     )
