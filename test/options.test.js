@@ -36,7 +36,10 @@ const base = (pkg, extra = {}) =>
       publicPath: '/assets/',
       css: {
         modules: false,
-        features: {}
+        features: {
+          include: null,
+          exclude: null
+        }
       }
     },
     extra

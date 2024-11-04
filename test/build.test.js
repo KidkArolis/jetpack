@@ -12,8 +12,47 @@ test('build with all the features', async (t) => {
   await build(t, 'pkg-with-everything')
 })
 
-test('build with postcss config', async (t) => {
-  await build(t, 'pkg-with-postcss-config')
+test('build with lightningcss syntax lowering', async (t) => {
+  const output = await build(t, 'pkg-with-lightningcss')
+
+  const base = path.join(__dirname, 'fixtures', 'pkg-with-lightningcss')
+  const inputCssPath = path.join(base, 'styles.css')
+  const inputCss = (await fs.readFile(inputCssPath)).toString()
+
+  t.true(
+    inputCss.includes(
+      `
+.logo {
+  backdrop-filter: blur(10px);
+}
+
+.button {
+  -webkit-transition: background 200ms;
+  -moz-transition: background 200ms;
+  transition: background 200ms;
+}
+    `.trim()
+    )
+  )
+
+  const outputPaths = Object.keys(output)
+  const outputCssFile = outputPaths.find((f) => f.endsWith('.css'))
+  const outputCss = output[outputCssFile]
+
+  t.true(
+    outputCss.includes(
+      `
+.logo {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.button {
+  transition: background .2s;
+}
+  `.trim()
+    )
+  )
 })
 
 test('build with scss', async (t) => {
