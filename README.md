@@ -5,7 +5,7 @@
 <h4 align="center">Rspack made more convenient.</h4>
 <br />
 
-**Jetpack wraps rspack** to create a smoother developer experience. Jetpack can be used instead of @rspack/core, @rspack/cli, webpack-dev-server and webpack-dev-middleware without writing any configuration. Jetpack is a thin wrapper around rspack, and can be extended with any rspack configuration.
+**Jetpack wraps rspack** to create a smoother developer experience. Jetpack can be used instead of @rspack/core, @rspack/cli and @rspack/dev-server without writing any configuration. Jetpack is a thin wrapper around rspack, and can be extended with any rspack configuration.
 
 - **Sensible defaults** to handle modern JavaScript, CSS and images.
 - **Preconfigured swc-loader** for speedy compilation.
@@ -20,13 +20,13 @@
 - **Automatic chunk splitting** with inlined runtime and HTML generation.
 - **Single dependency** with hassle-free updates.
 
-**Why use jetpack?** To avoid rolling your own custom rspack config or having to paste it from old projects. Jetpack has a set of defaults that should get you off the ground quickly. And with the `proxy` config or the universal `jetpack/serve` middleware you don't have to worry about wiring up webpack dev middleware or dev server – everything _just works_.
+**Why use jetpack?** To avoid rolling your own custom rspack config or having to paste it from old projects. Jetpack has a set of defaults that should get you off the ground quickly. And with the `proxy` config or the universal `jetpack/serve` middleware you don't have to worry about wiring up rspack's dev middleware or dev server – everything _just works_.
 
 ## Usage
 
 Install globally or locally:
 
-    $ npm install -g jetpack
+    $ npm install -g jetpack@alpha
 
 In your project with `package.json` or `index.js`, start your app on `http://localhost:3030`:
 
@@ -100,6 +100,6 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 
 This project is an exploration of some ideas accumulated over a few years using webpack in a variety of projects. Webpack is a very powerful and flexible tool. It applies to a lot of use cases and that is one of the reasons it has so many configuration options. Webpack also evolved over the years but preserved backward compatibility as much as possible to support the large ecosystem built around it.
 
-Rspack is a webpack compatible Rust rewrite that offers a significant performance boost over webpack.
+Rspack - a webpack compatible Rust rewrite has since been released and offers a significant performance boost over webpack. Jetpack has been updated to use rspack under the hood for improved performance.
 
 Jetpack is an exploration of how using webpack/rspack could be made easier if the defaults, the CLI usage patterns and the configuration came with good defaults.
