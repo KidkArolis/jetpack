@@ -40,10 +40,6 @@ Inspect the bundle size and make up:
 
     $ jetpack inspect
 
-Inspect the build performance and bundle details:
-
-    $ jetpack doctor
-
 Print what browsers will be supported:
 
     $ jetpack browsers
