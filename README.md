@@ -26,7 +26,7 @@
 
 Install globally or locally:
 
-    $ npm install -g jetpack@alpha
+    $ npm install -g jetpack
 
 In your project with `package.json` or `index.js`, start your app on `http://localhost:3030`:
 
