@@ -46,21 +46,21 @@ const base = (pkg, extra = {}) =>
   )
 
 test('creates options object from cli flags and jetpack.config.js', (t) => {
-  const program = { args: [], opts: () => ({ dir: dir('fixtures', 'pkg-swoosh') }) }
-  const opts = options('dev', program)
+  const args = { flags: { dir: dir('fixtures', 'pkg-swoosh') } }
+  const opts = options('dev', args)
   t.deepEqual(opts, base('pkg-swoosh'))
 })
 
 test('accepts cli flags', (t) => {
-  const program = {
-    args: ['some/path'],
-    opts: () => ({
+  const args = {
+    entry: 'some/path',
+    flags: {
       dir: dir('fixtures', 'pkg-swoosh'),
       hot: false,
       port: 2800
-    })
+    }
   }
-  const opts = options('dev', program)
+  const opts = options('dev', args)
   t.deepEqual(
     opts,
     base('pkg-swoosh', {
@@ -72,11 +72,11 @@ test('accepts cli flags', (t) => {
 })
 
 test('accepts individual js module as entry', (t) => {
-  const program = {
-    args: ['./module.js'],
-    opts: () => ({ dir: dir('fixtures', 'pkg-individual') })
+  const args = {
+    entry: './module.js',
+    flags: { dir: dir('fixtures', 'pkg-individual') }
   }
-  const opts = options('dev', program)
+  const opts = options('dev', args)
   t.deepEqual(
     opts,
     base('pkg-individual', {
@@ -86,8 +86,8 @@ test('accepts individual js module as entry', (t) => {
 })
 
 test('defaults to ./src if available', (t) => {
-  const program = { args: [], opts: () => ({ dir: dir('fixtures', 'pkg-src') }) }
-  const opts = options('dev', program)
+  const args = { flags: { dir: dir('fixtures', 'pkg-src') } }
+  const opts = options('dev', args)
   t.deepEqual(
     opts,
     base('pkg-src', {
@@ -97,15 +97,14 @@ test('defaults to ./src if available', (t) => {
 })
 
 test('creates options object from jetpack.config.js', (t) => {
-  const program = {
-    args: [],
-    opts: () => ({
+  const args = {
+    flags: {
       exec: true,
       log: 'info',
       dir: dir('fixtures', 'pkg-with-config')
-    })
+    }
   }
-  const opts = options('dev', program)
+  const opts = options('dev', args)
   t.deepEqual(
     opts,
     base('pkg-with-config', {

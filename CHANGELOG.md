@@ -1,3 +1,10 @@
+# 3.1.0
+
+- Removed `commander` in favor of native Node.js `parseArgs` util, this might have slight affect on cli flags
+- Upgrade all dependencies, including `rspack@1.1.2`
+- Switch `core-js` to usage mode for smaller bundles as less and less `core-js` is needed for smaller browsers
+- Improve portability of `jetpack` - running it without installing it locally should work better now
+
 # 3.0.0
 
 **Replacing webpack with rspack! 🎉**

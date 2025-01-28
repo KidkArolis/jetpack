@@ -59,17 +59,17 @@ test('build with scss', async (t) => {
   await build(t, 'pkg-with-scss')
 })
 
-test('build with cjs modules and core-js polyfill', async (t) => {
+test('build with cjs modules for modern js', async (t) => {
   const output = await build(t, 'pkg-with-cjs')
   const bundle = output['/assets/bundle.js']
-  t.true(bundle.includes('// `String.prototype.trim` method'))
+  t.true(bundle.includes(`'test  '.trim()`))
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
-test('build with esm modules and core-js polyfill', async (t) => {
+test('build with esm modules for modern js', async (t) => {
   const output = await build(t, 'pkg-with-esm')
   const bundle = output['/assets/bundle.js']
-  t.true(bundle.includes('// `String.prototype.trim` method'))
+  t.true(bundle.includes(`'test  '.trim()`))
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
@@ -85,6 +85,7 @@ test('build both modern and legacy bundles', async (t) => {
         return 'test  '.trim();
     });`)
   )
+  t.true(legacyBundle.includes('// `String.prototype.trim` method'))
 
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
