@@ -20,7 +20,7 @@ const base = (pkg, extra = {}) =>
         modern: true,
         legacy: false
       },
-      jsx: 'h',
+      react: false,
       hot: true,
       port: 3030,
       sourceMaps: 'source-map',
