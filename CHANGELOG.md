@@ -3,6 +3,7 @@
 - Add `typescript` support, compiled by `builtin:swc-loader`
 - Use `core-js@3.40` to correctly include latest polyfills
 - Switch to `builtin:swc-loader`
+- Make it easier to import global css when using css modules - css in *.global.css or node_modules no longer considered as css modules
 - Remove `h` as the default jsx pragma, instead use swc-loader's automatic mode for react
 
 # 3.1.0

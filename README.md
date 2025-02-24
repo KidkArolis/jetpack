@@ -10,12 +10,12 @@
 - **Sensible defaults** to handle modern JavaScript, CSS and images.
 - **Preconfigured swc-loader** for speedy compilation.
 - **Preconfigured core-js** for polyfilling missing browser features.
-- **Preconfigured postcss-loader** with `postcss-preset-env` including autoprefixing.
+- **Preconfigured lightningcss** for css syntax lowering.
 - **Modern bundles by default** with no async/await transpilation.
 - **Differential builds** with modern/legacy bundles served based on user agent headers.
 - **CSS modules** one config flag away.
-- **Sass** auto enabled by installing `node-sass`.
-- **JSX detection** with `React.createElement` or `h` depending on dependencies.
+- **SCSS** preconfigured.
+- **JSX detection** preconfigured.
 - **Hot reloading** using `fast-refresh` for React as well as for vanilla JavaScript and CSS.
 - **Automatic chunk splitting** with inlined runtime and HTML generation.
 - **Single dependency** with hassle-free updates.
@@ -79,7 +79,6 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 - [All configuration options](./docs/01-configuration-options.md)
 - [Customizing Rspack](./docs/02-customizing-rspack.md)
 - [Customizing SWC](./docs/03-customizing-swc.md)
-- [Customizing PostCSS](./docs/04-customizing-postcss.md)
 - [Customizing Browserslist](./docs/05-customizing-browserslist.md)
 - [Workflow and deployment](./docs/06-workflow-and-deployment.md)
 - [Differential serving](./docs/07-differential-serving.md)
