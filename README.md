@@ -85,11 +85,6 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 - [Differential serving](./docs/07-differential-serving.md)
 - [Hot reloading](./docs/08-hot-reloading.md)
 - [Comparison to cra, pwa-cli, parcel, etc.](./docs/09-comparison.md)
-
-#### Recipes
-
-- [Adding Flow](./docs/recipe-04-adding-flow.md)
-- [Adding Typescript](./docs/recipe-05-adding-typescript.md)
 - [Server side rendering](./docs/recipe-06-server-side-rendering.md)
 
 ## Motivation

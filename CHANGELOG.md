@@ -1,3 +1,10 @@
+# 4.0.0
+
+- Add `typescript` support, compiled by `builtin:swc-loader`
+- Use `core-js@3.40` to correctly include latest polyfills
+- Switch to `builtin:swc-loader`
+- Remove `h` as the default jsx pragma, instead use swc-loader's automatic mode for react
+
 # 3.1.0
 
 - Removed `commander` in favor of native Node.js `parseArgs` util, this might have slight affect on cli flags
