@@ -87,6 +87,8 @@ test('build both modern and legacy bundles', async (t) => {
   )
   t.true(legacyBundle.includes('// `String.prototype.trim` method'))
 
+  t.true(legacyBundle.includes('`Array.prototype.toReversed` method'))
+
   t.notThrows(() => eval(bundle)) // eslint-disable-line
 })
 
