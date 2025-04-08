@@ -1,3 +1,8 @@
+# 4.1.0
+
+- Upgrade all dependencies
+- Upgrade to express@5
+
 # 4.0.0
 
 - Add `typescript` support, compiled by `builtin:swc-loader`
