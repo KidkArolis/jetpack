@@ -1,8 +1,3 @@
-# 4.1.0
-
-- Upgrade all dependencies
-- Upgrade to express@5
-
 # 4.0.0
 
 - Add `typescript` support, compiled by `builtin:swc-loader`
@@ -10,6 +5,7 @@
 - Switch to `builtin:swc-loader`
 - Make it easier to import global css when using css modules - css in *.global.css or node_modules no longer considered as css modules
 - Remove `h` as the default jsx pragma, instead use swc-loader's automatic mode for react
+- Upgrade to express@5
 
 # 3.1.0
 
