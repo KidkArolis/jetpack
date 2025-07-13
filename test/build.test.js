@@ -24,6 +24,7 @@ test('build with lightningcss syntax lowering', async (t) => {
       `
 .logo {
   backdrop-filter: blur(10px);
+  background: yellow;
 }
 
 .button {
@@ -43,8 +44,8 @@ test('build with lightningcss syntax lowering', async (t) => {
     outputCss.includes(
       `
 .logo {
-  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
+  background: #ff0;
 }
 
 .button {
@@ -81,9 +82,9 @@ test('build both modern and legacy bundles', async (t) => {
 
   const legacyBundle = output['/assets/bundle.legacy.js']
   t.true(
-    legacyBundle.includes(`var _ref = _async_to_generator(function*() {
+    legacyBundle.includes(`var test = ()=>_async_to_generator(function*() {
         return 'test  '.trim();
-    });`)
+    })();`)
   )
   t.true(legacyBundle.includes('// `String.prototype.trim` method'))
 

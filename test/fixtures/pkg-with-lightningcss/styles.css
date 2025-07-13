@@ -19,6 +19,7 @@
 
 .logo {
   backdrop-filter: blur(10px);
+  background: yellow;
 }
 
 .button {
