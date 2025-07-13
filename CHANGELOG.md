@@ -1,3 +1,8 @@
+# 4.1.0
+
+- Make rspack config creation synchronous
+- Use `jetpack/rspack.config.js` to import the full rspack config object as used by jetpack
+
 # 4.0.0
 
 - Add `typescript` support, compiled by `builtin:swc-loader`
