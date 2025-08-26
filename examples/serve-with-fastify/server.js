@@ -8,8 +8,8 @@ app.get('/api/data', (req, res) => {
 })
 
 app.get('/*', (req, res) => {
-  jetpack(req.req, res.res).then(() => {
-     reply.sent = true
+  jetpack(req.raw, res.raw).then(() => {
+     res.sent = true
   })
 })
 

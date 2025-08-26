@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './App.scss'
+import './App.scss'
 
 function HooksCounter () {
   const [count, setCount] = useState(0)
@@ -29,7 +29,7 @@ function App () {
       Class component:
       <ClassCounter />
     </>
-    
+
 }
 
 export default App

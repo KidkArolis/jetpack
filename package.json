@@ -54,9 +54,10 @@
   },
   "devDependencies": {
     "ava": "^6.4.1",
+    "eslint": "^9.34.0",
     "execa": "^9.6.0",
-    "healthier": "^7.0.0",
     "klaw": "^4.1.0",
+    "neostandard": "^0.12.2",
     "prettier": "^3.6.2",
     "string-replace-loader": "^3.2.0"
   },
