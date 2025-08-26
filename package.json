@@ -42,7 +42,6 @@
     "prepend-transform": "0.0.1019",
     "react-refresh": "^0.17.0",
     "regenerator-runtime": "^0.14.1",
-    "require-relative": "^0.8.7",
     "sass-embedded": "^1.91.0",
     "sass-loader": "^16.0.5",
     "sass-resources-loader": "^2.2.5",
