@@ -3,6 +3,7 @@
 - Update to Rspack 1.5
 - Update all dependencies to remove vulnerabilities
 - Replace the use of `inquirer-confirm` dependency with a local implementation
+- Remove the use of `fs-extra` in favor of Node built in fs module
 
 # 4.1.0
 

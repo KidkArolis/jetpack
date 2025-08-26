@@ -1,6 +1,6 @@
 const test = require('ava')
 const path = require('path')
-const fs = require('fs-extra')
+const fs = require('fs').promises
 const klaw = require('klaw')
 const os = require('os')
 
@@ -97,7 +97,7 @@ async function build(t, pkg) {
   const base = path.join(__dirname, 'fixtures', pkg)
   const dist = path.join(base, 'dist')
 
-  await fs.remove(dist)
+  await fs.rm(dist, { recursive: true, force: true })
 
   const { execaNode } = await import('execa')
   const result = await execaNode(path.join(__dirname, '..', 'bin', 'jetpack'), ['build', '--log=info', '--dir', base], {
