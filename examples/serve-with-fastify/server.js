@@ -9,10 +9,10 @@ app.get('/api/data', (req, res) => {
 
 app.get('/*', (req, res) => {
   jetpack(req.raw, res.raw).then(() => {
-     res.sent = true
+     res.hijack()
   })
 })
 
-app.listen(3000, function () {
+app.listen({ port: 3000 }, function () {
   console.log('Running server on http://localhost:3000')
 })

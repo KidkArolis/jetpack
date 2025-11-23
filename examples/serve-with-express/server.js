@@ -7,8 +7,9 @@ app.get('/api/data', (req, res) => {
   res.send('hello')
 })
 
-app.get('*', jetpack)
+app.get('/*splat', jetpack)
 
-app.listen(3000, function () {
+const server = app.listen(3000)
+server.on('listening', function () {
   console.log('Running server on http://localhost:3000')
 })

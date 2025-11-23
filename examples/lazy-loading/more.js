@@ -1,6 +1,6 @@
-require('./more.css')
+import './more.css'
 
-module.exports = function more () {
+export function more () {
   const p = document.createElement('p')
   p.className = 'more'
   p.innerText = 'more content'

@@ -1,4 +1,4 @@
-require('./styles.css')
+import './styles.css'
 
 function main () {
   document.querySelector('#root').innerHTML = `
@@ -9,7 +9,7 @@ function main () {
   `
 
   document.querySelector('#load').addEventListener('click', () => {
-    require(['./more.js'], (more) => {
+    import('./more.js').then(({ more }) => {
       const p = Array.from(document.querySelectorAll('p'))
       p[p.length - 1].appendChild(more())
     })

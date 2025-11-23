@@ -5,5 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "serve": "^14.2.4"
+  },
+  "scripts": {
+    "start": "../../bin/jetpack"
   }
 }
