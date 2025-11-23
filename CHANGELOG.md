@@ -1,3 +1,8 @@
+# 4.3.0
+
+- Update to Rspack 1.6.4
+- Update all dependencies
+
 # 4.2.1
 
 - Update to Rspack 1.5.2
