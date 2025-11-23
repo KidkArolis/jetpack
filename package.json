@@ -21,7 +21,7 @@
     "jetpack": "./bin/jetpack"
   },
   "scripts": {
-    "test": "ava && healthier && prettier --check '**/*.{js,json,css,yml}'",
+    "test": "ava && eslint . && prettier --check '**/*.{js,json,css,yml}'",
     "format": "prettier --write '**/*.{js,json,css,yml}'",
     "release": "np",
     "release-alpha": "np --tag=alpha --any-branch --no-cleanup"
@@ -60,18 +60,6 @@
     "neostandard": "^0.12.2",
     "prettier": "^3.6.2",
     "string-replace-loader": "^3.2.0"
-  },
-  "healthier": {
-    "ignore": [
-      "examples",
-      "test/fixtures/pkg-with-everything"
-    ],
-    "global": [
-      "describe",
-      "it",
-      "afterEach",
-      "beforeEach"
-    ]
   },
   "ava": {
     "files": [
