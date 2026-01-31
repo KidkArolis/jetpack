@@ -1,3 +1,9 @@
+# 4.4.0
+
+- Update to Rspack 1.7.4
+- Nicer looking error page when jetpack is not running
+- Allow silencing hmr logs in the browser
+
 # 4.3.0
 
 - Update to Rspack 1.6.4

@@ -21,7 +21,7 @@ const base = (pkg, extra = {}) =>
         legacy: false
       },
       react: false,
-      hot: true,
+      hot: { enabled: true, quiet: false },
       port: 3030,
       sourceMaps: 'source-map',
       title: 'jetpack',
@@ -64,7 +64,7 @@ test('accepts cli flags', (t) => {
   t.deepEqual(
     opts,
     base('pkg-swoosh', {
-      hot: false,
+      hot: { enabled: false, quiet: false },
       entry: './some/path',
       port: 2800
     })

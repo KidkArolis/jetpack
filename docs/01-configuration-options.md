@@ -72,6 +72,8 @@ module.exports = {
 
   // hot reloading
   hot: true,
+  // or with options:
+  // hot: { quiet: true },  // silence HMR logs in browser console
 
   // unified flag for source maps for js and css
   // follows rspack naming, but can also be simply set to true
