@@ -1,3 +1,8 @@
+# 4.4.1
+
+- Fix Firefox HMR warning
+- Fix error page render when assets are not published to npm
+
 # 4.4.0
 
 - Update to Rspack 1.7.4
