@@ -1,3 +1,7 @@
+# 4.4.2
+
+- Fix proxy error handling when headers have already been sent
+
 # 4.4.1
 
 - Fix Firefox HMR warning
