@@ -1,0 +1,16 @@
+{
+  "name": "with-api-fetch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "../../bin/jetpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-hot-loader": "^4.13.1"
+  }
+}
