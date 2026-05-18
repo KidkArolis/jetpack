@@ -5,6 +5,7 @@
 - Breaking change: `jetpack/options` now exports a function instead of a resolved options object. Use `import getOptions from 'jetpack/options'; const options = await getOptions()`.
 - Breaking change: `jetpack/rspack.config` now exports an async function that returns the rspack config. Pass it directly to rspack — `rspack --config node_modules/jetpack/rspack.config.js` continues to work since rspack supports async config functions.
 - Replace `eslint` + `neostandard` + `prettier` with `oxlint` + `oxfmt`.
+- Drop seven dependencies in favour of Node built-ins or short inline equivalents: `@swc/core` (unused), `regenerator-runtime` (no longer needed by modern SWC output), `parseurl` (use `URL`), `klaw` (use `fs.readdir` recursive), `prepend-transform` (inline `Transform` stream), `webpack-format-messages` (inlined), and `execa` (use `node:child_process.spawn`).
 
 # 4.4.2
 

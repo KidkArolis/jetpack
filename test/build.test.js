@@ -2,9 +2,8 @@ import test from 'ava'
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import os from 'node:os'
+import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import klaw from 'klaw'
-import { execaNode } from 'execa'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -103,13 +102,11 @@ async function build(t, pkg) {
 
   await fs.rm(dist, { recursive: true, force: true })
 
-  const result = await execaNode(path.join(__dirname, '..', 'bin', 'jetpack'), ['build', '--log=info', '--dir', base], {
-    // on purpose do not run in root of jetpack to ensure we're not
-    // accidentally using something from node_modules
+  // on purpose do not run in root of jetpack to ensure we're not
+  // accidentally using something from node_modules
+  const result = await runNode(path.join(__dirname, '..', 'bin', 'jetpack'), ['build', '--log=info', '--dir', base], {
     cwd: os.tmpdir(),
-    env: {},
-    extendEnv: false,
-    all: true
+    env: {}
   })
 
   t.snapshot(
@@ -128,20 +125,8 @@ async function build(t, pkg) {
     t.true(false)
   }
 
-  const files = []
-  await new Promise((resolve, reject) => {
-    klaw(dist)
-      .on('readable', function () {
-        let item
-        while ((item = this.read())) {
-          if (!item.stats.isDirectory()) {
-            files.push(item.path)
-          }
-        }
-      })
-      .on('error', (err) => reject(err))
-      .on('end', () => resolve())
-  })
+  const entries = await fs.readdir(dist, { recursive: true, withFileTypes: true })
+  const files = entries.filter((e) => e.isFile()).map((e) => path.join(e.parentPath, e.name))
 
   const output = {}
   for (const file of files) {
@@ -158,4 +143,30 @@ async function build(t, pkg) {
     }
   }
   return output
+}
+
+function runNode(script, args, opts) {
+  return new Promise((resolve, reject) => {
+    const p = spawn(process.execPath, [script, ...args], opts)
+    const all = []
+    const stdout = []
+    const stderr = []
+    p.stdout.on('data', (chunk) => {
+      all.push(chunk)
+      stdout.push(chunk)
+    })
+    p.stderr.on('data', (chunk) => {
+      all.push(chunk)
+      stderr.push(chunk)
+    })
+    p.on('error', reject)
+    p.on('close', (exitCode) => {
+      resolve({
+        exitCode,
+        all: Buffer.concat(all).toString('utf8'),
+        stdout: Buffer.concat(stdout).toString('utf8'),
+        stderr: Buffer.concat(stderr).toString('utf8')
+      })
+    })
+  })
 }
