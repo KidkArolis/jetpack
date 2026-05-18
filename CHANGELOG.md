@@ -6,6 +6,9 @@
 - Breaking change: `jetpack/rspack.config` now exports an async function that returns the rspack config. Pass it directly to rspack — `rspack --config node_modules/jetpack/rspack.config.js` continues to work since rspack supports async config functions.
 - Replace `eslint` + `neostandard` + `prettier` with `oxlint` + `oxfmt`.
 - Drop seven dependencies in favour of Node built-ins or short inline equivalents: `@swc/core` (unused), `regenerator-runtime` (no longer needed by modern SWC output), `parseurl` (use `URL`), `klaw` (use `fs.readdir` recursive), `prepend-transform` (inline `Transform` stream), `webpack-format-messages` (inlined), and `execa` (use `node:child_process.spawn`).
+- Update to Rspack 2.0. Internal-only changes for jetpack: switched to `ReactRefreshRspackPlugin` (renamed from default export of `@rspack/plugin-react-refresh`), updated the `ProgressPlugin` handler signature (third arg is now an `info` object, no longer used), and started passing `{ entrypoints: true }` to `stats.toJson()` where needed. See the [Rspack v1 → v2 migration guide](https://rspack.rs/guide/migration/rspack_1.x) if you customise rspack via `jetpack.config.js`.
+- Fix `--no-hot` and `--no-minify` flags — they were silently broken because Node's `parseArgs` strict mode rejected them before the fallback `process.argv.includes` checks could run. Now declared as proper boolean options.
+- `jetpack inspect` no longer auto-opens the analyzer in your browser when stdout isn't a TTY (CI, tests, piped output). The URL is still printed.
 
 # 4.4.2
 
