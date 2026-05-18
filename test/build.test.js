@@ -2,8 +2,8 @@ import test from 'ava'
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import os from 'node:os'
-import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { runJetpack } from './helpers/process.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -104,9 +104,9 @@ async function build(t, pkg) {
 
   // on purpose do not run in root of jetpack to ensure we're not
   // accidentally using something from node_modules
-  const result = await runNode(path.join(__dirname, '..', 'bin', 'jetpack'), ['build', '--log=info', '--dir', base], {
+  const result = await runJetpack(['build', '--log=info', '--dir', base], {
     cwd: os.tmpdir(),
-    env: {}
+    env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
   })
 
   t.snapshot(
@@ -143,30 +143,4 @@ async function build(t, pkg) {
     }
   }
   return output
-}
-
-function runNode(script, args, opts) {
-  return new Promise((resolve, reject) => {
-    const p = spawn(process.execPath, [script, ...args], opts)
-    const all = []
-    const stdout = []
-    const stderr = []
-    p.stdout.on('data', (chunk) => {
-      all.push(chunk)
-      stdout.push(chunk)
-    })
-    p.stderr.on('data', (chunk) => {
-      all.push(chunk)
-      stderr.push(chunk)
-    })
-    p.on('error', reject)
-    p.on('close', (exitCode) => {
-      resolve({
-        exitCode,
-        all: Buffer.concat(all).toString('utf8'),
-        stdout: Buffer.concat(stdout).toString('utf8'),
-        stderr: Buffer.concat(stderr).toString('utf8')
-      })
-    })
-  })
 }

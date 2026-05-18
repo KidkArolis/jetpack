@@ -30,6 +30,7 @@
   },
   "scripts": {
     "test": "ava && oxlint && oxfmt --check '**/*.{js,json,css,yml}'",
+    "coverage": "c8 --reporter=text --reporter=html --include='lib/**/*.js' --include='*.js' --exclude='test/**' --exclude='examples/**' --exclude='lib/hmrFirefoxFix.js' --exclude='lib/retryChunkLoadPlugin.js' ava",
     "format": "oxfmt --write '**/*.{js,json,css,yml}'",
     "release": "np",
     "release-alpha": "np --tag=alpha --any-branch --no-cleanup"
@@ -57,6 +58,7 @@
   },
   "devDependencies": {
     "ava": "^8.0.1",
+    "c8": "^11.0.0",
     "oxfmt": "^0.50.0",
     "oxlint": "^1.65.0",
     "string-replace-loader": "^3.3.0"
