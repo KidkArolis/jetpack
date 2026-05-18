@@ -62,7 +62,13 @@ test.serial('dev server with --log=info,progress emits progress status lines', a
     { readyMatcher: new RegExp(`Asset server http://localhost:${port}`) }
   )
   try {
-    // status() writes a percentage like "10%" or the final "⚡️" marker
+    // webpack-dev-middleware compiles lazily — hit the server to trigger it
+    await fetch(`http://localhost:${port}/`)
+    // poll briefly until the progress handler has produced output
+    const deadline = Date.now() + 5000
+    while (Date.now() < deadline && !/(\d+%|⚡️)/.test(server.output())) {
+      await new Promise((r) => setTimeout(r, 50))
+    }
     t.regex(server.output(), /(\d+%|⚡️)/)
   } finally {
     await server.kill()
