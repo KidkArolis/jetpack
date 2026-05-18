@@ -20,8 +20,9 @@ export function getFreePort() {
 
 // Spawn a node script, wait for the process to exit, return captured output.
 export function runNode(script, args = [], opts = {}) {
+  const { input, ...spawnOpts } = opts
   return new Promise((resolve, reject) => {
-    const p = spawn(process.execPath, [script, ...args], opts)
+    const p = spawn(process.execPath, [script, ...args], spawnOpts)
     const all = []
     const stdout = []
     const stderr = []
@@ -42,6 +43,10 @@ export function runNode(script, args = [], opts = {}) {
         stderr: Buffer.concat(stderr).toString('utf8')
       })
     })
+    if (input != null && p.stdin) {
+      p.stdin.write(input)
+      p.stdin.end()
+    }
   })
 }
 
