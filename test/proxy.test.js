@@ -20,18 +20,19 @@ async function setupTmpFixture(fixture, configOverrides = {}) {
   return dest
 }
 
-function startBackend(port, handler) {
+// bind directly to port 0 and read back the assigned port — avoids the
+// race in getFreePort where a port is freed then claimed by another test
+function startBackend(handler) {
   return new Promise((resolve) => {
     const server = http.createServer(handler)
-    server.listen(port, () => resolve(server))
+    server.listen(0, () => resolve({ server, port: server.address().port }))
   })
 }
 
 test.serial('jetpack dev forwards configured proxy paths to upstream', async (t) => {
-  const backendPort = await getFreePort()
   const jetpackPort = await getFreePort()
 
-  const backend = await startBackend(backendPort, (req, res) => {
+  const { server: backend, port: backendPort } = await startBackend((req, res) => {
     res.writeHead(200, { 'content-type': 'application/json' })
     res.end(JSON.stringify({ from: 'backend', path: req.url }))
   })
