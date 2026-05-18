@@ -2,4 +2,9 @@
 
 import { run } from '../lib/cli.js'
 
+// Exit cleanly on Ctrl+C / SIGTERM so any pending work (e.g. V8 coverage
+// flushes under NODE_V8_COVERAGE) gets a chance to run.
+process.on('SIGINT', () => process.exit(0))
+process.on('SIGTERM', () => process.exit(0))
+
 await run()

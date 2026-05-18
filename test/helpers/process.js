@@ -90,7 +90,9 @@ export async function startNode(script, args = [], { readyMatcher, env, cwd, tim
       new Promise((resolve) => {
         if (p.exitCode !== null) return resolve()
         p.once('exit', () => resolve())
-        p.kill('SIGTERM')
+        // SIGINT lets Node flush v8 coverage (NODE_V8_COVERAGE) on exit;
+        // SIGTERM in some Node versions skips that hook.
+        p.kill('SIGINT')
       })
   }
 }
