@@ -1,6 +1,6 @@
-const rspackConfigForTests = require('../../helpers/rspackConfigForTests')
+import rspackConfigForTests from '../../helpers/rspackConfigForTests.js'
 
-module.exports = {
+export default {
   minify: false,
   chunkLoadRetry: true,
   css: {

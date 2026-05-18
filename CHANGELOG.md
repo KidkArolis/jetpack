@@ -1,3 +1,11 @@
+# 5.0.0
+
+- Breaking change: jetpack is now ESM. The package sets `"type": "module"` and all entry points (`jetpack`, `jetpack/serve`, `jetpack/proxy`, `jetpack/options`, `jetpack/rspack`, `jetpack/rspack.config`) are ES modules — consume them with `import` or dynamic `import()`. CommonJS `require()` of jetpack is no longer supported.
+- Breaking change: `jetpack.config.js` is now loaded via `import()`. If your project uses `"type": "module"` (or has no type field and inherits one), your config can use `export default { ... }`. CommonJS configs continue to work either by using `module.exports = { ... }` in a project without `"type": "module"`, or by renaming to `jetpack.config.cjs`. A `jetpack.config.mjs` variant is also supported.
+- Breaking change: `jetpack/options` now exports a function instead of a resolved options object. Use `import getOptions from 'jetpack/options'; const options = await getOptions()`.
+- Breaking change: `jetpack/rspack.config` now exports an async function that returns the rspack config. Pass it directly to rspack — `rspack --config node_modules/jetpack/rspack.config.js` continues to work since rspack supports async config functions.
+- Replace `eslint` + `neostandard` + `prettier` with `oxlint` + `oxfmt`.
+
 # 4.4.2
 
 - Fix proxy error handling when headers have already been sent
@@ -40,7 +48,7 @@
 - Add `typescript` support, compiled by `builtin:swc-loader`
 - Use `core-js@3.40` to correctly include latest polyfills
 - Switch to `builtin:swc-loader`
-- Make it easier to import global css when using css modules - css in *.global.css or node_modules no longer considered as css modules
+- Make it easier to import global css when using css modules - css in \*.global.css or node_modules no longer considered as css modules
 - Remove `h` as the default jsx pragma, instead use swc-loader's automatic mode for react
 - Upgrade to express@5
 

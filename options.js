@@ -1,1 +1,1 @@
-module.exports = require('./lib/cli').options()
+export { options as default } from './lib/cli.js'

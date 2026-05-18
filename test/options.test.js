@@ -1,8 +1,10 @@
-const test = require('ava')
-const fs = require('fs')
-const path = require('path')
-const options = require('../lib/options')
+import test from 'ava'
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import options from '../lib/options.js'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const dir = (...subdir) => path.join(__dirname, ...subdir)
 
 const base = (pkg, extra = {}) =>
@@ -45,13 +47,13 @@ const base = (pkg, extra = {}) =>
     extra
   )
 
-test('creates options object from cli flags and jetpack.config.js', (t) => {
+test('creates options object from cli flags and jetpack.config.js', async (t) => {
   const args = { flags: { dir: dir('fixtures', 'pkg-swoosh') } }
-  const opts = options('dev', args)
+  const opts = await options('dev', args)
   t.deepEqual(opts, base('pkg-swoosh'))
 })
 
-test('accepts cli flags', (t) => {
+test('accepts cli flags', async (t) => {
   const args = {
     entry: 'some/path',
     flags: {
@@ -60,7 +62,7 @@ test('accepts cli flags', (t) => {
       port: 2800
     }
   }
-  const opts = options('dev', args)
+  const opts = await options('dev', args)
   t.deepEqual(
     opts,
     base('pkg-swoosh', {
@@ -71,12 +73,12 @@ test('accepts cli flags', (t) => {
   )
 })
 
-test('accepts individual js module as entry', (t) => {
+test('accepts individual js module as entry', async (t) => {
   const args = {
     entry: './module.js',
     flags: { dir: dir('fixtures', 'pkg-individual') }
   }
-  const opts = options('dev', args)
+  const opts = await options('dev', args)
   t.deepEqual(
     opts,
     base('pkg-individual', {
@@ -85,9 +87,9 @@ test('accepts individual js module as entry', (t) => {
   )
 })
 
-test('defaults to ./src if available', (t) => {
+test('defaults to ./src if available', async (t) => {
   const args = { flags: { dir: dir('fixtures', 'pkg-src') } }
-  const opts = options('dev', args)
+  const opts = await options('dev', args)
   t.deepEqual(
     opts,
     base('pkg-src', {
@@ -96,7 +98,7 @@ test('defaults to ./src if available', (t) => {
   )
 })
 
-test('creates options object from jetpack.config.js', (t) => {
+test('creates options object from jetpack.config.js', async (t) => {
   const args = {
     flags: {
       exec: true,
@@ -104,7 +106,7 @@ test('creates options object from jetpack.config.js', (t) => {
       dir: dir('fixtures', 'pkg-with-config')
     }
   }
-  const opts = options('dev', args)
+  const opts = await options('dev', args)
   t.deepEqual(
     opts,
     base('pkg-with-config', {

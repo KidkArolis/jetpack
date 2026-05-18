@@ -1,6 +1,6 @@
-require('./styles.css')
+import './styles.css'
 
-function main () {
+function main() {
   document.querySelector('#root').innerHTML = `
     <h1>HMR!</h1>
     <p>Hello world.</p>
@@ -10,6 +10,6 @@ function main () {
 
 main()
 
-if (module.hot) {
-  module.hot.accept()
+if (import.meta.webpackHot) {
+  import.meta.webpackHot.accept()
 }

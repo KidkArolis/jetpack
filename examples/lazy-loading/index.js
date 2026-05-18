@@ -18,6 +18,6 @@ function main () {
 
 main()
 
-if (module.hot) {
-  module.hot.accept()
+if (import.meta.webpackHot) {
+  import.meta.webpackHot.accept()
 }

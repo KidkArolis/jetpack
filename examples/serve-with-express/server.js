@@ -1,5 +1,5 @@
-const express = require('express')
-const jetpack = require('../../serve')
+import express from 'express'
+import jetpack from '../../serve.js'
 
 const app = express()
 

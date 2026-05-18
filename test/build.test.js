@@ -1,8 +1,12 @@
-const test = require('ava')
-const path = require('path')
-const fs = require('fs').promises
-const klaw = require('klaw')
-const os = require('os')
+import test from 'ava'
+import path from 'node:path'
+import fs from 'node:fs/promises'
+import os from 'node:os'
+import { fileURLToPath } from 'node:url'
+import klaw from 'klaw'
+import { execaNode } from 'execa'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 test('build basic', async (t) => {
   await build(t, 'pkg-basic')
@@ -64,14 +68,14 @@ test('build with cjs modules for modern js', async (t) => {
   const output = await build(t, 'pkg-with-cjs')
   const bundle = output['/assets/bundle.js']
   t.true(bundle.includes(`'test  '.trim()`))
-  t.notThrows(() => eval(bundle)) // eslint-disable-line
+  t.notThrows(() => eval(bundle)) // oxlint-disable-line no-eval
 })
 
 test('build with esm modules for modern js', async (t) => {
   const output = await build(t, 'pkg-with-esm')
   const bundle = output['/assets/bundle.js']
   t.true(bundle.includes(`'test  '.trim()`))
-  t.notThrows(() => eval(bundle)) // eslint-disable-line
+  t.notThrows(() => eval(bundle)) // oxlint-disable-line no-eval
 })
 
 test('build both modern and legacy bundles', async (t) => {
@@ -90,7 +94,7 @@ test('build both modern and legacy bundles', async (t) => {
 
   t.true(legacyBundle.includes('`Array.prototype.toReversed` method'))
 
-  t.notThrows(() => eval(bundle)) // eslint-disable-line
+  t.notThrows(() => eval(bundle)) // oxlint-disable-line no-eval
 })
 
 async function build(t, pkg) {
@@ -99,7 +103,6 @@ async function build(t, pkg) {
 
   await fs.rm(dist, { recursive: true, force: true })
 
-  const { execaNode } = await import('execa')
   const result = await execaNode(path.join(__dirname, '..', 'bin', 'jetpack'), ['build', '--log=info', '--dir', base], {
     // on purpose do not run in root of jetpack to ensure we're not
     // accidentally using something from node_modules

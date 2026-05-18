@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-require('../lib/cli').run()
+import { run } from '../lib/cli.js'
+
+await run()

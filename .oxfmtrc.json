@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "printWidth": 120,
+  "trailingComma": "none",
+  "sortPackageJson": false,
+  "ignorePatterns": ["test/fixtures", "examples", "lib/template.hbs"]
+}

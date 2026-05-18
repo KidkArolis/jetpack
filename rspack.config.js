@@ -1,7 +1,7 @@
-const cli = require('./lib/cli')
-const createJetpackConfig = require('./lib/rspack.config')
+import { options as cliOptions } from './lib/cli.js'
+import createJetpackConfig from './lib/rspack.config.js'
 
-const options = cli.options()
-const rspackConfigs = createJetpackConfig(options)
-
-module.exports = rspackConfigs.modern
+export default async () => {
+  const options = await cliOptions()
+  return createJetpackConfig(options).modern
+}

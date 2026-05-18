@@ -1,5 +1,5 @@
-const fastify = require('fastify')
-const jetpack = require('../../serve')
+import fastify from 'fastify'
+import jetpack from '../../serve.js'
 
 const app = fastify({ logger: true })
 
@@ -9,7 +9,7 @@ app.get('/api/data', (req, res) => {
 
 app.get('/*', (req, res) => {
   jetpack(req.raw, res.raw).then(() => {
-     res.hijack()
+    res.hijack()
   })
 })
 

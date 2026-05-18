@@ -1,7 +1,8 @@
 {
   "name": "serve-with-express",
   "version": "1.0.0",
-  "main": "server",
+  "type": "module",
+  "main": "server.js",
   "browser": "client",
   "license": "MIT",
   "dependencies": {

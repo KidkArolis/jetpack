@@ -12,4 +12,4 @@ function main() {
 
 main()
 
-module.hot.accept()
+import.meta.webpackHot.accept()

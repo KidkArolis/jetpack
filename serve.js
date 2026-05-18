@@ -1,1 +1,1 @@
-module.exports = require('./lib/serve')
+export { default } from './lib/serve.js'
