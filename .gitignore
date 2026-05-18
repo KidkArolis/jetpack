@@ -1,5 +1,5 @@
 node_modules
 .DS_Store
 coverage
-examples/*/dist
-test/fixtures/*/dist
+examples/**/dist
+test/fixtures/**/dist

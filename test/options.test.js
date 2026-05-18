@@ -87,15 +87,23 @@ test('accepts individual js module as entry', async (t) => {
   )
 })
 
-test('defaults to ./src if available', async (t) => {
+test('defaults to . — rspack resolves via package.json main', async (t) => {
+  // pkg-src has package.json with "main": "src/index.js"
   const args = { flags: { dir: dir('fixtures', 'pkg-src') } }
   const opts = await options('dev', args)
-  t.deepEqual(
-    opts,
-    base('pkg-src', {
-      entry: './src'
-    })
-  )
+  t.deepEqual(opts, base('pkg-src', { title: 'pkg-src' }))
+})
+
+test('positional `.` is preserved', async (t) => {
+  const args = { entry: '.', flags: { dir: dir('fixtures', 'pkg-src') } }
+  const opts = await options('dev', args)
+  t.is(opts.entry, '.')
+})
+
+test('positional `./` is preserved', async (t) => {
+  const args = { entry: './', flags: { dir: dir('fixtures', 'pkg-src') } }
+  const opts = await options('dev', args)
+  t.is(opts.entry, './')
 })
 
 test('creates options object from jetpack.config.js', async (t) => {
