@@ -28,7 +28,7 @@ test('--print-config prints the rspack config to stdout', async (t) => {
   t.is(result.exitCode, 0)
   const out = stripAnsi(result.stdout)
   t.regex(out, /Modern config/)
-  t.regex(out, /target:\s*'web'/)
+  t.regex(out, /target:\s*\[\s*'web'/)
   t.regex(out, /entry:\s*\{/)
   t.regex(out, /mode:\s*'production'/)
   t.regex(out, /assetModuleFilename:/)
