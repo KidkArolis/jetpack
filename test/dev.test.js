@@ -89,27 +89,3 @@ test.serial('dev server mounts HMR endpoint', async (t) => {
     await server.kill()
   }
 })
-
-test.serial('--exec runs a subprocess with prefixed output', async (t) => {
-  const port = await getFreePort()
-  // run a tiny inline node program that prints a known marker
-  const server = await startJetpack(
-    [
-      '--dir',
-      path.join(fixturesDir, 'pkg-basic'),
-      '--port',
-      String(port),
-      '--log=info',
-      '--exec',
-      `node -e "console.log('subproc-out'); setInterval(() => {}, 1000)"`
-    ],
-    // wait for the actual prefixed subprocess output, not the announcement
-    { readyMatcher: /jetpack »\s*subproc-out/, timeout: 15000 }
-  )
-  try {
-    t.regex(server.output(), /Executing .* in a subprocess/i)
-    t.regex(server.output(), /jetpack »\s*subproc-out/)
-  } finally {
-    await server.kill()
-  }
-})

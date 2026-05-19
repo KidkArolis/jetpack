@@ -30,7 +30,6 @@ const base = (pkg, extra = {}) =>
       body: "<div id='root'></div>",
       html: fs.readFileSync(path.join(__dirname, '..', 'lib', 'template.hbs')).toString(),
       head: null,
-      exec: false,
       proxy: {},
       minify: true,
       chunkLoadRetry: false,
@@ -110,7 +109,6 @@ test('positional `./` is preserved', async (t) => {
 test('creates options object from jetpack.config.js', async (t) => {
   const args = {
     flags: {
-      exec: true,
       log: 'info',
       dir: dir('fixtures', 'pkg-with-config')
     }
@@ -123,7 +121,6 @@ test('creates options object from jetpack.config.js', async (t) => {
       logLevels: { info: true, progress: false, none: false },
       title: 'testing',
       entry: './app/client',
-      exec: 'node ./app/server',
       css: {
         modules: false,
         features: {

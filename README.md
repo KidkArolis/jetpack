@@ -24,8 +24,9 @@
 
 Plenty of bundler tools exist — Vite, Parcel, Next.js, esbuild — each tuned for a different workflow. Jetpack's angles:
 
-- **Interactive SPAs with a custom server.** Dev server plays nicely next to your own API via the `proxy` config or the `jetpack/serve` middleware. Production defaults are sensible out of the box, no config required.
-- **Run-anywhere CLI.** Install globally and point it at any file or directory, much like `node ~/Desktop/something.js`.
+- **Run-anywhere CLI.** Install globally and point jetpack at any file or directory: `jetpack ~/Desktop/script.js` works just like `node ~/Desktop/script.js`. Useful for one-off hacks _and_ full projects alike.
+- **Production-ready out of the box.** Content-hashed assets, code splitting with inlined runtime, modern + legacy differential bundles, browser-targeted polyfills — all preconfigured. Extensible if you outgrow it.
+- **One dependency.** Wraps rspack + swc + lightningcss + sass-embedded into a single, cohesive install.
 
 For server-side rendering, reach for Next.js. For mostly-static content, Astro.
 
@@ -59,18 +60,27 @@ Install jetpack globally and point it at any file or directory:
     $ jetpack ~/Desktop/magic.js
     $ jetpack --dir ~/projects/manyverse
 
-## Use jetpack with a server API
+## Use jetpack with an API
 
-Point `package.json#main` at your server entry and configure `entry` in `jetpack.config.js` for your client. To run the API alongside jetpack in a single command:
+Two common patterns:
 
-    $ jetpack -x
+**Proxy from jetpack to your API in dev.** Run your API on `:3000`, jetpack on `:3030`, and forward `/api/*` requests:
 
-or with a custom command:
+```js
+// jetpack.config.js
+export default {
+  proxy: { '/api/*': 'http://localhost:3000' }
+}
+```
 
-    $ jetpack -x 'nodemon ./api'
-    $ jetpack -x 'rails s'
+**Mount jetpack into your own server** using `jetpack/serve` — proxies to the dev server in development, serves built files in production:
 
-Use the `proxy` config option or the `jetpack/serve` middleware to bridge your client and server in dev. See [Workflow and deployment](./docs/06-workflow-and-deployment.md).
+```js
+import jetpack from 'jetpack/serve'
+app.use(jetpack)
+```
+
+See [Workflow and deployment](./docs/06-workflow-and-deployment.md).
 
 ## Documentation
 

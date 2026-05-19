@@ -21,7 +21,7 @@ app.get('/api/unicorns', (req, res) => {...})
 app.use(jetpack)
 ```
 
-`jetpack/serve` proxies to the dev server in development and serves `dist/` in production. Run both processes via two terminals, or with `jetpack -x` to spawn the API alongside.
+`jetpack/serve` proxies to the dev server in development and serves `dist/` in production. Run both processes via two terminals or your preferred process manager.
 
 Deploy by building (`jetpack build`) and running `node .`.
 

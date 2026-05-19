@@ -24,7 +24,6 @@ Options:
   -u, --no-minify      disable minification
   -m, --modern         build a modern bundle
   -l, --legacy         build a legacy bundle
-  -x, --exec [path]    execute an additional process, e.g. an api server
   -i, --print-config   print the rspack config object used in the current command
   -o, --log [levels]   select log levels: info, progress, none
   -v, --version        print the version of jetpack and rspack
@@ -73,9 +72,6 @@ export default {
 
   // set to `true` to enable retries on chunk loads (5 attempts, exponential backoff)
   chunkLoadRetry: false,
-
-  // command executed to run the server/api process when `-x` is passed
-  exec: 'node .',
 
   // proxy certain requests to a different server
   // e.g. { '/api/*': 'http://localhost:3000',

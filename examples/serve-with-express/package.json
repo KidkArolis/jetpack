@@ -9,8 +9,8 @@
     "express": "^5.2.1"
   },
   "scripts": {
-    "watch": "../../bin/jetpack -x",
     "start": "node .",
+    "dev:client": "../../bin/jetpack",
     "build": "../../bin/jetpack build"
   }
 }
