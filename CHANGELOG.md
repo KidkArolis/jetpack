@@ -19,7 +19,6 @@
 - `--no-hot` and `--no-minify` were silently broken; now work as expected.
 - Asset filenames now use `[contenthash:8]` instead of `[hash:8]` — actual content-based hashing for cache busting.
 - `jetpack inspect` now writes a self-contained `dist/inspect.html` treemap (no server, no `webpack-bundle-analyzer` dependency, ~30 KB single file). The HTML opens automatically in your browser in interactive runs.
-- New `jetpack doctor` command — runs a production build with [Rsdoctor](https://rsdoctor.dev/) attached for deeper analysis (bundle treemap, build-time profiling, duplicate-package detection, dependency tree). Optional companion to `jetpack inspect`.
 
 **Improvements**
 

@@ -94,14 +94,3 @@ test.serial('jetpack inspect writes a self-contained treemap HTML', async (t) =>
     await fs.rm(dir, { recursive: true, force: true })
   }
 })
-
-test.serial('jetpack doctor runs the Rsdoctor build', async (t) => {
-  // Subprocess stdout is piped (not a TTY) → Rsdoctor's report server is
-  // disabled; we just verify the build runs to completion with the plugin
-  // attached and Rsdoctor logs itself. We don't clear env here because
-  // Rsdoctor spawns a node subprocess and needs PATH.
-  const result = await runJetpack(['doctor', '--dir', path.join(fixturesDir, 'pkg-basic')], { cwd: os.tmpdir() })
-  t.is(result.exitCode, 0, `doctor failed: ${result.all}`)
-  t.regex(result.all, /Running Rsdoctor/)
-  t.regex(result.all, /Rsdoctor v\d/)
-})

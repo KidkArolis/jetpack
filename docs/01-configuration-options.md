@@ -13,7 +13,6 @@ Commands:
   dev       run the dev server (default)
   build     build for production
   inspect   write a self-contained treemap HTML (dist/inspect.html)
-  doctor    open the Rsdoctor build report
   browsers  print supported browsers
   clean     remove the dist dir
 
