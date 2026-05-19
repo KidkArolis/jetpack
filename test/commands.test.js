@@ -4,7 +4,7 @@ import fs from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import os from 'node:os'
 import { fileURLToPath } from 'node:url'
-import { runJetpack, startJetpack } from './helpers/process.js'
+import { runJetpack } from './helpers/process.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, 'fixtures')
@@ -74,16 +74,24 @@ test.serial('jetpack clean keeps dist when not confirmed', async (t) => {
   }
 })
 
-test.serial('jetpack inspect starts the bundle analyzer', async (t) => {
-  const proc = await startJetpack(['inspect', '--dir', path.join(fixturesDir, 'pkg-basic')], {
-    readyMatcher: /Webpack Bundle Analyzer is started/,
-    timeout: 20000
-  })
+test.serial('jetpack inspect writes a self-contained treemap HTML', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic')
   try {
-    t.regex(proc.output(), /Generating report/)
-    t.regex(proc.output(), /Webpack Bundle Analyzer is started/)
+    const result = await runJetpack(['inspect', '--dir', dir], {
+      cwd: os.tmpdir(),
+      env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+    })
+    t.is(result.exitCode, 0, `inspect failed: ${result.all}`)
+    t.regex(result.all, /Wrote dist\/inspect\.html/)
+
+    const html = await fs.readFile(path.join(dir, 'dist', 'inspect.html'), 'utf8')
+    t.regex(html, /<title>jetpack inspect/)
+    // The d3-hierarchy bundle is inlined
+    t.regex(html, /d3\.treemap/)
+    // The bundle data is inlined and has at least one js asset
+    t.regex(html, /"name":"bundle\..*\.js"/)
   } finally {
-    await proc.kill()
+    await fs.rm(dir, { recursive: true, force: true })
   }
 })
 

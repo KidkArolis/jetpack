@@ -44,6 +44,7 @@
     "browserslist-useragent-regexp": "^4.1.4",
     "core-js": "^3.49.0",
     "css-loader": "^7.1.4",
+    "d3-hierarchy": "^3.1.2",
     "express": "^5.2.1",
     "handlebars": "^4.7.9",
     "picocolors": "^1.1.1",
@@ -53,7 +54,6 @@
     "sass-resources-loader": "^2.2.5",
     "send": "^1.2.1",
     "style-loader": "^4.0.0",
-    "webpack-bundle-analyzer": "^5.3.0",
     "webpack-dev-middleware": "^8.0.3",
     "webpack-hot-middleware": "^2.26.1"
   },
