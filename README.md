@@ -20,7 +20,14 @@
 - **Automatic chunk splitting** with inlined runtime.
 - **Single dependency**.
 
-**Why use jetpack?** To avoid rolling your own rspack config or pasting one from project to project. With the `proxy` option or the `jetpack/serve` middleware you don't have to worry about wiring up dev middleware — everything _just works_.
+## Why jetpack?
+
+Plenty of bundler tools exist — Vite, Parcel, Next.js, esbuild — each tuned for a different workflow. Jetpack's angles:
+
+- **Interactive SPAs with a custom server.** Dev server plays nicely next to your own API via the `proxy` config or the `jetpack/serve` middleware. Production defaults are sensible out of the box, no config required.
+- **Run-anywhere CLI.** Install globally and point it at any file or directory, much like `node ~/Desktop/something.js`.
+
+For server-side rendering, reach for Next.js. For mostly-static content, Astro.
 
 ## Usage
 
@@ -74,4 +81,3 @@ Use the `proxy` config option or the `jetpack/serve` middleware to bridge your c
 - [Workflow and deployment](./docs/06-workflow-and-deployment.md)
 - [Differential serving](./docs/07-differential-serving.md)
 - [Hot reloading](./docs/08-hot-reloading.md)
-- [Comparison](./docs/09-comparison.md)
