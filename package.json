@@ -49,7 +49,7 @@
     "picocolors": "^1.1.1",
     "react-refresh": "^0.18.0",
     "sass-embedded": "^1.99.0",
-    "sass-loader": "^16.0.8",
+    "sass-loader": "^17.0.0",
     "send": "^1.2.1",
     "style-loader": "^4.0.0",
     "webpack-dev-middleware": "^8.0.3",
@@ -58,8 +58,8 @@
   "devDependencies": {
     "ava": "^8.0.1",
     "c8": "^11.0.0",
-    "oxfmt": "^0.50.0",
-    "oxlint": "^1.65.0",
+    "oxfmt": "^0.51.0",
+    "oxlint": "^1.66.0",
     "string-replace-loader": "^3.3.0"
   },
   "ava": {
