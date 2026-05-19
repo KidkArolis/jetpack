@@ -36,6 +36,7 @@ const base = (pkg, extra = {}) =>
       chunkLoadRetry: false,
       coverage: false,
       publicPath: '/assets/',
+      publicPathName: '/assets/',
       css: {
         modules: false,
         features: {
