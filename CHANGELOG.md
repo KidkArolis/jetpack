@@ -1,27 +1,30 @@
 # 5.0.0
 
-- Breaking change: jetpack is now ESM. The package sets `"type": "module"` and all entry points (`jetpack`, `jetpack/serve`, `jetpack/proxy`, `jetpack/options`, `jetpack/rspack`, `jetpack/rspack.config`) are ES modules — consume them with `import` or dynamic `import()`. CommonJS `require()` of jetpack is no longer supported.
-- Breaking change: `jetpack.config.js` is now loaded via `import()`. If your project uses `"type": "module"` (or has no type field and inherits one), your config can use `export default { ... }`. CommonJS configs continue to work either by using `module.exports = { ... }` in a project without `"type": "module"`, or by renaming to `jetpack.config.cjs`. A `jetpack.config.mjs` variant is also supported.
-- Breaking change: `jetpack/options` now exports a function instead of a resolved options object. Use `import getOptions from 'jetpack/options'; const options = await getOptions()`.
-- Breaking change: `jetpack/rspack.config` now exports an async function that returns the rspack config. Pass it directly to rspack — `rspack --config node_modules/jetpack/rspack.config.js` continues to work since rspack supports async config functions.
-- Breaking change: dropped the implicit `./src` entry fallback. Previously, when no entry was specified, jetpack would auto-detect `./src/index.js` even without it being declared anywhere. We now rely solely on standard Node module resolution — `package.json` `main` (or `exports`, `module`, `browser`) and `./index.js`. If your project has source under `./src/` and no `main` field, add `"main": "src/index.js"` to `package.json` (or set `entry: './src'` in `jetpack.config.js`).
-- Breaking change: dropped the `-x` / `--exec` CLI flag and the `exec` config option. The "run a second process alongside jetpack" use case is better served by standard tools (two terminals, `concurrently`, `npm-run-all`, your IDE's task runner, etc.). If you were using it, swap to e.g. `concurrently 'jetpack' 'node ./server'`.
-- Replace `eslint` + `neostandard` + `prettier` with `oxlint` + `oxfmt`.
-- Drop seven dependencies in favour of Node built-ins or short inline equivalents: `@swc/core` (unused), `regenerator-runtime` (no longer needed by modern SWC output), `parseurl` (use `URL`), `klaw` (use `fs.readdir` recursive), `prepend-transform` (inline `Transform` stream), `webpack-format-messages` (inlined), and `execa` (use `node:child_process.spawn`).
-- Update to Rspack 2.0. Internal-only changes for jetpack: switched to `ReactRefreshRspackPlugin` (renamed from default export of `@rspack/plugin-react-refresh`), updated the `ProgressPlugin` handler signature (third arg is now an `info` object, no longer used), and started passing `{ entrypoints: true }` to `stats.toJson()` where needed. See the [Rspack v1 → v2 migration guide](https://rspack.rs/guide/migration/rspack_1.x) if you customise rspack via `jetpack.config.js`.
-- Fix `--no-hot` and `--no-minify` flags — they were silently broken because Node's `parseArgs` strict mode rejected them before the fallback `process.argv.includes` checks could run. Now declared as proper boolean options.
+**Breaking changes**
+
+- jetpack is now ESM. Import its entry points (e.g. `import jetpack from 'jetpack/serve'`) — `require('jetpack/...')` is no longer supported.
+- `jetpack.config.js` is loaded via `import()`. In projects with `"type": "module"`, use `export default { ... }`. CommonJS configs still work — keep `module.exports = { ... }` in projects without `"type": "module"`, or rename to `jetpack.config.cjs`.
+- `jetpack/options` now exports an async function:
+  ```js
+  import getOptions from 'jetpack/options'
+  const options = await getOptions()
+  ```
+- `jetpack/rspack.config` now exports an async function returning the rspack config. `rspack --config node_modules/jetpack/rspack.config.js` still works (rspack supports async config functions).
+- Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
+- Dropped the `-x` / `--exec` flag and the `exec` config option. Use `concurrently`, two terminals, or your task runner of choice to run a second process alongside jetpack.
+- Updated to Rspack 2.0 — see the [Rspack v1 → v2 migration guide](https://rspack.rs/guide/migration/rspack_1.x) if you customise rspack via `jetpack.config.js`.
+
+**Fixes**
+
+- `--no-hot` and `--no-minify` were silently broken; now work as expected.
+- Asset filenames now use `[contenthash:8]` instead of `[hash:8]` — actual content-based hashing for cache busting.
 - `jetpack inspect` no longer auto-opens the analyzer in your browser when stdout isn't a TTY (CI, tests, piped output). The URL is still printed.
-- `output.publicPath` is now `'auto'` — the bundle computes its runtime URL from the loaded script's location. Works out of the box for CDN deployments and sub-path mounts. The `options.publicPath` (default `/assets/`) still controls the static HTML template's asset URLs.
-- Fix asset module cache-busting: filenames now use `[contenthash:8]` (was `[hash:8]`, which is the build-wide compilation hash and changes whenever anything in the build changes).
-- Expand the asset extensions list: added `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
-- Internal cleanup of the rspack config:
-  - Drop the dead `devServer` block (jetpack uses `webpack-dev-middleware` directly via express; rspack's `devServer` settings were never read).
-  - Drop redundant `optimization.usedExports: true` (already default in production).
-  - Drop `splitChunks: { chunks: 'all' }` override — rspack 2's defaults are reasonable.
-  - Drop the `performance.maxAssetSize: 500_000` override; users can set it via `rspack` config hook if they care.
-  - Single conditional filename pattern instead of post-hoc `string.replace`.
-  - Drop the empty `jsc.transform: {}` placeholder from swc-loader options; the React plugin now ensures the object exists when it needs to attach to it.
-  - Collapse the hardcoded node_modules exclude list into a single named constant (`JETPACK_BUNDLED_DEPS`).
+
+**Improvements**
+
+- `output.publicPath` is now `'auto'`: the bundle computes its runtime URL from the loaded script's location, so it works out of the box for CDN deployments and sub-path mounts without further config.
+- Expanded asset extension list: `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
+- Smaller install — dropped seven runtime dependencies in favour of Node built-ins.
 
 # 4.4.2
 
