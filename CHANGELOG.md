@@ -10,6 +10,17 @@
 - Update to Rspack 2.0. Internal-only changes for jetpack: switched to `ReactRefreshRspackPlugin` (renamed from default export of `@rspack/plugin-react-refresh`), updated the `ProgressPlugin` handler signature (third arg is now an `info` object, no longer used), and started passing `{ entrypoints: true }` to `stats.toJson()` where needed. See the [Rspack v1 → v2 migration guide](https://rspack.rs/guide/migration/rspack_1.x) if you customise rspack via `jetpack.config.js`.
 - Fix `--no-hot` and `--no-minify` flags — they were silently broken because Node's `parseArgs` strict mode rejected them before the fallback `process.argv.includes` checks could run. Now declared as proper boolean options.
 - `jetpack inspect` no longer auto-opens the analyzer in your browser when stdout isn't a TTY (CI, tests, piped output). The URL is still printed.
+- `output.publicPath` is now `'auto'` — the bundle computes its runtime URL from the loaded script's location. Works out of the box for CDN deployments and sub-path mounts. The `options.publicPath` (default `/assets/`) still controls the static HTML template's asset URLs.
+- Fix asset module cache-busting: filenames now use `[contenthash:8]` (was `[hash:8]`, which is the build-wide compilation hash and changes whenever anything in the build changes).
+- Expand the asset extensions list: added `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
+- Internal cleanup of the rspack config:
+  - Drop the dead `devServer` block (jetpack uses `webpack-dev-middleware` directly via express; rspack's `devServer` settings were never read).
+  - Drop redundant `optimization.usedExports: true` (already default in production).
+  - Drop `splitChunks: { chunks: 'all' }` override — rspack 2's defaults are reasonable.
+  - Drop the `performance.maxAssetSize: 500_000` override; users can set it via `rspack` config hook if they care.
+  - Single conditional filename pattern instead of post-hoc `string.replace`.
+  - Drop the empty `jsc.transform: {}` placeholder from swc-loader options; the React plugin now ensures the object exists when it needs to attach to it.
+  - Collapse the hardcoded node_modules exclude list into a single named constant (`JETPACK_BUNDLED_DEPS`).
 
 # 4.4.2
 
