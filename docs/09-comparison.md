@@ -1,32 +1,19 @@
-## Comparison
+# Comparison
 
-There exist many tools that try and make working with webpack/rspack easier:
+There are plenty of tools in this space — Vite, Parcel, esbuild, Next.js, etc. — and they each make different trade-offs.
 
-* **create-react-app** – a great and powerful tool. I personally tend not to use, because I find it slightly big and intimidating with a large codebase, it's overly React specific and brings in opinionated tools such as `jest` testing framework. But it's a very comprehensive tool with great documentation, so keep using it if it works for you!
-* **pwa-cli** – very similar to what jetpack is trying to do. Has a neat plugin system for extending its functionality beyond what the core provides. Why jetpack and not pwa-cli? Not sure, you'll have to try both and see what you prefer.
+Where jetpack tries to be different:
 
-There are also alternatives to webpack/rspack:
+- Make it possible to run globally anywhere on your machine, much like `node ~/Desktop/test.js`.
+- Good workflow for [developing client + server together](./06-workflow-and-deployment.md).
+- Sensible production defaults out of the box, with no configuration.
+- Optimised for SPAs (not SSR or SSG).
 
-* **Parcel** is making 🌊. Let's see what version 2.0 brings to the table. It has very similar goals to that of jetpack's – most things should just work and be convenient without configuration.
-* **Browserify** – probably still has a hard core fan base ;) with dev servers similar to jetpack, e.g. [budo](https://github.com/mattdesl/budo) and [bankai](https://github.com/choojs/bankai) to mention a couple.
-
-There also exist higher level frameworks for certain use cases:
-
-* **Next.js** - use this when you need server side rendering. Server side rendering can be tricky to wrap your head around and so when you just want an Single Page Application – jetpack might be a better choice.
-* **Gatsby.js** - use this when you're building a web app that can be exported to a bunch of html files – it's a great fit for websites. For richer, interactive web applications, jetpack might just be a simpler choice.
-
-#### Conclusion
-
-In general, where jetpack tries to be different is:
-
-- make it possible to run globally anywhere on your machine, just like you can run `node ~/Desktop/test.js`
-- have [good workflow](./06-workflow-and-deployment.md) for simultaneously developing the client and the server
-- make sure that if no configuration is touched, the application is bundled in the best possible way for production
-- serve the SPA use case well (as opposed to SSR or SSG)
+If you need server-side rendering, reach for Next.js. If you're building a primarily static content site, Astro will probably suit you better. For a quick interactive SPA with a custom server, jetpack is a good fit.
 
 ## Bonus
 
-Because jetpack avoids anything too fancy, a lot of the time your app might already work with jetpack out of the box. For example, this works:
+Because jetpack avoids anything too fancy, lots of apps work out of the box. For example:
 
     $ npx create-react-app my-app
     $ cd my-app

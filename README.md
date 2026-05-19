@@ -5,22 +5,22 @@
 <h4 align="center">Rspack made more convenient.</h4>
 <br />
 
-**Jetpack wraps rspack** to create a smoother developer experience. Jetpack can be used instead of @rspack/core, @rspack/cli and @rspack/dev-server without writing any configuration. Jetpack is a thin wrapper around rspack, and can be extended with any rspack configuration.
+**Jetpack wraps rspack** to give you a smooth dev experience without writing a config. It can be extended with arbitrary rspack configuration if you outgrow the defaults.
 
-- **Sensible defaults** to handle modern JavaScript, CSS and images.
+- **Sensible defaults** for JavaScript, CSS, and assets.
 - **Preconfigured swc-loader** for speedy compilation.
 - **Preconfigured core-js** for polyfilling missing browser features.
-- **Preconfigured lightningcss** for css syntax lowering.
+- **Preconfigured lightningcss** for CSS syntax lowering.
 - **Modern bundles by default** with no async/await transpilation.
-- **Differential builds** with modern/legacy bundles served based on user agent headers.
+- **Differential builds** — modern/legacy bundles served by user-agent.
 - **CSS modules** one config flag away.
 - **SCSS** preconfigured.
-- **JSX detection** preconfigured.
-- **Hot reloading** using `fast-refresh` for React as well as for vanilla JavaScript and CSS.
-- **Automatic chunk splitting** with inlined runtime and HTML generation.
-- **Single dependency** with hassle-free updates.
+- **JSX and TypeScript** detection out of the box.
+- **Hot reloading** via React fast-refresh and for vanilla JS/CSS.
+- **Automatic chunk splitting** with inlined runtime.
+- **Single dependency**.
 
-**Why use jetpack?** To avoid rolling your own custom rspack config or having to paste it from old projects. Jetpack has a set of defaults that should get you off the ground quickly. And with the `proxy` config or the universal `jetpack/serve` middleware you don't have to worry about wiring up rspack's dev middleware or dev server – everything _just works_.
+**Why use jetpack?** To avoid rolling your own rspack config or pasting one from project to project. With the `proxy` option or the `jetpack/serve` middleware you don't have to worry about wiring up dev middleware — everything _just works_.
 
 ## Usage
 
@@ -28,51 +28,42 @@ Install globally or locally:
 
     $ npm install -g jetpack
 
-In your project with `package.json` or `index.js`, start your app on `http://localhost:3030`:
+In your project, start your app on `http://localhost:3030`:
 
     $ jetpack
 
-To build the app for production to a `dist` directory:
+Build for production into `dist/`:
 
     $ jetpack build
 
-Inspect the bundle size and make up:
+Inspect the bundle:
 
     $ jetpack inspect
 
-Print what browsers will be supported:
+Print supported browsers:
 
     $ jetpack browsers
     $ jetpack browsers --coverage=GB
 
-## Use jetpack anywhere, anytime
+## Use jetpack anywhere
 
-One of jetpack goals is to help you run any piece of JavaScript in a browser as easily as it is to run node scripts. Install jetpack globally and point it to any file on your machine. This is an alternative to jsfiddle / codepen / codesandbox style of hacking on things.
+Install jetpack globally and point it at any file or directory:
 
     $ jetpack ~/Desktop/magic.js
-
-Or any project on your machine:
-
     $ jetpack --dir ~/projects/manyverse
 
 ## Use jetpack with a server API
 
-Another goal of jetpack is to assist you in building complete, production apps. Very often in addition to developing the clientside application, you are also developing an API. Jetpack has a few features to make building such apps easier.
-
-Point your `package.json#main` to your server entry and `package.json#browser` to your client entry.
-
-Now you can run your API server together with jetpack in a single command:
+Point `package.json#main` at your server entry and configure `entry` in `jetpack.config.js` for your client. To run the API alongside jetpack in a single command:
 
     $ jetpack -x
 
-Alternatively, specify any command to execute:
-$ jetpack -x 'nodemon ./api'
+or with a custom command:
 
-Use this even if your server is not written in node
-
+    $ jetpack -x 'nodemon ./api'
     $ jetpack -x 'rails s'
 
-Jetpack provides an ability to proxy requests to your api by specifying `proxy` configuration in `jetpack.config.js` or mounting the dev server to your application server using the `jetpack/serve` middleware. Read more about it in [Workflow and deployment](./docs/06-workflow-and-deployment.md) docs.
+Use the `proxy` config option or the `jetpack/serve` middleware to bridge your client and server in dev. See [Workflow and deployment](./docs/06-workflow-and-deployment.md).
 
 ## Documentation
 
@@ -83,13 +74,4 @@ Jetpack provides an ability to proxy requests to your api by specifying `proxy` 
 - [Workflow and deployment](./docs/06-workflow-and-deployment.md)
 - [Differential serving](./docs/07-differential-serving.md)
 - [Hot reloading](./docs/08-hot-reloading.md)
-- [Comparison to cra, pwa-cli, parcel, etc.](./docs/09-comparison.md)
-- [Server side rendering](./docs/recipe-06-server-side-rendering.md)
-
-## Motivation
-
-This project is an exploration of some ideas accumulated over a few years using webpack in a variety of projects. Webpack is a very powerful and flexible tool. It applies to a lot of use cases and that is one of the reasons it has so many configuration options. Webpack also evolved over the years but preserved backward compatibility as much as possible to support the large ecosystem built around it.
-
-Rspack - a webpack compatible Rust rewrite has since been released and offers a significant performance boost over webpack. Jetpack has been updated to use rspack under the hood for improved performance.
-
-Jetpack is an exploration of how using webpack/rspack could be made easier if the defaults, the CLI usage patterns and the configuration came with good defaults.
+- [Comparison](./docs/09-comparison.md)

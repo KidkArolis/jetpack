@@ -1,38 +1,36 @@
 # Hot reloading
 
-Hot reloading is turned on by default in jetpack when in development mode. You can turn it off by passing `-r` arg or setting `hot: false` in the `jetpack.config.js` file.
+Hot reloading is on by default in development. Disable with `--no-hot` or `hot: false` in `jetpack.config.js`.
 
 ## CSS
 
-CSS is hot reloaded automatically with no extra steps.
+Hot-reloaded automatically. Nothing to do.
 
 ## React
 
-React components are hot reloaded automatically using `fast-refresh` (via the [@rspack/plugin-react-refresh](https://github.com/rspack-contrib/rspack-plugin-react-refresh) plugin).
+Components hot-reload via fast refresh (using [@rspack/plugin-react-refresh](https://github.com/rspack-contrib/rspack-plugin-react-refresh)). Nothing to do.
 
 ## Vanilla JS
 
-If you're not using React, hot reloading can still be used. That's something that rspack supports natively. All you need to do is add the following bit of code somewhere in your application, preferably in the entry module.
+For non-React code, accept HMR in your entry module:
 
 ```js
-if (module.hot) {
-  module.hot.accept()
-  module.hot.dispose(() => {
+if (import.meta.webpackHot) {
+  import.meta.webpackHot.accept()
+  import.meta.webpackHot.dispose(() => {
     // perform cleanup
   })
 }
 ```
 
-Now rspack will re execute the changed code. If you built your application in a way where it can be unrendered in dispose() and rendered again, you'll get a nice hot reloading behaviour. Note, you'll want to store the state on window or in localStorage if you want the app to remain in the same state after rerendering.
+Rspack will re-execute the changed module. If your app can re-render itself after `dispose()` runs, you'll get a clean hot-reload. Without `accept()`, only CSS hot-reloads; everything else requires a manual refresh.
 
-If `module.hot.accept` is not called by your code, you'll only get hot reloading behaviour for your css and will have to manually refresh the page for any other changes.
+## Gotcha: nodemon killing HMR
 
-## Gotchas
-
-It's common to get the following error in the network panel:
+If your client and server live in the same project and you restart the server with `nodemon`, you may see this in the network panel:
 
 ```
-GET http://localhost:3030/assets/__webpack_hmr net::ERR_INCOMPLETE_CHUNKED_ENCODING 200 (OK)
+GET /assets/__webpack_hmr  net::ERR_INCOMPLETE_CHUNKED_ENCODING
 ```
 
-This could happen if you keep your client and server code in the same project and use `nodemon` to restart server on code changes. Nodemon restarts the server and the hot reload gets interrupted. Make sure to ignore changes to client code in this case, e.g. `nodemon -i app/client .`.
+Nodemon restarts kill the HMR stream. Tell nodemon to ignore the client dir, e.g. `nodemon -i app/client .`.

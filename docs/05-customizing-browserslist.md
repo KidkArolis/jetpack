@@ -1,14 +1,8 @@
 # Customizing browserslist
 
-Jetpack compiles your code using `swc-loader` and rspack's `builtin:lightningcss-loader` plugins to ensure the code is ready for all the browsers you support. Those projects follow the lovely [browserlist](https://github.com/browserslist/browserslist) convention.
+Jetpack compiles JS via `builtin:swc-loader` and CSS via `builtin:lightningcss-loader`. Both follow the [browserslist](https://github.com/browserslist/browserslist) convention. The top-level rspack `target` is set from your browserslist config and inherited by both loaders.
 
-Jetpack supports differential serving, that is it can produce 2 bundles - modern and legacy. By default jetpack only builds a modern bundle using the `defaults` [browserslist query](https://browsersl.ist/#q=defaults):
-
-```
-defaults
-```
-
-Which is shortcut for:
+By default jetpack builds a single _modern_ bundle using the `defaults` [browserslist query](https://browsersl.ist/#q=defaults):
 
 ```
 > 0.5%
@@ -17,39 +11,28 @@ Firefox ESR
 not dead
 ```
 
-This query ensures that only modern browsers with full support for async/await are targeted. This removes the need to transpiled async/await and many other modern JavaScript features.
+If you turn on differential builds (`target: { modern: true, legacy: true }`), you'll want to define two browserslist environments named `modern` and `legacy`.
 
-To configure the list of browsers, you can use any of methods supported by browserslist, but make sure to use `modern` and `legacy` environments:
+### `package.json`
 
-#### package.json
-
-```js
+```json
 {
-  "private": true,
-  "dependencies": {
-    "autoprefixer": "^6.5.4"
-  },
   "browserslist": {
-    "modern": [
-      "last 1 version",
-      "> 1%",
-      "IE 10"
-    ]
+    "modern": ["last 1 version", "> 1%"],
+    "legacy": ["> 0.1%"]
   }
 }
 ```
 
-#### .browserslistrc config file
+### `.browserslistrc`
 
 ```
-# Browsers that we support
 [modern]
 last 1 version
 > 1%
-IE 10 # sorry
 
 [legacy]
 > 0.1%
 ```
 
-See [browserslist docs](https://github.com/browserslist/browserslist) for more details.
+See the [browserslist docs](https://github.com/browserslist/browserslist) for the full query syntax.

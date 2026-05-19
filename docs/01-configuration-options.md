@@ -7,136 +7,111 @@ Jetpack accepts some configuration via CLI.
 ```
 $ jetpack --help
 
-Usage: jetpack [options] [command] [path]
-
-Options:
-  -v, --version       print the version of jetpack and rspack
-  -p, --port <n>      port, defaults to 3030
-  -d, --dir [path]    run jetpack in the context of this directory
-  -c, --config        config file to use, defaults to jetpack.config.js
-  -r, --no-hot        disable hot reloading
-  -u, --no-minify     disable minification
-  -m, --modern        build a modern bundle
-  -l, --legacy        build a legacy bundle
-  -x, --exec [path]   execute an additional process, e.g. an api server
-  -i, --print-config  print the rspack config object used in the current command
-  --log [levels]      select log levels: info, progress, none (default: "info,progress")
-  -h, --help          display help for command
+Usage: jetpack [command] [options] [path]
 
 Commands:
-  dev                 run the dev server
-  build               build for production
-  inspect             analyze bundle
-  browsers [options]  print supported browsers
-  clean               remove the dist dir
-  help [command]      display help for command
+  dev       run the dev server (default)
+  build     build for production
+  inspect   analyze bundle
+  browsers  print supported browsers
+  clean     remove the dist dir
+
+Options:
+  -p, --port <n>       port, defaults to 3030
+  -d, --dir [path]     run jetpack in the context of this directory
+  -c, --config [path]  config file to use, defaults to jetpack.config.js
+  -r, --no-hot         disable hot reloading
+  -u, --no-minify      disable minification
+  -m, --modern         build a modern bundle
+  -l, --legacy         build a legacy bundle
+  -x, --exec [path]    execute an additional process, e.g. an api server
+  -i, --print-config   print the rspack config object used in the current command
+  -o, --log [levels]   select log levels: info, progress, none
+  -v, --version        print the version of jetpack and rspack
+  -h, --help           display help for command
 ```
 
 ## Configuration File
 
-Jetpack can also be configured using `jetpack.config.js` file. Here are all of the available options.
+Jetpack can also be configured using `jetpack.config.js` (or `.mjs`/`.cjs`). Here are all of the available options.
 
 ```js
-module.exports = {
+export default {
   // directory to run jetpack in
   dir: '.',
 
   // entry module path relative to dir
-  // defaults to which ever is found first:
-  //   index.js
-  //   package.json#main
-  //   src/index.js
+  // defaults to '.' — rspack resolves it via package.json main / index.js
   entry: '.',
 
   // port of the dev server
   port: 3030,
 
-  // relative path to static assets file dir
-  // these are files that you don't want to process via rspack
-  // but want to serve as part of your application, these
-  // will get exposed under /assets/*
+  // relative path to a static assets dir (files served from /assets/* without rspack processing)
   static: 'assets',
 
   // build output path relative to dir
   dist: 'dist',
 
-  // use when uploading assets to CDN, e.g. 'https://storage.googleapis.com/humaans-static/assets/'
-  // or when serving from a different path than the jetpack default. Note: this doesn't affect
-  // the build output structure, you will still get dist/index.html and dist/assets/*, but
-  // manifest.json and index.html will be pointing to this publicPath instead of the default /assets
+  // used to build the static asset URLs embedded in the HTML template
+  // (e.g. 'https://cdn.example.com/assets/'). Inside the bundle, chunk URLs
+  // are resolved at runtime from the loaded script's location — works for
+  // CDN and sub-path deployments without further config.
   publicPath: '/assets/',
-
-  // jsx pragma
-  // defaults to `React.createElement` if react is installed, `h` otherwise
-  jsx: 'React.createElement',
 
   // hot reloading
   hot: true,
   // or with options:
   // hot: { quiet: true },  // silence HMR logs in browser console
 
-  // unified flag for source maps for js and css
-  // follows rspack naming, but can also be simply set to true
-  // it's true by default in development and false in production
+  // source maps for js and css
+  // true by default in development, off by default in production
   sourceMaps: true,
 
-  // in you need to turn off minification in production for any reason
+  // to turn off minification in production for any reason
   minify: false,
 
-  // set to `true` to enable retries on chunk loads
-  // defaults to trying 5 times with exponential backoff
+  // set to `true` to enable retries on chunk loads (5 attempts, exponential backoff)
   chunkLoadRetry: false,
 
-  // command executed to run the server/api process
-  // this command is executed only if `-x` arg is passed to jetpack
-  // even if this option is configured
+  // command executed to run the server/api process when `-x` is passed
   exec: 'node .',
 
-  // used for proxying certain requests to a different server
+  // proxy certain requests to a different server
   // e.g. { '/api/*': 'http://localhost:3000',
-  //        '/api2/*': 'http://localhost:3001/:splat',
-  //        '/api3/*': 'http://localhost:3002/custom/:splat' }
-  // it can also be a function that receives an express app
-  // e.g. (app) => app.get('/api/foo', (req, res) => {...})
+  //        '/api2/*': 'http://localhost:3001/:splat' }
+  // or a function that receives an express app:
+  // (app) => app.get('/api/foo', (req, res) => {...})
   proxy: {},
 
   // configure logging
   log: 'info,progress',
 
-  // the index.html template generation
-  // defaults to package.json#name or 'jetpack' if not available
+  // page title (defaults to package.json#name or 'jetpack')
   title: 'jetpack',
 
-  // useful for adding meta tags or scripts
-  // can be specified in handlebars template syntax
+  // useful for adding meta tags or scripts (handlebars template syntax)
   head: null,
 
-  // body
-  // can be specified in handlebars template syntax
+  // body (handlebars template syntax)
   body: `<div id='root'></div>`,
 
-  // the html template
-  // can be specified in handlebars template syntax
-  html: `see lib/template.hbs`,
+  // the html template (handlebars), defaults to lib/template.hbs
+  html: undefined,
 
-  // css options
   css: {
     // css modules
     modules: false,
 
-    // a shortcut for setting lightningcss feature flags
-    // e.g. { 'nesting': true, colorFunction: true }
+    // shortcut for setting lightningcss feature flags
     // see https://rspack.dev/guide/features/builtin-lightningcss-loader#options
-    // and https://lightningcss.dev/transpilation.html
     features: {
       include: {},
-      exclude: {},
+      exclude: {}
     },
 
-    // when using Sass, you can specify paths to your global scss resources
-    // so that you can use your shared variables & mixins across all Sass styles
-    // without manually importing them in each file. Works with CSS Modules.
-    // See further tips: https://github.com/shakacode/sass-resources-loader#tips
+    // when using Sass, paths to global scss resources to inject into every Sass file
+    // see https://github.com/shakacode/sass-resources-loader
     resources: []
   },
 
@@ -145,93 +120,59 @@ module.exports = {
     legacy: false
   },
 
-  // rspack config transform fn
+  // rspack config transform fn — see 02-customizing-rspack.md
   rspack: (config, options) => {
-    // config is the rspack config generated by jetpack
-    // options is this jetpack options object including defaults,
-    // but also includes a very handy options.production flag
-    // see 02-customizing-rspack.md for more details
+    // config: the rspack config jetpack generated
+    // options: this jetpack options object including defaults (has options.production)
   }
 }
 ```
 
 ## HTML Template
 
-The default html template is the following:
-
-```hbs
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
-    <title>{{{title}}}</title>
-    {{#each assets.css}}
-    <link rel="stylesheet" href='{{{.}}}' />
-    {{/each}}
-    {{{head}}}
-  </head>
-  <body>
-    {{{body}}}
-    {{#if runtime}}
-    <script type='text/javascript'>
-    {{{runtime}}}
-    </script>
-    {{/if}}
-    {{#each assets.js}}
-    <script type='text/javascript' src='{{{.}}}' async></script>
-    {{/each}}
-  </body>
-</html>
-```
-
-You can override it completely using the `html` option or extend it by using `head` and `body` options.
+The default template is in [`lib/template.hbs`](../lib/template.hbs). You can override it via the `html` option, or extend it with `head` and `body`.
 
 ## Modules
 
-Jetpack exports the following modules:
+Jetpack exposes the following entry points.
 
-### jetpack/serve
+### `jetpack/serve`
 
-It's a middleware that can serve your assets in development and production. It proxies to jetpack dev server in development and serves files from `dist` in production. For example:
+Middleware that serves your assets in both dev (by proxying to the dev server) and production (from `dist`). For example:
 
 ```js
-const express = require('express')
-const jetpack = require('jetpack/serve')
+import express from 'express'
+import jetpack from 'jetpack/serve'
 
-const app = express();
-
+const app = express()
 app.get('/api/unicorns', (req, res) => {...})
-app.get('*', jetpack)
+app.use(jetpack)
 ```
 
-### jetpack/options
+### `jetpack/options`
 
-Receive all of the jepack config. Might be useful if you want to look at the port, dist, or generated assets in production if you're say generating your HTML server side, e.g.:
-
-```
-const options = require('jetpack/options')
-
-options.production
-options.entry
-options.port
-options.assets
-
-options.assets.js.forEach(script => console.log(script))
-options.assets.css.forEach(script => console.log(script))
-options.assets.other
-options.assets.runtime // the path to the runtime
-options.runtime // the content of the runtime script
-```
-
-### jetpack/proxy
-
-A simple proxy helper, useful if you want to customize your proxy behaviour using a function. E.g.
+Reads the resolved jetpack configuration. Useful for server-side HTML rendering, accessing the asset list, etc.
 
 ```js
-const proxy = require('jetpack/proxy')
+import getOptions from 'jetpack/options'
 
-module.exports = {
+const options = await getOptions()
+options.production
+options.port
+options.assets.js // string[]: URLs of js entry chunks
+options.assets.css // string[]: URLs of css entry chunks
+options.assets.runtime // string[]: URL of runtime chunk
+options.runtime // string: inlined runtime script content
+```
+
+### `jetpack/proxy`
+
+Proxy helper for customising proxy behaviour via a function.
+
+```js
+import proxy from 'jetpack/proxy'
+
+export default {
   proxy: (app) => {
     app.post('/custom', (req, res) => res.send(422))
     app.get('/api/*', proxy('http://localhost:3000'))
@@ -239,6 +180,10 @@ module.exports = {
 }
 ```
 
-### jetpack/rspack
+### `jetpack/rspack`
 
-An export of the rspack module used by jetpack. Useful to access rspack's plugins, etc.
+Re-exports the rspack module so you can use its plugins.
+
+### `jetpack/rspack.config`
+
+The full rspack config jetpack generates. Used internally; can be passed to `rspack` directly if you want to invoke it without `jetpack`.
