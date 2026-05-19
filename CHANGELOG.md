@@ -12,6 +12,18 @@
 - `jetpack/rspack.config` now exports an async function returning the rspack config. `rspack --config node_modules/jetpack/rspack.config.js` still works (rspack supports async config functions).
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
 - Dropped the `-x` / `--exec` flag and the `exec` config option. Use `concurrently`, two terminals, or your task runner of choice to run a second process alongside jetpack.
+- Dropped `sass-resources-loader` and the `css.resources` config option. The same behaviour is built into modern `sass-loader` via its `additionalData` option — use it via the `rspack` config hook:
+  ```js
+  rspack: (config) => {
+    for (const rule of config.module.rules[0].oneOf) {
+      for (const loader of rule.use || []) {
+        if (loader.loader?.includes('/sass-loader')) {
+          loader.options.additionalData = `@use './path/to/_resources' as *;`
+        }
+      }
+    }
+  }
+  ```
 - Updated to Rspack 2.0 — see the [Rspack v1 → v2 migration guide](https://rspack.rs/guide/migration/rspack_1.x) if you customise rspack via `jetpack.config.js`.
 
 **Fixes**

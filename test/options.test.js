@@ -1,5 +1,4 @@
 import test from 'ava'
-import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import options from '../lib/options.js'
@@ -27,9 +26,8 @@ const base = (pkg, extra = {}) =>
       port: 3030,
       sourceMaps: 'source-map',
       title: 'jetpack',
-      body: "<div id='root'></div>",
-      html: fs.readFileSync(path.join(__dirname, '..', 'lib', 'template.hbs')).toString(),
-      head: null,
+      cspNonce: false,
+      html: null,
       proxy: {},
       minify: true,
       chunkLoadRetry: false,

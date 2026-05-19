@@ -63,6 +63,35 @@ test.serial('jetpack/serve serves built files in production', async (t) => {
   }
 })
 
+test.serial('jetpack/serve replaces CSP nonce placeholders in production', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic', { cspNonce: true })
+  const build = await runJetpack(['build', '--log=info', '--dir', dir], {
+    cwd: os.tmpdir(),
+    env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+  })
+  t.is(build.exitCode, 0, `build failed: ${build.all}`)
+
+  const builtHtml = await fs.readFile(path.join(dir, 'dist', 'index.html'), 'utf8')
+  t.true(builtHtml.includes('__JETPACK_CSP_NONCE__'))
+
+  const port = await getFreePort()
+  const server = await startServeHarness({
+    cwd: dir,
+    port,
+    env: { NODE_ENV: 'production', CSP_NONCE: 'request-nonce' }
+  })
+  try {
+    const res = await fetch(`http://localhost:${port}/`)
+    const body = await res.text()
+    t.is(res.status, 200)
+    t.true(body.includes('nonce="request-nonce"'))
+    t.false(body.includes('__JETPACK_CSP_NONCE__'))
+  } finally {
+    await server.kill()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
 test.serial('jetpack/serve proxies to dev server in development', async (t) => {
   const devPort = await getFreePort()
   const servePort = await getFreePort()
@@ -87,6 +116,39 @@ test.serial('jetpack/serve proxies to dev server in development', async (t) => {
       t.is(res.status, 200)
       t.regex(body, /<!doctype html>/i)
       t.regex(body, /\/assets\/bundle\.js/)
+    } finally {
+      await harnessProc.kill()
+    }
+  } finally {
+    await dev.kill()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack/serve replaces CSP nonce placeholders when proxying dev server', async (t) => {
+  const devPort = await getFreePort()
+  const servePort = await getFreePort()
+  const dir = await setupTmpFixture('pkg-basic', { port: devPort, cspNonce: true })
+
+  const dev = await startNode(
+    path.join(__dirname, '..', 'bin', 'jetpack'),
+    ['--dir', dir, '--port', String(devPort), '--log=info'],
+    {
+      readyMatcher: new RegExp(`Asset server http://localhost:${devPort}`)
+    }
+  )
+  try {
+    const harnessProc = await startServeHarness({
+      cwd: dir,
+      port: servePort,
+      env: { NODE_ENV: 'development', CSP_NONCE: 'dev-nonce' }
+    })
+    try {
+      const res = await fetch(`http://localhost:${servePort}/`)
+      const body = await res.text()
+      t.is(res.status, 200)
+      t.true(body.includes('nonce="dev-nonce"'))
+      t.false(body.includes('__JETPACK_CSP_NONCE__'))
     } finally {
       await harnessProc.kill()
     }

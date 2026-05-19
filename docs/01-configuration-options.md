@@ -52,7 +52,7 @@ export default {
   // build output path relative to dir
   dist: 'dist',
 
-  // used to build the static asset URLs embedded in the HTML template
+  // used to build the static asset URLs embedded in index.html
   // (e.g. 'https://cdn.example.com/assets/'). Inside the bundle, chunk URLs
   // are resolved at runtime from the loaded script's location — works for
   // CDN and sub-path deployments without further config.
@@ -86,14 +86,26 @@ export default {
   // page title (defaults to package.json#name or 'jetpack')
   title: 'jetpack',
 
-  // useful for adding meta tags or scripts (handlebars template syntax)
-  head: null,
+  // add nonce placeholders to jetpack-owned script tags
+  // replace them per request with `renderHtmlResponse` from `jetpack/html`
+  cspNonce: false,
 
-  // body (handlebars template syntax)
-  body: `<div id='root'></div>`,
-
-  // the html template (handlebars), defaults to lib/template.hbs
-  html: undefined,
+  // custom index.html renderer. If omitted, jetpack renders a default app shell.
+  html: ({ html, title, tags, cspNonceAttr }) => html`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <title>${title}</title>
+        ${tags.css}
+      </head>
+      <body>
+        <div id="root"></div>
+        ${tags.runtime} ${tags.js}
+      </body>
+    </html>
+  `,
 
   css: {
     // css modules
@@ -104,11 +116,7 @@ export default {
     features: {
       include: {},
       exclude: {}
-    },
-
-    // when using Sass, paths to global scss resources to inject into every Sass file
-    // see https://github.com/shakacode/sass-resources-loader
-    resources: []
+    }
   },
 
   target: {
@@ -126,7 +134,46 @@ export default {
 
 ## HTML Template
 
-The default template is in [`lib/template.hbs`](../lib/template.hbs). You can override it via the `html` option, or extend it with `head` and `body`.
+By default, Jetpack renders a small app shell with `<div id="root"></div>` and injects generated CSS, runtime, and JS tags.
+
+For full control, provide an `html` function. Jetpack passes pre-rendered tag groups so custom HTML does not need to loop over assets.
+
+```js
+export default {
+  cspNonce: true,
+  html: ({ html, title, tags, cspNonceAttr, production }) => html`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>${title}</title>
+        ${tags.css}
+        ${production
+          ? html`
+              <script ${cspNonceAttr}>
+                window.analytics = true
+              </script>
+            `
+          : ''}
+      </head>
+      <body>
+        <div id="root"></div>
+        ${tags.runtime} ${tags.js}
+      </body>
+    </html>
+  `
+}
+```
+
+The `html` helper is `String.raw`; it exists so editors can syntax-highlight HTML template literals. It does not escape interpolated values.
+
+When `cspNonce: true` is set, Jetpack inserts `__JETPACK_CSP_NONCE__` into script nonces and exposes `cspNonce` and `cspNonceAttr` to the HTML renderer. Replace the placeholder per request:
+
+```js
+import { renderHtmlResponse } from 'jetpack/html'
+
+res.send(renderHtmlResponse(indexHtml, { cspNonce: res.locals.cspNonce }))
+```
 
 ## Modules
 
@@ -143,6 +190,19 @@ import jetpack from 'jetpack/serve'
 const app = express()
 app.get('/api/unicorns', (req, res) => {...})
 app.use(jetpack)
+```
+
+When `cspNonce: true` is enabled, `jetpack/serve` replaces nonce placeholders in `index.html` with `res.locals.cspNonce`.
+
+### `jetpack/html`
+
+Exports helpers for custom HTML rendering.
+
+```js
+import { html, renderHtmlResponse } from 'jetpack/html'
+
+html`<div>${'syntax highlighting helper only'}</div>`
+renderHtmlResponse(indexHtml, { cspNonce: res.locals.cspNonce })
 ```
 
 ### `jetpack/options`
