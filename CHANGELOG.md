@@ -2,21 +2,18 @@
 
 **Breaking changes**
 
-- Jetpack is now ESM-only. Use `import` (for example, `import { serve } from 'jetpack/serve'`); `require('jetpack/...')` is no longer supported.
-- `jetpack.config.js` is loaded via `import()`. In projects with `"type": "module"`, use `export default { ... }`. For CommonJS config, use `jetpack.config.cjs` or keep `module.exports = { ... }` in projects without `"type": "module"`.
-- The package root now exports only `defineConfig` and `resolveConfig`:
-  ```js
-  import { defineConfig, resolveConfig } from 'jetpack'
-  const config = await resolveConfig({ command: 'dev', dir: process.cwd() })
-  ```
-  If you call `resolveConfig` directly, pass `command`, `dir`, `entry`, and `overrides` explicitly.
-- Resolved config no longer includes `assets`, `runtime`, or `production`. Use `mode === 'production'`; emitted asset URLs are written to `dist/manifest.json`.
-- Removed `jetpack/options`. Use `resolveConfig` from `jetpack`.
+- Jetpack is now ESM-only. Use `import` instead, for example `import { serve } from 'jetpack/serve'`. `require('jetpack/...')` is no longer supported.
+- `jetpack.config.js` is loaded with `import()`. In projects with `"type": "module"`, use `export default { ... }`. For CommonJS config, use `jetpack.config.cjs` or keep `module.exports = { ... }` in projects without `"type": "module"`.
+- The package root now exports only `defineConfig` and `resolveConfig`. Removed `jetpack/options`; use `resolveConfig` from `jetpack`.
+- If you call `resolveConfig` directly, pass `command`, `dir`, `entry`, and `overrides` explicitly.
+- Resolved config no longer includes `assets`, `runtime`, `production`, `react`, or CLI-only flags such as `printConfig`, `yes`, `dryRun`, or `coverage`. Use `mode === 'production'`; emitted asset URLs are written to `dist/manifest.json`. React support remains automatic when `react` is installed.
 - Removed `jetpack/proxy`. Keep using the `proxy` config option for dev API forwarding.
 - Removed `jetpack/rspack.config`. Use `jetpack/rspack-config` for the generated rspack config factory.
 - `jetpack/serve` now exports a factory: resolve config explicitly, then pass it to `serve(config)`.
 - Replaced `--modern` / `--legacy` with `--target modern|legacy|all`.
+- Replaced the `target: { modern, legacy }` config object with `target: 'modern' | 'legacy' | 'all'`. Resolved config now uses the same shape.
 - The implicit modern browser target changed from Browserslist `defaults` to `baseline widely available with downstream`. Legacy still defaults to Browserslist `defaults`.
+- Polyfill config is now top-level: `polyfills: 'usage' | 'entry' | false`.
 - The `rspack(config, options)` config hook now receives `rspack(config, context)`, where `context` is `{ command, mode, target, dir, findLoader }`.
 - Removed the old `webpack` config hook alias. Use `rspack` instead.
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
@@ -25,13 +22,9 @@
   - `publicPath` -> `assetBaseUrl`
   - `dist` -> `build.outDir`
   - build options -> `build.outDir`, `build.sourceMaps`, `build.minify`, and `build.chunkLoadRetry`
-  - document shell options -> `html.title`, `html.cspNonce`, and `html.render`
-- Removed `static` and config-file `dir`. Use `--dir` or `resolveConfig({ dir })` to select the project root.
-- Replaced the `target: { modern, legacy }` config object with `target: 'modern' | 'legacy' | 'all'`.
-- Resolved config now keeps that same `target: 'modern' | 'legacy' | 'all'` shape instead of returning `{ modern, legacy }`.
-- Resolved config no longer includes CLI-only command flags such as `printConfig`, `yes`, `dryRun`, or `coverage`.
+  - HTML options -> `html.title`, `html.cspNonce`, and `html.render`
+- Removed the `static` option and `dir` in config files. Use `--dir` or `resolveConfig({ dir })` to select the project root.
 - Removed the `css.features` config option. Customize `builtin:lightningcss-loader` via the `rspack` config hook if needed.
-- Removed the resolved `react` option. React support remains automatic when `react` is installed.
 - Removed `sass-resources-loader` and `css.resources`. Use `sass-loader`'s `additionalData` option via the `rspack` config hook:
   ```js
   rspack: (config, { findLoader }) => {
