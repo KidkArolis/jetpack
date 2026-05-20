@@ -15,7 +15,6 @@ const base = (pkg, extra = {}) =>
     {
       command: 'dev',
       mode: 'development',
-      production: false,
       logLevels: { info: false, progress: false, none: false },
       dir: dir('fixtures', pkg),
       entry: '.',
@@ -156,6 +155,29 @@ test('accepts string targets', async (t) => {
     overrides: { target: 'all' }
   })
   t.deepEqual(opts.target, { modern: true, legacy: true })
+})
+
+test('accepts explicit mode independently of command', async (t) => {
+  const opts = await options({
+    command: 'build',
+    mode: 'development',
+    dir: dir('fixtures', 'pkg-src')
+  })
+
+  t.is(opts.command, 'build')
+  t.is(opts.mode, 'development')
+  t.is(opts.sourceMaps, 'source-map')
+})
+
+test('rejects invalid modes', async (t) => {
+  await t.throwsAsync(
+    options({
+      command: 'build',
+      mode: 'staging',
+      dir: dir('fixtures', 'pkg-src')
+    }),
+    { message: 'Invalid mode "staging". Expected development or production.' }
+  )
 })
 
 test('rejects invalid targets', async (t) => {

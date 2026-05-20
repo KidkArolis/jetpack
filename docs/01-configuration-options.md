@@ -144,14 +144,14 @@ For full control, provide an `html` function. Jetpack passes the resolved option
 ```js
 export default {
   cspNonce: true,
-  html: ({ html, title, tags, manifest, cspNonceAttr, production }) => html`
+  html: ({ html, title, tags, manifest, cspNonceAttr, mode }) => html`
     <!DOCTYPE html>
     <html>
       <head>
         <meta charset="utf-8" />
         <title>${title}</title>
         ${tags.css}
-        ${production
+        ${mode === 'production'
           ? html`
               <script ${cspNonceAttr}>
                 window.analytics = true
@@ -231,7 +231,7 @@ const config = await resolveConfig({
   command: process.env.NODE_ENV === 'production' ? 'build' : 'dev',
   dir: process.cwd()
 })
-config.production
+config.mode
 config.port
 config.outDir
 config.assetBaseUrl

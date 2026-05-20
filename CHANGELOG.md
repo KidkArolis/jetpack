@@ -10,7 +10,7 @@
   const config = await resolveConfig({ command: 'dev', dir: process.cwd() })
   ```
   `resolveConfig` does not parse CLI arguments on import; pass `command`, `dir`, `entry`, and `overrides` explicitly.
-- Resolved config no longer includes build output fields like `assets` and `runtime`. `jetpack build` writes emitted asset URLs to `dist/manifest.json`.
+- Resolved config no longer includes build output fields like `assets` and `runtime`, or the derived `production` boolean. Use `mode === 'production'` instead. `jetpack build` writes emitted asset URLs to `dist/manifest.json`.
 - Removed the public `jetpack/options` entry point. Use `resolveConfig` from `jetpack`.
 - Removed the public `jetpack/proxy` entry point. Keep using the `proxy` config option for simple dev API forwarding.
 - Removed `jetpack/rspack.config`. Use `jetpack/rspack-config` for the generated rspack config factory.

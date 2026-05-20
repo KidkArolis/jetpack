@@ -2,7 +2,7 @@ import test from 'ava'
 import { renderHtml, renderHtmlResponse } from '../lib/html.js'
 
 const options = {
-  production: false,
+  mode: 'development',
   title: 'test app',
   cspNonce: false
 }
