@@ -2,7 +2,7 @@
 
 **Breaking changes**
 
-- jetpack is now ESM. Import its entry points (e.g. `import { createServe } from 'jetpack/serve'`) — `require('jetpack/...')` is no longer supported.
+- jetpack is now ESM. Import its entry points (e.g. `import { serve } from 'jetpack/serve'`) — `require('jetpack/...')` is no longer supported.
 - `jetpack.config.js` is loaded via `import()`. In projects with `"type": "module"`, use `export default { ... }`. CommonJS configs still work — keep `module.exports = { ... }` in projects without `"type": "module"`, or rename to `jetpack.config.cjs`.
 - The package root now exports `defineConfig` and `resolveConfig` only:
   ```js
@@ -14,13 +14,13 @@
 - Removed the public `jetpack/options` entry point. Use `resolveConfig` from `jetpack`.
 - Removed the public `jetpack/proxy` entry point. Keep using the `proxy` config option for simple dev API forwarding.
 - Removed `jetpack/rspack.config`. Use `jetpack/rspack-config` for the generated rspack config factory.
-- `jetpack/serve` now exports a factory. Resolve config explicitly, then pass it to `createServe(config)`.
+- `jetpack/serve` now exports a factory. Resolve config explicitly, then pass it to `serve(config)`.
 - Replaced `--modern` / `--legacy` with `--target modern|legacy|all`.
-- The `rspack(config, options)` config hook now receives `rspack(config, context)`, where `context` is `{ command, mode, target, root }`.
+- The `rspack(config, options)` config hook now receives `rspack(config, context)`, where `context` is `{ command, mode, target, dir }`.
 - Removed the old `webpack` config hook alias. Use `rspack` instead.
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
 - Dropped the `-x` / `--exec` flag and the `exec` config option. Use `concurrently`, two terminals, or your task runner of choice to run a second process alongside jetpack.
-- Renamed `publicPath` to `assetBaseUrl`, removed the `static` config option, and removed `dir` from config files. Continue using `--dir` or `resolveOptions({ dir })` to select the project root.
+- Renamed `publicPath` to `assetBaseUrl`, renamed `dist` to `outDir`, removed the `static` config option, and removed `dir` from config files. Continue using `--dir` or `resolveConfig({ dir })` to select the project root.
 - Dropped `sass-resources-loader` and the `css.resources` config option. The same behaviour is built into modern `sass-loader` via its `additionalData` option — use it via the `rspack` config hook:
   ```js
   rspack: (config) => {

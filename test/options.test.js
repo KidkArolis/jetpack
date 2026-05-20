@@ -19,7 +19,7 @@ const base = (pkg, extra = {}) =>
       logLevels: { info: false, progress: false, none: false },
       dir: dir('fixtures', pkg),
       entry: '.',
-      dist: 'dist',
+      outDir: 'dist',
       target: {
         modern: true,
         legacy: false
@@ -189,22 +189,22 @@ test('rejects output paths that point at or outside the project root', async (t)
   t.teardown(() => fs.rm(projectRootDist, { recursive: true, force: true }))
   t.teardown(() => fs.rm(outsideDist, { recursive: true, force: true }))
 
-  await fs.writeFile(path.join(projectRootDist, 'jetpack.config.mjs'), 'export default { dist: "." }\n')
+  await fs.writeFile(path.join(projectRootDist, 'jetpack.config.mjs'), 'export default { outDir: "." }\n')
   await t.throwsAsync(
     options({
       command: 'build',
       dir: projectRootDist
     }),
-    { message: 'dist must not point to the project root.' }
+    { message: 'outDir must not point to the project root.' }
   )
 
-  await fs.writeFile(path.join(outsideDist, 'jetpack.config.mjs'), 'export default { dist: "../outside" }\n')
+  await fs.writeFile(path.join(outsideDist, 'jetpack.config.mjs'), 'export default { outDir: "../outside" }\n')
   await t.throwsAsync(
     options({
       command: 'build',
       dir: outsideDist
     }),
-    { message: 'dist must stay inside the project root.' }
+    { message: 'outDir must stay inside the project root.' }
   )
 })
 
@@ -226,7 +226,7 @@ test('passes a small public context to the rspack hook', async (t) => {
   })
 
   t.deepEqual(contexts, [
-    { command: 'build', mode: 'production', target: 'modern', root: dir('fixtures', 'pkg-src') },
-    { command: 'build', mode: 'production', target: 'legacy', root: dir('fixtures', 'pkg-src') }
+    { command: 'build', mode: 'production', target: 'modern', dir: dir('fixtures', 'pkg-src') },
+    { command: 'build', mode: 'production', target: 'legacy', dir: dir('fixtures', 'pkg-src') }
   ])
 })

@@ -34,4 +34,4 @@ export default {
 }
 ```
 
-The second argument is `{ command, mode, target, root }`.
+The second argument is `{ command, mode, target, dir }`.

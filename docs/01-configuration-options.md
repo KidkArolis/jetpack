@@ -47,7 +47,7 @@ export default defineConfig({
   host: 'localhost',
 
   // build output path relative to the project root
-  dist: 'dist',
+  outDir: 'dist',
 
   // used to build the static asset URLs embedded in index.html
   // (e.g. 'https://cdn.example.com/assets/'). Inside the bundle, chunk URLs
@@ -130,7 +130,7 @@ export default defineConfig({
   // rspack config transform fn — see 02-customizing-rspack.md
   rspack: (config, context) => {
     // config: the rspack config jetpack generated
-    // context: { command, mode, target, root }
+    // context: { command, mode, target, dir }
   }
 })
 ```
@@ -233,6 +233,7 @@ const config = await resolveConfig({
 })
 config.production
 config.port
+config.outDir
 config.assetBaseUrl
 config.assetBasePathname
 ```
