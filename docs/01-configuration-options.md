@@ -136,12 +136,12 @@ export default {
 
 By default, Jetpack renders a small app shell with `<div id="root"></div>` and injects generated CSS, runtime, and JS tags.
 
-For full control, provide an `html` function. Jetpack passes pre-rendered tag groups so custom HTML does not need to loop over assets.
+For full control, provide an `html` function. Jetpack passes the resolved options, the current build manifest, and pre-rendered tag groups so custom HTML does not need to loop over assets.
 
 ```js
 export default {
   cspNonce: true,
-  html: ({ html, title, tags, cspNonceAttr, production }) => html`
+  html: ({ html, title, tags, manifest, cspNonceAttr, production }) => html`
     <!DOCTYPE html>
     <html>
       <head>
@@ -166,6 +166,23 @@ export default {
 ```
 
 The `html` helper is `String.raw`; it exists so editors can syntax-highlight HTML template literals. It does not escape interpolated values.
+
+## Build Manifest
+
+`jetpack build` writes `dist/manifest.json` with the emitted asset URLs for each built target:
+
+```json
+{
+  "modern": {
+    "js": ["/assets/bundle.d399b1f50adbbdb5.js"],
+    "css": ["/assets/bundle.b3e6bb21.css"],
+    "runtime": ["/assets/runtime~bundle.744331fd996ca501.js"],
+    "other": []
+  }
+}
+```
+
+The resolved options describe what Jetpack should do. The manifest describes what the build produced.
 
 When `cspNonce: true` is set, Jetpack inserts `__JETPACK_CSP_NONCE__` into script nonces and exposes `cspNonce` and `cspNonceAttr` to the HTML renderer. Replace the placeholder per request:
 
@@ -223,7 +240,7 @@ renderHtmlResponse(indexHtml, { cspNonce: res.locals.cspNonce })
 
 ### `jetpack/options`
 
-Reads the resolved jetpack configuration. Useful for server-side HTML rendering, accessing the asset list, etc. This API does not parse `process.argv`; pass CLI-like values explicitly when you need them.
+Reads the resolved jetpack configuration. This API does not parse `process.argv`; pass CLI-like values explicitly when you need them.
 
 ```js
 import getOptions, { resolveOptions } from 'jetpack/options'
@@ -234,14 +251,14 @@ const options = await getOptions({
 })
 options.production
 options.port
-options.assets.js // string[]: URLs of js entry chunks
-options.assets.css // string[]: URLs of css entry chunks
-options.assets.runtime // string[]: URL of runtime chunk
-options.runtime // string: inlined runtime script content
+options.assetBaseUrl
+options.assetBasePathname
 
 // named export for clarity when you prefer it
 await resolveOptions({ command: 'dev', dir: './app', entry: './client.js' })
 ```
+
+Build asset URLs live in `dist/manifest.json`, not in the resolved options object.
 
 ### `jetpack/proxy`
 

@@ -4,18 +4,19 @@ import { renderHtml, renderHtmlResponse } from '../lib/html.js'
 const options = {
   production: false,
   title: 'test app',
-  cspNonce: false,
-  assets: {
-    js: ['/assets/bundle.js'],
-    css: ['/assets/bundle.css'],
-    other: [],
-    runtime: []
-  },
-  runtime: 'console.log("runtime")'
+  cspNonce: false
+}
+
+const manifest = {
+  js: ['/assets/bundle.js'],
+  css: ['/assets/bundle.css'],
+  other: [],
+  runtime: [],
+  inlineRuntime: 'console.log("runtime")'
 }
 
 test('renders default html with generated asset tags', (t) => {
-  const html = renderHtml(options)
+  const html = renderHtml(options, manifest)
   t.true(html.includes('<title>test app</title>'))
   t.true(html.includes('<link rel="stylesheet" href="/assets/bundle.css">'))
   t.true(html.includes('<script>\nconsole.log("runtime")\n</script>'))
@@ -26,7 +27,8 @@ test('renders custom html function with pre-rendered tags', (t) => {
   const html = renderHtml(
     Object.assign({}, options, {
       html: ({ html, tags }) => html`<main>${tags.css}${tags.js}</main>`
-    })
+    }),
+    manifest
   )
 
   t.is(
@@ -36,7 +38,7 @@ test('renders custom html function with pre-rendered tags', (t) => {
 })
 
 test('adds csp nonce placeholders to jetpack-owned scripts', (t) => {
-  const html = renderHtml(Object.assign({}, options, { cspNonce: true }))
+  const html = renderHtml(Object.assign({}, options, { cspNonce: true }), manifest)
   t.true(html.includes('<script nonce="__JETPACK_CSP_NONCE__">'))
   t.true(html.includes('<script src="/assets/bundle.js" nonce="__JETPACK_CSP_NONCE__" async></script>'))
 

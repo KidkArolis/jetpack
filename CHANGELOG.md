@@ -10,6 +10,7 @@
   const options = await getOptions({ command: 'dev', dir: process.cwd() })
   ```
   It no longer parses CLI arguments on import; pass `command`, `dir`, `entry`, and `overrides` explicitly.
+- `jetpack/options` no longer includes build output fields like `assets` and `runtime`. `jetpack build` writes emitted asset URLs to `dist/manifest.json`.
 - `jetpack/rspack.config` now exports an async function returning the rspack config. `rspack --config node_modules/jetpack/rspack.config.js` still works (rspack supports async config functions).
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
 - Dropped the `-x` / `--exec` flag and the `exec` config option. Use `concurrently`, two terminals, or your task runner of choice to run a second process alongside jetpack.

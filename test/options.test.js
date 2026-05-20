@@ -13,8 +13,6 @@ const base = (pkg, extra = {}) =>
       production: false,
       logLevels: { info: false, progress: false, none: false },
       dir: dir('fixtures', pkg),
-      assets: { js: ['/assets/bundle.js'], css: [], other: [], runtime: [] },
-      runtime: null,
       entry: '.',
       dist: 'dist',
       target: {

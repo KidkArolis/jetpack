@@ -161,3 +161,24 @@ test.serial('assetBaseUrl controls generated html asset urls', async (t) => {
     await fs.rm(dir, { recursive: true, force: true })
   }
 })
+
+test.serial('build writes an asset manifest', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic', {
+    assetBaseUrl: 'https://cdn.example.com/client-assets'
+  })
+
+  try {
+    const build = await runJetpack(['build', '--log=info', '--dir', dir], {
+      cwd: os.tmpdir(),
+      env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+    })
+    t.is(build.exitCode, 0, `build failed: ${build.all}`)
+    const manifest = JSON.parse(await fs.readFile(path.join(dir, 'dist', 'manifest.json'), 'utf8'))
+    t.regex(manifest.modern.js[0], /^https:\/\/cdn\.example\.com\/client-assets\/bundle\..*\.js$/)
+    t.regex(manifest.modern.css[0], /^https:\/\/cdn\.example\.com\/client-assets\/bundle\..*\.css$/)
+    t.deepEqual(manifest.modern.other, [])
+    t.false('inlineRuntime' in manifest.modern)
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
