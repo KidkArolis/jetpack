@@ -352,6 +352,18 @@ test('resolves extensionless imports for supported js and typescript files', asy
   t.deepEqual(config.resolve.extensions, ['.tsx', '.ts', '.jsx', '.mjs', '...'])
 })
 
+test('production builds split initial and async chunks', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null
+  })
+  const config = createRspackConfig(opts).modern
+
+  t.true(config.optimization.runtimeChunk)
+  t.deepEqual(config.optimization.splitChunks, { chunks: 'all' })
+})
+
 function swcEnv(config) {
   return config.module.rules[0].oneOf.find((rule) => rule.use?.some((loader) => loader.loader === 'builtin:swc-loader'))
     .use[0].options.env
