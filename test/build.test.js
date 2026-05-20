@@ -4,6 +4,8 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { runJetpack } from './helpers/process.js'
+import buildCommand from '../lib/build.js'
+import options from '../lib/options.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -94,6 +96,26 @@ test('build both modern and legacy bundles', async (t) => {
   t.true(legacyBundle.includes('`Array.prototype.toReversed` method'))
 
   t.notThrows(() => eval(bundle)) // oxlint-disable-line no-eval
+})
+
+test('build command can be called without exiting the process', async (t) => {
+  const src = path.join(__dirname, 'fixtures', 'pkg-basic')
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-build-api-'))
+  await fs.cp(src, dir, { recursive: true, filter: (s) => !s.includes(`${path.sep}dist`) })
+
+  try {
+    const opts = await options({
+      command: 'build',
+      dir,
+      overrides: { log: 'none' }
+    })
+    const log = { info() {}, warn() {}, error() {}, status() {} }
+    await buildCommand(opts, log)
+    const manifest = JSON.parse(await fs.readFile(path.join(dir, 'dist', 'manifest.json'), 'utf8'))
+    t.truthy(manifest.modern.js[0])
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true })
+  }
 })
 
 async function build(t, pkg) {

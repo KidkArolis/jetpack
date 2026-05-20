@@ -38,6 +38,7 @@
 **Improvements**
 
 - `output.publicPath` is now `'auto'`: the bundle computes its runtime URL from the loaded script's location, so it works out of the box for CDN deployments and sub-path mounts without further config.
+- Reusable command modules no longer change `process.cwd()` or call `process.exit()`. The CLI wrapper owns process exits; commands return or throw.
 - Added a `define` option for build-time constants backed by `rspack.DefinePlugin`.
 - Expanded asset extension list: `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
 - Smaller install — dropped seven runtime dependencies in favour of Node built-ins.
