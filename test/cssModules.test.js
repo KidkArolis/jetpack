@@ -30,6 +30,23 @@ function cssLoader(rule) {
   return rule.use.find((loader) => loader.loader.includes('/css-loader'))
 }
 
+async function stylesheetRule(filename, sourceMaps) {
+  const opts = await options({
+    command: 'build',
+    dir: path.join(fixturesDir, 'pkg-basic'),
+    config: null
+  })
+  const config = createRspackConfig({
+    ...opts,
+    build: {
+      ...opts.build,
+      sourceMaps
+    }
+  }).modern
+
+  return config.module.rules[0].oneOf.find((rule) => rule.test.test(filename))
+}
+
 test('css.modules false keeps all css global', async (t) => {
   const rules = await cssRules(false)
 
@@ -108,4 +125,13 @@ test('css.modules rejects non-boolean conventional', async (t) => {
     }),
     { message: 'css.modules.conventional must be a boolean.' }
   )
+})
+
+test('css-loader source maps follow build.sourceMaps', async (t) => {
+  t.true(cssLoader(await stylesheetRule('style.css', 'source-map')).options.sourceMap)
+  t.true(cssLoader(await stylesheetRule('style.scss', 'source-map')).options.sourceMap)
+  t.false(cssLoader(await stylesheetRule('style.css', false)).options.sourceMap)
+  t.false(cssLoader(await stylesheetRule('style.scss', false)).options.sourceMap)
+  t.false(cssLoader(await stylesheetRule('style.css', 'eval-source-map')).options.sourceMap)
+  t.false(cssLoader(await stylesheetRule('style.scss', 'eval-source-map')).options.sourceMap)
 })
