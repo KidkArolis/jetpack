@@ -4,12 +4,33 @@
   "type": "module",
   "description": "Rspack made more convenient.",
   "exports": {
-    ".": "./index.js",
-    "./rspack": "./rspack.js",
-    "./rspack-config": "./rspack-config.js",
-    "./html": "./html.js",
-    "./serve": "./serve.js"
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./rspack": {
+      "types": "./rspack.d.ts",
+      "import": "./rspack.js",
+      "default": "./rspack.js"
+    },
+    "./rspack-config": {
+      "types": "./rspack-config.d.ts",
+      "import": "./rspack-config.js",
+      "default": "./rspack-config.js"
+    },
+    "./html": {
+      "types": "./html.d.ts",
+      "import": "./html.js",
+      "default": "./html.js"
+    },
+    "./serve": {
+      "types": "./serve.d.ts",
+      "import": "./serve.js",
+      "default": "./serve.js"
+    }
   },
+  "types": "./index.d.ts",
   "license": "MIT",
   "author": "Karolis Narkevicius",
   "repository": {
@@ -31,6 +52,7 @@
     "bin",
     "lib",
     "docs",
+    "*.d.ts",
     "index.js",
     "html.js",
     "rspack-config.js",
@@ -38,7 +60,8 @@
     "serve.js"
   ],
   "scripts": {
-    "test": "ava && oxlint && oxfmt --check '**/*.{js,json,css,yml}'",
+    "test": "ava && npm run test:types && oxlint && oxfmt --check '**/*.{js,json,css,yml,ts}'",
+    "test:types": "tsc -p tsconfig.types.json",
     "coverage": "c8 --reporter=text --reporter=html --include='lib/**/*.js' --include='*.js' --exclude='test/**' --exclude='examples/**' --exclude='lib/hmrFirefoxFix.js' --exclude='lib/retryChunkLoadPlugin.js' ava",
     "format": "oxfmt --write '**/*.{js,json,css,yml}'",
     "release": "np",
@@ -64,12 +87,14 @@
     "webpack-hot-middleware": "^2.26.1"
   },
   "devDependencies": {
+    "@types/node": "^20.19.41",
     "ava": "^8.0.1",
     "c8": "^11.0.0",
     "oxfmt": "^0.51.0",
     "oxlint": "^1.66.0",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "typescript": "^6.0.3"
   },
   "ava": {
     "files": [
