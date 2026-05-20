@@ -52,7 +52,7 @@ export default {
 
 ## SWC
 
-Jetpack handles `.js`, `.mjs`, `.jsx`, `.ts`, and `.tsx` through rspack's `builtin:swc-loader`.
+Jetpack handles app `.js`, `.mjs`, `.jsx`, `.ts`, and `.tsx` files through rspack's `builtin:swc-loader`. Dependency transpilation uses a separate JS-only `.js`/`.mjs` rule so npm packages can be compiled for the configured browser target without running TypeScript/JSX parsing across `node_modules`.
 
 Defaults:
 
@@ -61,7 +61,7 @@ Defaults:
   env: {
     targets: /* derived from browserslist + bundle target */,
     coreJs: /* major.minor from installed core-js */,
-    mode: 'usage'
+    mode: /* polyfills option, default 'usage' */
   },
   jsc: {
     externalHelpers: true
@@ -70,6 +70,8 @@ Defaults:
   isModule: 'unknown'
 }
 ```
+
+Set `polyfills: false` to omit `coreJs` and `mode` from SWC's env options.
 
 To tweak SWC, find the generated loader options:
 
@@ -100,7 +102,7 @@ By default, the modern bundle uses `baseline widely available with downstream`. 
 
 ## Hot Reloading
 
-Hot reloading is on by default in development. Disable it with `--no-hot` or `hot: false`.
+Hot reloading is on by default in development. Disable it with `--no-hot`, `hot: false`, or `hot: { enabled: false }`. Use `hot: { quiet: true }` to silence browser HMR logs.
 
 CSS hot reloads automatically. React components use fast refresh when React is installed.
 
@@ -118,3 +120,21 @@ if (import.meta.webpackHot) {
 ## Inspect
 
 Use `jetpack inspect` to build once and write a self-contained treemap to `${build.outDir}/inspect.html`.
+
+## Chunk Load Retry
+
+Production builds can add a small runtime wrapper that retries failed async chunk loads:
+
+```js
+export default {
+  build: {
+    chunkLoadRetry: {
+      maxAttempts: 5,
+      base: 1.8,
+      multiplier: 500
+    }
+  }
+}
+```
+
+Set `build.chunkLoadRetry: true` to use those defaults. The retry delay is `base ** (attempt - 1) * multiplier` milliseconds.

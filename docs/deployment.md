@@ -11,6 +11,14 @@ jetpack build
 
 Deploy `dist/`, or the directory configured as `build.outDir`, to your static host.
 
+Set `assetBaseUrl` when assets are served from a sub-path or CDN:
+
+```js
+export default {
+  assetBaseUrl: 'https://cdn.example.com/client-assets'
+}
+```
+
 ## Client And API
 
 If the client and API live together, point `package.json#main` at the server entry and set the client `entry` in `jetpack.config.js`.
@@ -29,7 +37,9 @@ app.get('/api/unicorns', (req, res) => res.json([]))
 app.use(serve(config))
 ```
 
-In development, run the API server and `jetpack` in separate processes. `serve(config)` proxies to the dev server. In production, run `jetpack build` first and `serve(config)` serves `config.build.outDir`.
+In development, run the API server and `jetpack` in separate processes. `serve(config)` proxies to the dev server and returns a helpful 502 HTML page for browser requests if the dev server is not running. In production, run `jetpack build` first and `serve(config)` serves `config.build.outDir`.
+
+If you enable `html.cspNonce`, set `res.locals.cspNonce` before `serve(config)` runs. The middleware replaces Jetpack's nonce placeholders in development and production HTML responses.
 
 ## Separate API
 
@@ -95,3 +105,5 @@ jetpack browsers --target all
   }
 }
 ```
+
+Each target key contains public `js`, `css`, `runtime`, and `other` arrays. The runtime may be inlined into `index.html`, so `manifest.json` intentionally omits Jetpack's internal `inlineRuntime` field.

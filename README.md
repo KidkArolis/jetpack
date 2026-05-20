@@ -20,8 +20,9 @@ Jetpack requires Node 20 or newer and is published as ESM.
 - JavaScript, TypeScript, JSX, CSS, SCSS, and assets
 - SWC, core-js polyfills, and Lightning CSS
 - Hot reloading, including React fast refresh
-- Content-hashed production builds with code splitting
+- Content-hashed production builds with code splitting and an asset manifest
 - Optional modern/legacy differential builds
+- Dev proxying, static serving middleware, and CSP nonce helpers
 - A small config file when defaults are not enough
 
 ## Usage
@@ -49,13 +50,13 @@ Inspect, clean, or check browser targets:
 
 ```sh
 jetpack inspect
-jetpack clean
+jetpack clean --dry-run
 jetpack browsers --coverage=GB
 ```
 
 ## Configuration
 
-Most projects do not need config. When you do, keep common app options top-level and put build/HTML shell settings under `build` and `html`.
+Most projects do not need config. When you do, add `jetpack.config.js`, `jetpack.config.mjs`, or `jetpack.config.cjs`. Keep common app options top-level and put build/HTML shell settings under `build` and `html`.
 
 ```js
 import { defineConfig } from 'jetpack'
@@ -64,9 +65,13 @@ export default defineConfig({
   entry: '.',
   port: 3030,
   assetBaseUrl: '/assets/',
+  define: {
+    __APP_VERSION__: '1.0.0'
+  },
 
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    chunkLoadRetry: true
   },
 
   html: {
@@ -103,6 +108,8 @@ const config = await resolveConfig({
 
 app.use(serve(config))
 ```
+
+In development, `serve(config)` proxies to the Jetpack dev server. In production, it serves `build.outDir` and chooses modern or legacy HTML when both bundles exist.
 
 ## Docs
 
