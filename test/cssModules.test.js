@@ -30,6 +30,10 @@ function cssLoader(rule) {
   return rule.use.find((loader) => loader.loader.includes('/css-loader'))
 }
 
+function cssExtractPlugin(config) {
+  return config.plugins.find((plugin) => plugin.constructor.name === 'CssExtractRspackPlugin')
+}
+
 async function stylesheetRule(filename, sourceMaps) {
   const opts = await options({
     command: 'build',
@@ -134,4 +138,16 @@ test('css-loader source maps follow build.sourceMaps', async (t) => {
   t.false(cssLoader(await stylesheetRule('style.scss', false)).options.sourceMap)
   t.false(cssLoader(await stylesheetRule('style.css', 'eval-source-map')).options.sourceMap)
   t.false(cssLoader(await stylesheetRule('style.scss', 'eval-source-map')).options.sourceMap)
+})
+
+test('css chunks use the same filename pattern as entry css', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: path.join(fixturesDir, 'pkg-basic'),
+    config: null
+  })
+  const plugin = cssExtractPlugin(createRspackConfig(opts).modern)
+
+  t.is(plugin.options.filename, '[name].[contenthash:8].css')
+  t.is(plugin.options.chunkFilename, '[name].[contenthash:8].css')
 })
