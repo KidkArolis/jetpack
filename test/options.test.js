@@ -81,6 +81,75 @@ test('accepts explicit overrides', async (t) => {
   )
 })
 
+test('accepts config-shaped overrides', async (t) => {
+  const rspack = () => {}
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    overrides: {
+      entry: 'client.js',
+      port: '4040',
+      host: '127.0.0.1',
+      assetBaseUrl: 'https://cdn.example.com/app',
+      hot: { enabled: false, quiet: true },
+      target: 'legacy',
+      polyfills: false,
+      define: { __TEST__: true },
+      proxy: { '/api/*': 'http://localhost:3000' },
+      log: 'silent',
+      build: {
+        outDir: 'build',
+        sourceMaps: true,
+        minify: false
+      },
+      html: {
+        title: 'Override'
+      },
+      css: {
+        modules: true
+      },
+      assets: {
+        inlineLimit: 1234
+      },
+      transpileDependencies: false,
+      rspack
+    }
+  })
+
+  t.like(opts, {
+    entry: './client.js',
+    port: '4040',
+    host: '127.0.0.1',
+    assetBaseUrl: 'https://cdn.example.com/app/',
+    assetBasePathname: '/app/',
+    hot: { enabled: false, quiet: true },
+    target: 'legacy',
+    polyfills: false,
+    define: { __TEST__: true },
+    proxy: { '/api/*': 'http://localhost:3000' },
+    logLevels: { info: false, progress: false, none: true },
+    build: {
+      outDir: 'build',
+      sourceMaps: 'source-map',
+      minify: false,
+      chunkLoadRetry: false
+    },
+    html: {
+      title: 'Override',
+      cspNonce: false,
+      render: null
+    },
+    css: {
+      modules: true
+    },
+    assets: {
+      inlineLimit: 1234
+    },
+    transpileDependencies: false,
+    rspack
+  })
+})
+
 test('accepts individual js module as entry', async (t) => {
   const opts = await options({
     command: 'dev',
@@ -200,6 +269,23 @@ test('normalizes assetBaseUrl and assetBasePathname', async (t) => {
   t.is(opts.assetBasePathname, '/assets/')
 })
 
+test('supports configFile and configFile false', async (t) => {
+  const projectRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-options-'))
+  await fs.cp(dir('fixtures', 'pkg-src'), projectRoot, { recursive: true })
+  t.teardown(() => fs.rm(projectRoot, { recursive: true, force: true }))
+
+  const defaultConfig = path.join(projectRoot, 'jetpack.config.mjs')
+  const explicitConfig = path.join(projectRoot, 'custom.config.mjs')
+  await fs.writeFile(defaultConfig, 'export default { html: { title: "Default config" } }\n')
+  await fs.writeFile(explicitConfig, 'export default { html: { title: "Explicit config" } }\n')
+
+  const explicit = await options({ command: 'dev', dir: projectRoot, configFile: explicitConfig })
+  const skipped = await options({ command: 'dev', dir: projectRoot, configFile: false })
+
+  t.is(explicit.html.title, 'Explicit config')
+  t.is(skipped.html.title, 'pkg-src')
+})
+
 test('public config export resolves without cli parsing', async (t) => {
   const opts = await resolveConfig({ command: 'dev', dir: dir('fixtures', 'pkg-src') })
   const namedOpts = await options({ command: 'dev', dir: dir('fixtures', 'pkg-src') })
@@ -253,6 +339,44 @@ test('rejects invalid modes', async (t) => {
       dir: dir('fixtures', 'pkg-src')
     }),
     { message: 'Invalid mode "staging". Expected development or production.' }
+  )
+})
+
+test('rejects invalid basic config values', async (t) => {
+  await t.throwsAsync(
+    options({
+      command: 'dev',
+      dir: dir('fixtures', 'pkg-src'),
+      overrides: { log: 'debug' }
+    }),
+    { message: 'Invalid log level "debug". Expected info, progress, all, silent, or none.' }
+  )
+
+  await t.throwsAsync(
+    options({
+      command: 'dev',
+      dir: dir('fixtures', 'pkg-src'),
+      overrides: { port: 'abc' }
+    }),
+    { message: 'port must be an integer between 0 and 65535.' }
+  )
+
+  await t.throwsAsync(
+    options({
+      command: 'dev',
+      dir: dir('fixtures', 'pkg-src'),
+      overrides: { assetBaseUrl: 12 }
+    }),
+    { message: 'assetBaseUrl must be a non-empty string.' }
+  )
+
+  await t.throwsAsync(
+    options({
+      command: 'dev',
+      dir: dir('fixtures', 'pkg-src'),
+      overrides: { rspack: true }
+    }),
+    { message: 'rspack must be a function.' }
   )
 })
 

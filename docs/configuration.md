@@ -284,4 +284,6 @@ config.assetBaseUrl
 config.assetBasePathname
 ```
 
+Use `configFile` to point at a specific config file, or `configFile: false` to skip config file lookup.
+
 `resolveConfig()` returns project config only. CLI command flags such as `--print-config`, `--yes`, `--dry-run`, and `--coverage` are not included. `jetpack build` writes emitted asset URLs to `${config.build.outDir}/manifest.json`; build assets do not live in the resolved config object.

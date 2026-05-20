@@ -96,7 +96,7 @@ export interface ResolveConfigInput {
   mode?: JetpackMode
   dir?: string
   entry?: string | null
-  config?: string | null
+  configFile?: string | false | null
   overrides?: Partial<JetpackConfig> & {
     minify?: boolean
     printConfig?: boolean

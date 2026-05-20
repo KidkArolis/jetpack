@@ -63,6 +63,7 @@ const config = defineConfig({
 const resolved = await resolveConfig({
   command: 'build',
   dir: process.cwd(),
+  configFile: false,
   overrides: {
     target: config.target,
     minify: false

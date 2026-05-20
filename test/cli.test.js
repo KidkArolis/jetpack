@@ -49,6 +49,12 @@ test('unknown bare commands fail', async (t) => {
   t.regex(result.stderr, /Unknown command "buidl"/)
 })
 
+test('extra positional arguments fail', async (t) => {
+  const result = await runJetpack(['build', 'index.js', 'extra.js', '--dir', path.join(fixturesDir, 'pkg-basic')])
+  t.is(result.exitCode, 1)
+  t.regex(result.stderr, /Unexpected argument "extra.js"/)
+})
+
 test('--no-hot is parsed and reflected in the resolved config', async (t) => {
   const result = await runJetpack(['build', '--print-config', '--no-hot', '--dir', path.join(fixturesDir, 'pkg-basic')])
   t.is(result.exitCode, 0)

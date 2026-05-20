@@ -9,7 +9,7 @@
   - `jetpack/serve` now exports a `serve(config)` factory
   - `jetpack/rspack.config` moved to `jetpack/rspack-config`
   - `jetpack/options` and `jetpack/proxy` were removed; the `proxy` config option still works
-- If you call `resolveConfig` directly, pass `command`, `dir`, `entry`, and `overrides` explicitly. Some resolved fields were removed; use `mode === 'production'` and `dist/manifest.json` instead.
+- If you call `resolveConfig` directly, pass `command`, `dir`, `entry`, `configFile`, and `overrides` explicitly. Use `configFile: false` to skip config file lookup. Some resolved fields were removed; use `mode === 'production'` and `dist/manifest.json` instead.
 - Build targets changed. Use `--target modern|legacy|all` and `target: 'modern' | 'legacy' | 'all'` instead of `--modern`, `--legacy`, or `target: { modern, legacy }`.
 - The modern browser target changed from Browserslist `defaults` to `baseline widely available with downstream`. Legacy still uses Browserslist `defaults`.
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
@@ -28,6 +28,8 @@
 
 - Fixed `--no-hot` and `--no-minify`.
 - Unknown commands now fail instead of being treated as entry paths.
+- Extra positional CLI arguments now fail instead of being ignored.
+- `resolveConfig({ overrides })` now honors the full public config shape, including nested `build`, `html`, `css`, and `assets` overrides.
 - Asset filenames now use `[contenthash:8]` for better cache busting.
 - `jetpack inspect` now writes a self-contained `dist/inspect.html` treemap and opens it automatically in interactive runs.
 
