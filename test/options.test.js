@@ -35,6 +35,7 @@ const base = (pkg, extra = {}) => {
     },
     proxy: {},
     define: {},
+    polyfills: 'usage',
     assetBaseUrl: '/assets/',
     assetBasePathname: '/assets/',
     css: {
@@ -485,6 +486,36 @@ test('rejects invalid dependency transpilation options', async (t) => {
   )
 })
 
+test('accepts polyfill options', async (t) => {
+  const entry = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null,
+    overrides: { polyfills: 'entry' }
+  })
+  t.is(entry.polyfills, 'entry')
+
+  const disabled = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null,
+    overrides: { polyfills: false }
+  })
+  t.false(disabled.polyfills)
+})
+
+test('rejects invalid polyfill option', async (t) => {
+  await t.throwsAsync(
+    options({
+      command: 'build',
+      dir: dir('fixtures', 'pkg-src'),
+      config: null,
+      overrides: { polyfills: true }
+    }),
+    { message: 'polyfills must be "usage", "entry", or false.' }
+  )
+})
+
 function dependencySwcRule(config) {
   return config.module.rules[0].oneOf.find(
     (rule) =>
@@ -586,4 +617,31 @@ test('uses project browserslist config when present', async (t) => {
 
   t.deepEqual(config.target, ['web', `browserslist:${targets.join(', ')}`])
   t.deepEqual(swcEnv(config).targets, targets)
+})
+
+test('passes polyfill mode to swc env', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null,
+    overrides: { polyfills: 'entry' }
+  })
+  const env = swcEnv(createRspackConfig(opts).modern)
+
+  t.is(env.mode, 'entry')
+  t.truthy(env.coreJs)
+})
+
+test('can disable core-js polyfills in swc env', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null,
+    overrides: { polyfills: false }
+  })
+  const env = swcEnv(createRspackConfig(opts).modern)
+
+  t.false('mode' in env)
+  t.false('coreJs' in env)
+  t.true('targets' in env)
 })

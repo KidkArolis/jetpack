@@ -5,6 +5,7 @@ export type JetpackMode = 'development' | 'production'
 export type JetpackTarget = 'modern' | 'legacy' | 'all'
 export type JetpackBundleTarget = 'modern' | 'legacy'
 export type JetpackLogLevel = 'info' | 'progress' | 'all' | 'silent' | 'none'
+export type JetpackPolyfills = 'usage' | 'entry' | false
 export interface JetpackRspackLoader extends Omit<RuleSetLoaderWithOptions, 'options'> {
   options?: Record<string, any>
 }
@@ -78,6 +79,7 @@ export interface JetpackConfig {
   assetBaseUrl?: string
   hot?: boolean | JetpackHotConfig
   target?: JetpackTarget
+  polyfills?: JetpackPolyfills
   define?: Record<string, unknown>
   proxy?: JetpackProxyConfig
   log?: JetpackLogLevel | string
@@ -142,6 +144,7 @@ export interface ResolvedJetpackConfig {
   assetBasePathname: string
   hot: ResolvedJetpackHotConfig
   define: Record<string, unknown>
+  polyfills: JetpackPolyfills
   target: JetpackTarget
   proxy: JetpackProxyConfig
   logLevels: {

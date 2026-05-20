@@ -11,6 +11,7 @@ const config = defineConfig({
   assetBaseUrl: '/assets/',
   hot: { quiet: true },
   target: 'all',
+  polyfills: 'usage',
   define: {
     __BUILD__: 'smoke'
   },
@@ -69,6 +70,7 @@ const resolved = await resolveConfig({
 })
 
 const target: 'modern' | 'legacy' | 'all' = resolved.target
+const polyfills: 'usage' | 'entry' | false = resolved.polyfills
 const inlineLimit: number = resolved.assets.inlineLimit
 const configs = await createRspackConfig({ command: 'build' }, { target })
 const middleware = serve(resolved)
@@ -79,3 +81,4 @@ new DefinePlugin({ __TEST__: JSON.stringify(true) })
 rspack(configs.modern ?? {})
 middleware({}, {}, () => {})
 void inlineLimit
+void polyfills
