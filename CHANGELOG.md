@@ -2,18 +2,18 @@
 
 **Breaking changes**
 
-- Jetpack is now ESM-only. Use `import`; `require('jetpack/...')` is no longer supported.
+- Updated to Rspack 2.0. If you customize Rspack, see the [Rspack v1 -> v2 migration guide](https://rspack.rs/guide/migration/rspack_1.x).
+- Jetpack is now ESM-only. Use `import`, `require('jetpack/...')` is no longer supported.
 - Use ESM config in `"type": "module"` projects: `export default { ... }`. Use `jetpack.config.cjs` for CommonJS config.
 - Public API exports were trimmed:
   - `jetpack` now exports only `defineConfig` and `resolveConfig`
   - `jetpack/serve` now exports a `serve(config)` factory
   - `jetpack/rspack.config` moved to `jetpack/rspack-config`
   - `jetpack/options` and `jetpack/proxy` were removed; the `proxy` config option still works
-- If you call `resolveConfig` directly, pass `command`, `dir`, `entry`, `configFile`, and `overrides` explicitly. Use `configFile: false` to skip config file lookup. Some resolved fields were removed; use `mode === 'production'` and `dist/manifest.json` instead.
 - Build targets changed. Use `--target modern|legacy|all` and `target: 'modern' | 'legacy' | 'all'` instead of `--modern`, `--legacy`, or `target: { modern, legacy }`.
-- The modern browser target changed from Browserslist `defaults` to `baseline widely available with downstream`. Legacy still uses Browserslist `defaults`.
-- Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
-- Removed `-x` / `--exec` and the `exec` config option. Use your task runner of choice to run another process alongside Jetpack.
+- The modern browser target changed from Browserslist `defaults` to `baseline widely available with downstream`.
+- Dropped the implicit `./src/index.js` entry fallback.
+- Removed `-x` / `--exec` and the `exec` config option.
 - Renamed, moved, or removed several config options:
   - `publicPath` -> `assetBaseUrl`
   - `dist` -> `build.outDir`
@@ -21,8 +21,8 @@
   - HTML options -> `html.title`, `html.cspNonce`, and `html.render`
   - `polyfills` is now top-level: `polyfills: 'usage' | 'entry' | false`
   - removed `static`, config-file `dir`, and `css.features`
-- For advanced customization, use the `rspack` config hook. The old `webpack` hook alias was removed, `rspack(config, options)` is now `rspack(config, context)`, and `sass-loader` resources should use `additionalData`.
-- Updated to Rspack 2.0. If you customize Rspack, see the [Rspack v1 -> v2 migration guide](https://rspack.rs/guide/migration/rspack_1.x).
+- For advanced customization, use the `rspack` config hook. The old `webpack` hook alias was removed, `rspack(config, options)` is now `rspack(config, context)`
+- `sass-loader` resources should use `additionalData`.
 
 **Fixes**
 
