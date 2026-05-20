@@ -3,6 +3,7 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import browserslist from 'browserslist'
 import options from '../lib/options.js'
 import createRspackConfig from '../lib/rspack.config.js'
 import { resolveConfig } from '../index.js'
@@ -338,4 +339,34 @@ test('passes rspack hook context for each requested target', async (t) => {
     { command: 'build', mode: 'production', target: 'modern', dir: dir('fixtures', 'pkg-src') },
     { command: 'build', mode: 'production', target: 'legacy', dir: dir('fixtures', 'pkg-src') }
   ])
+})
+
+function swcEnv(config) {
+  return config.module.rules[0].oneOf.find((rule) => rule.use?.some((loader) => loader.loader === 'builtin:swc-loader'))
+    .use[0].options.env
+}
+
+test('delegates to browserslist defaults when no browserslist config exists', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null
+  })
+  const config = createRspackConfig(opts).modern
+
+  t.deepEqual(config.target, ['web', `browserslist:${browserslist.defaults.join(', ')}`])
+  t.false('targets' in swcEnv(config))
+})
+
+test('uses project browserslist config when present', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-basic'),
+    config: null
+  })
+  const config = createRspackConfig(opts).modern
+  const targets = ['last 4 versions', '> 1%', 'not dead']
+
+  t.deepEqual(config.target, ['web', `browserslist:${targets.join(', ')}`])
+  t.deepEqual(swcEnv(config).targets, targets)
 })

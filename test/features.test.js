@@ -61,6 +61,20 @@ test('dev mode includes source-map devtool', async (t) => {
   t.regex(stripAnsi(result.stdout), /devtool:\s*'source-map'/)
 })
 
+test.serial('build uses browserslist defaults when no browserslist config exists', async (t) => {
+  const dir = await setupTmpFixture('pkg-src')
+
+  try {
+    const build = await runJetpack(['build', '--log=info', '--dir', dir], {
+      cwd: os.tmpdir(),
+      env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+    })
+    t.is(build.exitCode, 0, `build failed: ${build.all}`)
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
 // Sets up a fixture that has a dynamic import (so a chunk gets created and the
 // RetryChunkLoadPlugin's runtime injection can actually run).
 async function setupSplittingFixture(config) {
