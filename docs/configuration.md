@@ -12,6 +12,7 @@ export default defineConfig({
   assetBaseUrl: '/assets/',
   hot: true,
   target: 'modern',
+  transpileDependencies: true,
 
   build: {
     outDir: 'dist',
@@ -24,6 +25,10 @@ export default defineConfig({
 
   css: {
     modules: false
+  },
+
+  assets: {
+    inlineLimit: 8096
   }
 })
 ```
@@ -36,71 +41,117 @@ jetpack [command] [options] [path]
 
 Commands:
 
-| Command | Description |
-| --- | --- |
-| `dev` | Run the dev server. This is the default. |
-| `build` | Build for production. |
-| `inspect` | Write a self-contained bundle treemap. |
-| `browsers` | Print supported browser targets. |
-| `clean` | Remove the build output directory. |
+| Command    | Description                              |
+| ---------- | ---------------------------------------- |
+| `dev`      | Run the dev server. This is the default. |
+| `build`    | Build for production.                    |
+| `inspect`  | Write a self-contained bundle treemap.   |
+| `browsers` | Print supported browser targets.         |
+| `clean`    | Remove the build output directory.       |
 
 Useful options:
 
-| Option | Description |
-| --- | --- |
-| `-p, --port <n>` | Dev server port. |
-| `--host <host>` | Dev server host. |
-| `-d, --dir <path>` | Run Jetpack in another project directory. |
-| `-c, --config <path>` | Use a specific config file. |
-| `-r, --no-hot` | Disable hot reloading. |
-| `-u, --no-minify` | Disable production minification. |
-| `-t, --target <name>` | Bundle target: `modern`, `legacy`, or `all`. |
-| `-i, --print-config` | Print the generated rspack config. |
-| `-o, --log <levels>` | Log levels: `info`, `progress`, `all`, or `silent`. |
+| Option                | Description                                         |
+| --------------------- | --------------------------------------------------- |
+| `-p, --port <n>`      | Dev server port.                                    |
+| `--host <host>`       | Dev server host.                                    |
+| `-d, --dir <path>`    | Run Jetpack in another project directory.           |
+| `-c, --config <path>` | Use a specific config file.                         |
+| `-r, --no-hot`        | Disable hot reloading.                              |
+| `-u, --no-minify`     | Disable production minification.                    |
+| `-t, --target <name>` | Bundle target: `modern`, `legacy`, or `all`.        |
+| `-i, --print-config`  | Print the generated rspack config.                  |
+| `-o, --log <levels>`  | Log levels: `info`, `progress`, `all`, or `silent`. |
 
 ## Options
 
 Top-level options:
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `entry` | `'.'` | Entry module relative to the project root. Rspack resolves `.` through `package.json#main` or `index.js`. |
-| `port` | `3030` | Dev server port. |
-| `host` | `'localhost'` | Dev server host. |
-| `assetBaseUrl` | `'/assets/'` | URL prefix written into generated HTML. Runtime chunk loading uses the loaded script URL automatically. |
-| `hot` | `true` | Set `false` to disable hot reload, or `{ quiet: true }` to silence browser HMR logs. |
-| `target` | `'modern'` | `modern`, `legacy`, or `all`. Dev and inspect support one target at a time. |
-| `define` | `{}` | Build-time constants for `rspack.DefinePlugin`. |
-| `proxy` | `{}` | Dev proxy map, or a function that receives the Express app. |
-| `log` | `'info,progress'` | Log levels: `info`, `progress`, `all`, or `silent`. |
-| `rspack` | `undefined` | Function that receives the generated rspack config. |
+| Option                  | Default           | Description                                                                                               |
+| ----------------------- | ----------------- | --------------------------------------------------------------------------------------------------------- |
+| `entry`                 | `'.'`             | Entry module relative to the project root. Rspack resolves `.` through `package.json#main` or `index.js`. |
+| `port`                  | `3030`            | Dev server port.                                                                                          |
+| `host`                  | `'localhost'`     | Dev server host.                                                                                          |
+| `assetBaseUrl`          | `'/assets/'`      | URL prefix written into generated HTML. Runtime chunk loading uses the loaded script URL automatically.   |
+| `hot`                   | `true`            | Set `false` to disable hot reload, or `{ quiet: true }` to silence browser HMR logs.                      |
+| `target`                | `'modern'`        | `modern`, `legacy`, or `all`. Dev and inspect support one target at a time.                               |
+| `transpileDependencies` | `true`            | Controls which packages in `node_modules` are passed through Jetpack's JS compiler.                       |
+| `assets`                | see below         | Asset handling options.                                                                                   |
+| `define`                | `{}`              | Build-time constants for `rspack.DefinePlugin`.                                                           |
+| `proxy`                 | `{}`              | Dev proxy map, or a function that receives the Express app.                                               |
+| `log`                   | `'info,progress'` | Log levels: `info`, `progress`, `all`, or `silent`.                                                       |
+| `rspack`                | `undefined`       | Function that receives the generated rspack config.                                                       |
 
 Build options:
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `build.outDir` | `'dist'` | Output directory relative to the project root. |
-| `build.sourceMaps` | dev only | Set `true` to force source maps, or `false` to disable them. |
-| `build.minify` | `true` | Minify production JS and CSS. |
-| `build.chunkLoadRetry` | `false` | Enable retry runtime for failed async chunk loads. |
+| Option                 | Default  | Description                                                  |
+| ---------------------- | -------- | ------------------------------------------------------------ |
+| `build.outDir`         | `'dist'` | Output directory relative to the project root.               |
+| `build.sourceMaps`     | dev only | Set `true` to force source maps, or `false` to disable them. |
+| `build.minify`         | `true`   | Minify production JS and CSS.                                |
+| `build.chunkLoadRetry` | `false`  | Enable retry runtime for failed async chunk loads.           |
+
+Asset options:
+
+| Option               | Default | Description                                                  |
+| -------------------- | ------- | ------------------------------------------------------------ |
+| `assets.inlineLimit` | `8096`  | Maximum image asset size, in bytes, to inline as a data URL. |
+
+Images under the inline limit are emitted as data URLs. Larger images, fonts, audio, and video are emitted as files.
 
 HTML options:
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `html.title` | package name or `'jetpack'` | Page title for the default HTML shell. |
-| `html.cspNonce` | `false` | Add nonce placeholders to Jetpack-owned script tags. |
-| `html.render` | `null` | Custom HTML renderer. |
+| Option          | Default                     | Description                                          |
+| --------------- | --------------------------- | ---------------------------------------------------- |
+| `html.title`    | package name or `'jetpack'` | Page title for the default HTML shell.               |
+| `html.cspNonce` | `false`                     | Add nonce placeholders to Jetpack-owned script tags. |
+| `html.render`   | `null`                      | Custom HTML renderer.                                |
 
 CSS options:
 
-| Option | Description |
-| --- | --- |
-| `css.modules: false` | All CSS is global. |
-| `css.modules: true` | App CSS is modular by default. `*.global.css` and `*.global.scss` opt out. |
-| `css.modules: { conventional: true }` | Only `*.module.css` and `*.module.scss` opt in. |
+| Option                                | Description                                                                |
+| ------------------------------------- | -------------------------------------------------------------------------- |
+| `css.modules: false`                  | All CSS is global.                                                         |
+| `css.modules: true`                   | App CSS is modular by default. `*.global.css` and `*.global.scss` opt out. |
+| `css.modules: { conventional: true }` | Only `*.module.css` and `*.module.scss` opt in.                            |
 
 Any other object keys under `css.modules` are passed to `css-loader`'s modules options.
+
+## Dependency Transpilation
+
+Jetpack transpiles dependency JavaScript by default so npm packages are compiled for the configured browser target. Configure `transpileDependencies` to change that behavior:
+
+```js
+export default {
+  // Current default: transpile dependency JS, except Jetpack runtime packages.
+  transpileDependencies: true
+}
+
+export default {
+  // Do not transpile dependency JS.
+  transpileDependencies: false
+}
+
+export default {
+  // Transpile only these packages.
+  transpileDependencies: ['@acme/ui', 'modern-lib']
+}
+
+export default {
+  // Transpile all dependency JS except these packages.
+  transpileDependencies: {
+    exclude: ['prebuilt-lib']
+  }
+}
+
+export default {
+  // Transpile only listed packages, with an explicit exclusion.
+  transpileDependencies: {
+    include: ['@acme/ui', 'modern-lib'],
+    exclude: ['modern-lib']
+  }
+}
+```
 
 ## HTML
 
@@ -117,7 +168,11 @@ export default {
           <meta charset="utf-8" />
           <title>${title}</title>
           ${tags.css}
-          ${mode === 'production' ? html`<script ${cspNonceAttr}>window.analytics = true</script>` : ''}
+          ${mode === 'production'
+            ? html`<script ${cspNonceAttr}>
+                window.analytics = true
+              </script>`
+            : ''}
         </head>
         <body>
           <div id="root"></div>

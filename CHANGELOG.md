@@ -16,7 +16,7 @@
 - Removed `jetpack/rspack.config`. Use `jetpack/rspack-config` for the generated rspack config factory.
 - `jetpack/serve` now exports a factory: resolve config explicitly, then pass it to `serve(config)`.
 - Replaced `--modern` / `--legacy` with `--target modern|legacy|all`.
-- The `rspack(config, options)` config hook now receives `rspack(config, context)`, where `context` is `{ command, mode, target, dir }`.
+- The `rspack(config, options)` config hook now receives `rspack(config, context)`, where `context` is `{ command, mode, target, dir, findLoader }`.
 - Removed the old `webpack` config hook alias. Use `rspack` instead.
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
 - Removed `-x` / `--exec` and the `exec` config option. Use your task runner of choice to run another process alongside Jetpack.
@@ -33,13 +33,9 @@
 - Removed the resolved `react` option. React support remains automatic when `react` is installed.
 - Removed `sass-resources-loader` and `css.resources`. Use `sass-loader`'s `additionalData` option via the `rspack` config hook:
   ```js
-  rspack: (config) => {
-    for (const rule of config.module.rules[0].oneOf) {
-      for (const loader of rule.use || []) {
-        if (loader.loader?.includes('/sass-loader')) {
-          loader.options.additionalData = `@use './path/to/_resources' as *;`
-        }
-      }
+  rspack: (config, { findLoader }) => {
+    for (const loader of findLoader('sass-loader')) {
+      loader.options.additionalData = `@use './path/to/_resources' as *;`
     }
   }
   ```
@@ -58,6 +54,9 @@
 - Added command-specific help, `dev --host`, `clean --yes`, and `clean --dry-run`.
 - Added `--log=all` and `--log=silent` presets.
 - Added a `define` option for build-time constants backed by `rspack.DefinePlugin`.
+- Added `context.findLoader(name)` to the `rspack` config hook for customizing generated loaders by string or `RegExp`.
+- Added `assets.inlineLimit` to control which image assets are inlined as data URLs. Fonts and media are now emitted as files.
+- Added `transpileDependencies` to control dependency JS transpilation: use `true`, `false`, a package list, or `{ include, exclude }`.
 - Expanded asset extension list: `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
 - Smaller install: dropped seven runtime dependencies in favour of Node built-ins.
 

@@ -39,12 +39,17 @@ const base = (pkg, extra = {}) => {
     assetBasePathname: '/assets/',
     css: {
       modules: false
-    }
+    },
+    assets: {
+      inlineLimit: 8096
+    },
+    transpileDependencies: true
   }
 
   return Object.assign({}, defaults, extra, {
     build: Object.assign({}, defaults.build, extra.build),
-    html: Object.assign({}, defaults.html, extra.html)
+    html: Object.assign({}, defaults.html, extra.html),
+    assets: Object.assign({}, defaults.assets, extra.assets)
   })
 }
 
@@ -143,6 +148,9 @@ test('normalizes grouped build and html config', async (t) => {
       html: {
         title: 'Custom',
         cspNonce: true
+      },
+      assets: {
+        inlineLimit: 4096
       }
     }\n`
   )
@@ -155,6 +163,7 @@ test('normalizes grouped build and html config', async (t) => {
   t.is(opts.build.chunkLoadRetry, true)
   t.is(opts.html.title, 'Custom')
   t.is(opts.html.cspNonce, true)
+  t.is(opts.assets.inlineLimit, 4096)
 })
 
 test('rejects config options that moved into groups', async (t) => {
@@ -165,6 +174,18 @@ test('rejects config options that moved into groups', async (t) => {
   await fs.writeFile(path.join(projectRoot, 'jetpack.config.mjs'), 'export default { minify: false }\n')
 
   await t.throwsAsync(options({ command: 'build', dir: projectRoot }), { message: 'minify moved to build.minify.' })
+})
+
+test('rejects invalid assets config', async (t) => {
+  const projectRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-options-'))
+  await fs.cp(dir('fixtures', 'pkg-src'), projectRoot, { recursive: true })
+  t.teardown(() => fs.rm(projectRoot, { recursive: true, force: true }))
+
+  await fs.writeFile(path.join(projectRoot, 'jetpack.config.mjs'), 'export default { assets: { inlineLimit: -1 } }\n')
+
+  await t.throwsAsync(options({ command: 'build', dir: projectRoot }), {
+    message: 'assets.inlineLimit must be a non-negative integer.'
+  })
 })
 
 test('normalizes assetBaseUrl and assetBasePathname', async (t) => {
@@ -315,7 +336,13 @@ test('passes a small public context to the rspack hook', async (t) => {
     }
   })
 
-  t.deepEqual(contexts, [{ command: 'build', mode: 'production', target: 'modern', dir: dir('fixtures', 'pkg-src') }])
+  t.deepEqual(
+    contexts.map(({ findLoader, ...context }) => {
+      t.is(typeof findLoader, 'function')
+      return context
+    }),
+    [{ command: 'build', mode: 'production', target: 'modern', dir: dir('fixtures', 'pkg-src') }]
+  )
 })
 
 test('passes rspack hook context for each requested target', async (t) => {
@@ -335,10 +362,51 @@ test('passes rspack hook context for each requested target', async (t) => {
     }
   })
 
-  t.deepEqual(contexts, [
-    { command: 'build', mode: 'production', target: 'modern', dir: dir('fixtures', 'pkg-src') },
-    { command: 'build', mode: 'production', target: 'legacy', dir: dir('fixtures', 'pkg-src') }
-  ])
+  t.deepEqual(
+    contexts.map(({ findLoader, ...context }) => {
+      t.is(typeof findLoader, 'function')
+      return context
+    }),
+    [
+      { command: 'build', mode: 'production', target: 'modern', dir: dir('fixtures', 'pkg-src') },
+      { command: 'build', mode: 'production', target: 'legacy', dir: dir('fixtures', 'pkg-src') }
+    ]
+  )
+})
+
+test('rspack hook context finds generated loaders by name or regex', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null
+  })
+
+  const config = createRspackConfig({
+    ...opts,
+    rspack(config, context) {
+      const cssLoaders = context.findLoader('css-loader')
+      const sassLoaders = context.findLoader(/sass-loader/)
+      const swcLoaders = context.findLoader('builtin:swc-loader')
+
+      t.true(cssLoaders.length >= 2)
+      t.true(sassLoaders.length >= 1)
+      t.true(swcLoaders.length >= 2)
+
+      for (const loader of cssLoaders) {
+        loader.options ??= {}
+        loader.options.importLoaders = 7
+      }
+
+      return config
+    }
+  }).modern
+
+  const cssLoaders = config.module.rules[0].oneOf
+    .flatMap((rule) => rule.use || [])
+    .filter((loader) => loader.loader?.includes('css-loader'))
+
+  t.true(cssLoaders.length >= 2)
+  t.true(cssLoaders.every((loader) => loader.options.importLoaders === 7))
 })
 
 test('resolves extensionless imports for supported js and typescript files', async (t) => {
@@ -362,6 +430,115 @@ test('production builds split initial and async chunks', async (t) => {
 
   t.true(config.optimization.runtimeChunk)
   t.deepEqual(config.optimization.splitChunks, { chunks: 'all' })
+})
+
+test('accepts dependency transpilation options', async (t) => {
+  const disabled = await options({
+    command: 'dev',
+    dir: dir('fixtures', 'pkg-src'),
+    overrides: {
+      transpileDependencies: false
+    }
+  })
+  t.false(disabled.transpileDependencies)
+
+  const selected = await options({
+    command: 'dev',
+    dir: dir('fixtures', 'pkg-src'),
+    overrides: {
+      transpileDependencies: ['@acme/ui', 'modern-lib']
+    }
+  })
+  t.deepEqual(selected.transpileDependencies, ['@acme/ui', 'modern-lib'])
+
+  const excluded = await options({
+    command: 'dev',
+    dir: dir('fixtures', 'pkg-src'),
+    overrides: {
+      transpileDependencies: { exclude: ['prebuilt-lib'] }
+    }
+  })
+  t.deepEqual(excluded.transpileDependencies, { include: true, exclude: ['prebuilt-lib'] })
+})
+
+test('rejects invalid dependency transpilation options', async (t) => {
+  await t.throwsAsync(
+    options({
+      command: 'dev',
+      dir: dir('fixtures', 'pkg-src'),
+      overrides: {
+        transpileDependencies: 'all'
+      }
+    }),
+    { message: 'transpileDependencies must be true, false, an array, or an object.' }
+  )
+
+  await t.throwsAsync(
+    options({
+      command: 'dev',
+      dir: dir('fixtures', 'pkg-src'),
+      overrides: {
+        transpileDependencies: { exclude: true }
+      }
+    }),
+    { message: 'transpileDependencies.exclude must be an array of package names.' }
+  )
+})
+
+function dependencySwcRule(config) {
+  return config.module.rules[0].oneOf.find(
+    (rule) =>
+      String(rule.test) === String(/\.(js|mjs)$/) && rule.use?.some((loader) => loader.loader === 'builtin:swc-loader')
+  )
+}
+
+test('transpiles dependencies by default', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null
+  })
+  const config = createRspackConfig(opts).modern
+  const include = dependencySwcRule(config).include
+
+  t.true(include(path.join(opts.dir, 'node_modules', 'modern-lib', 'index.js')))
+  t.true(include(path.join(opts.dir, 'node_modules', '@acme', 'ui', 'index.mjs')))
+  t.false(include(path.join(opts.dir, 'node_modules', 'core-js', 'index.js')))
+})
+
+test('can disable dependency transpilation', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null,
+    overrides: {
+      transpileDependencies: false
+    }
+  })
+  const config = createRspackConfig(opts).modern
+  const include = dependencySwcRule(config).include
+
+  t.false(include(path.join(opts.dir, 'node_modules', 'modern-lib', 'index.js')))
+})
+
+test('can limit and exclude dependency transpilation by package name', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null,
+    overrides: {
+      transpileDependencies: {
+        include: ['@acme/ui', 'modern-lib'],
+        exclude: ['modern-lib']
+      }
+    }
+  })
+  const config = createRspackConfig(opts).modern
+  const include = dependencySwcRule(config).include
+
+  t.true(include(path.join(opts.dir, 'node_modules', '@acme', 'ui', 'index.mjs')))
+  t.false(include(path.join(opts.dir, 'node_modules', 'modern-lib', 'index.js')))
+  t.false(include(path.join(opts.dir, 'node_modules', 'other-lib', 'index.js')))
 })
 
 function swcEnv(config) {

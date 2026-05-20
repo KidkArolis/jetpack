@@ -25,7 +25,30 @@ export default {
 }
 ```
 
-The second argument is `{ command, mode, target, dir }`, where `target` is the generated bundle target: `'modern'` or `'legacy'`.
+The second argument is `{ command, mode, target, dir, findLoader }`, where `target` is the generated bundle target: `'modern'` or `'legacy'`.
+
+Use `findLoader(name)` to tweak Jetpack's generated loader options without depending on the internal rule nesting:
+
+```js
+export default {
+  rspack: (config, { findLoader }) => {
+    for (const loader of findLoader('css-loader')) {
+      loader.options.modules ??= {}
+      loader.options.modules.namedExport = false
+      loader.options.modules.exportLocalsConvention = 'as-is'
+    }
+
+    for (const loader of findLoader('sass-loader')) {
+      loader.options.sassOptions = {
+        silenceDeprecations: ['color-functions', 'global-builtin', 'import', 'slash-div', 'if-function']
+      }
+      loader.options.additionalData = `@import './src/styles/resources.scss';`
+    }
+  }
+}
+```
+
+`findLoader()` accepts a string or `RegExp` and returns the actual loader objects, so mutations affect the generated rspack config directly. For adding new rules or plugins, keep editing `config` itself.
 
 ## SWC
 
@@ -48,17 +71,13 @@ Defaults:
 }
 ```
 
-To tweak SWC, walk the generated loader options:
+To tweak SWC, find the generated loader options:
 
 ```js
 export default {
-  rspack: (config) => {
-    for (const rule of config.module.rules[0].oneOf) {
-      for (const loader of rule.use || []) {
-        if (loader.loader === 'builtin:swc-loader') {
-          loader.options.jsc.parser = { decorators: true }
-        }
-      }
+  rspack: (config, { findLoader }) => {
+    for (const loader of findLoader('builtin:swc-loader')) {
+      loader.options.jsc.parser = { decorators: true }
     }
   }
 }

@@ -1,16 +1,20 @@
-import type { Configuration as RspackConfig } from '@rspack/core'
+import type { Configuration as RspackConfig, RuleSetLoaderWithOptions } from '@rspack/core'
 
 export type JetpackCommand = 'dev' | 'build' | 'inspect' | 'browsers' | 'clean'
 export type JetpackMode = 'development' | 'production'
 export type JetpackTarget = 'modern' | 'legacy' | 'all'
 export type JetpackBundleTarget = 'modern' | 'legacy'
 export type JetpackLogLevel = 'info' | 'progress' | 'all' | 'silent' | 'none'
+export interface JetpackRspackLoader extends Omit<RuleSetLoaderWithOptions, 'options'> {
+  options?: Record<string, any>
+}
 
 export interface JetpackRspackContext {
   command: JetpackCommand
   mode: JetpackMode
   target: JetpackBundleTarget
   dir: string
+  findLoader: (name: string | RegExp) => JetpackRspackLoader[]
 }
 
 export interface JetpackHotConfig {
@@ -53,6 +57,18 @@ export interface JetpackCssConfig {
   modules?: boolean | JetpackCssModulesConfig
 }
 
+export interface JetpackAssetsConfig {
+  inlineLimit?: number
+}
+
+export type JetpackTranspileDependenciesConfig =
+  | boolean
+  | string[]
+  | {
+      include?: boolean | string[]
+      exclude?: string[]
+    }
+
 export type JetpackProxyConfig = Record<string, string> | ((app: unknown) => void)
 
 export interface JetpackConfig {
@@ -68,6 +84,8 @@ export interface JetpackConfig {
   build?: JetpackBuildConfig
   html?: JetpackHtmlConfig
   css?: JetpackCssConfig
+  assets?: JetpackAssetsConfig
+  transpileDependencies?: JetpackTranspileDependenciesConfig
   rspack?: (config: RspackConfig, context: JetpackRspackContext) => RspackConfig | void
 }
 
@@ -108,6 +126,10 @@ export interface ResolvedJetpackCssConfig {
   modules: boolean | JetpackCssModulesConfig
 }
 
+export interface ResolvedJetpackAssetsConfig {
+  inlineLimit: number
+}
+
 export interface ResolvedJetpackConfig {
   command: JetpackCommand
   mode: JetpackMode
@@ -129,6 +151,8 @@ export interface ResolvedJetpackConfig {
   }
   html: ResolvedJetpackHtmlConfig
   css: ResolvedJetpackCssConfig
+  assets: ResolvedJetpackAssetsConfig
+  transpileDependencies: JetpackTranspileDependenciesConfig
   rspack?: (config: RspackConfig, context: JetpackRspackContext) => RspackConfig | void
 }
 

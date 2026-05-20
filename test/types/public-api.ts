@@ -32,12 +32,29 @@ const config = defineConfig({
       localIdentName: '[name]__[local]'
     }
   },
+  assets: {
+    inlineLimit: 4096
+  },
+  transpileDependencies: {
+    include: true,
+    exclude: ['prebuilt-lib']
+  },
   proxy: {
     '/api/*': 'http://localhost:3000'
   },
   rspack(rspackConfig, context) {
     const target: 'modern' | 'legacy' = context.target
+    const swcLoaders = context.findLoader('builtin:swc-loader')
+    const cssLoaders = context.findLoader(/css-loader/)
     rspackConfig.plugins ??= []
+    for (const loader of swcLoaders) {
+      const loaderName: string = loader.loader
+      void loaderName
+    }
+    for (const loader of cssLoaders) {
+      loader.options ??= {}
+      loader.options.modules = {}
+    }
     return target ? rspackConfig : undefined
   }
 } satisfies JetpackConfig)
@@ -52,6 +69,7 @@ const resolved = await resolveConfig({
 })
 
 const target: 'modern' | 'legacy' | 'all' = resolved.target
+const inlineLimit: number = resolved.assets.inlineLimit
 const configs = await createRspackConfig({ command: 'build' }, { target })
 const middleware = serve(resolved)
 const renderedTemplate = html`<div>${target}</div>`
@@ -60,3 +78,4 @@ renderHtmlResponse(renderedTemplate, { cspNonce: 'nonce' })
 new DefinePlugin({ __TEST__: JSON.stringify(true) })
 rspack(configs.modern ?? {})
 middleware({}, {}, () => {})
+void inlineLimit
