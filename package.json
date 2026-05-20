@@ -64,8 +64,8 @@
     "test:types": "tsc -p tsconfig.types.json",
     "coverage": "c8 --reporter=text --reporter=html --include='lib/**/*.js' --include='*.js' --exclude='test/**' --exclude='examples/**' --exclude='lib/hmrFirefoxFix.js' --exclude='lib/retryChunkLoadPlugin.js' ava",
     "format": "oxfmt --write '**/*.{js,json,css,yml}'",
-    "release": "np",
-    "release-alpha": "np --tag=alpha --any-branch --no-cleanup"
+    "release": "npx np",
+    "release-rc": "npx np --tag=next --any-branch --no-cleanup"
   },
   "dependencies": {
     "@rspack/core": "^2.0.4",
