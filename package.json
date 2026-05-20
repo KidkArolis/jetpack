@@ -29,6 +29,17 @@
   "bin": {
     "jetpack": "./bin/jetpack"
   },
+  "files": [
+    "bin",
+    "lib",
+    "docs",
+    "html.js",
+    "options.js",
+    "proxy.js",
+    "rspack.config.js",
+    "rspack.js",
+    "serve.js"
+  ],
   "scripts": {
     "test": "ava && oxlint && oxfmt --check '**/*.{js,json,css,yml}'",
     "coverage": "c8 --reporter=text --reporter=html --include='lib/**/*.js' --include='*.js' --exclude='test/**' --exclude='examples/**' --exclude='lib/hmrFirefoxFix.js' --exclude='lib/retryChunkLoadPlugin.js' ava",
