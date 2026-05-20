@@ -34,4 +34,4 @@ export default {
 }
 ```
 
-The second argument is `{ command, mode, target, dir }`.
+The second argument is `{ command, mode, target, dir }`, where `target` is the generated bundle target (`'modern'` or `'legacy'`).

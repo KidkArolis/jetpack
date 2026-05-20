@@ -2,7 +2,7 @@
   "name": "jetpack",
   "version": "4.4.2",
   "type": "module",
-  "description": "Jetpack wraps webpack and nodemon to give you the best development workflow.",
+  "description": "Rspack made more convenient.",
   "exports": {
     ".": "./index.js",
     "./rspack": "./rspack.js",
@@ -17,7 +17,7 @@
     "url": "git://github.com/KidkArolis/jetpack.git"
   },
   "keywords": [
-    "webpack",
+    "rspack",
     "jetpack",
     "build"
   ],

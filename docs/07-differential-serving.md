@@ -4,7 +4,7 @@ Jetpack can produce two bundles — a _modern_ and a _legacy_ one — and serve 
 
 ## Modern by default
 
-Out of the box, jetpack only builds a modern bundle. No differential serving needed — point `jetpack/serve`, `express.static`, Nginx, or your CDN at `dist/` and you're done.
+Out of the box, jetpack only builds a modern bundle. No differential serving needed — point `jetpack/serve`, `express.static`, Nginx, or your CDN at `dist/` or your configured `build.outDir` and you're done.
 
 ## Differential builds
 

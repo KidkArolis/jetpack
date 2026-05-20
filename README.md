@@ -13,7 +13,7 @@
 - **Preconfigured lightningcss** for CSS syntax lowering.
 - **Modern bundles by default** with no async/await transpilation.
 - **Differential builds** — modern/legacy bundles served by user-agent.
-- **CSS modules** one config flag away.
+- **CSS modules** one config flag away, with `.global.css` opt-out or conventional `.module.css` opt-in.
 - **SCSS** preconfigured.
 - **JSX and TypeScript** detection out of the box.
 - **Hot reloading** via React fast-refresh and for vanilla JS/CSS.
@@ -32,6 +32,8 @@ For server-side rendering, reach for Next.js. For mostly-static content, Astro.
 
 ## Usage
 
+Jetpack requires Node 20 or newer and is published as ESM.
+
 Install globally or locally:
 
     $ npm install -g jetpack
@@ -43,6 +45,10 @@ In your project, start your app on `http://localhost:3030`:
 Build for production into `dist/`:
 
     $ jetpack build
+
+Remove the build output:
+
+    $ jetpack clean
 
 Inspect the bundle:
 
@@ -86,6 +92,34 @@ app.use(serve(config))
 ```
 
 See [Workflow and deployment](./docs/06-workflow-and-deployment.md).
+
+## Configuration
+
+Most projects need no config. When you do need one, keep common app options top-level and put build/HTML shell settings under `build` and `html`:
+
+```js
+import { defineConfig } from 'jetpack'
+
+export default defineConfig({
+  entry: '.',
+  port: 3030,
+  assetBaseUrl: '/assets/',
+  target: 'modern',
+
+  build: {
+    outDir: 'dist',
+    minify: true
+  },
+
+  html: {
+    title: 'my-app'
+  },
+
+  css: {
+    modules: true
+  }
+})
+```
 
 ## Documentation
 

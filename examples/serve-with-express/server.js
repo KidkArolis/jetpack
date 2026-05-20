@@ -1,7 +1,13 @@
 import express from 'express'
-import jetpack from '../../serve.js'
+import { resolveConfig } from '../../index.js'
+import { serve } from '../../serve.js'
 
 const app = express()
+const jetpack = serve(
+  await resolveConfig({
+    command: process.env.NODE_ENV === 'production' ? 'build' : 'dev'
+  })
+)
 
 app.get('/api/data', (req, res) => {
   res.send('hello')

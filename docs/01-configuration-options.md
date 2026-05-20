@@ -12,9 +12,9 @@ Usage: jetpack [command] [options] [path]
 Commands:
   dev       run the dev server (default)
   build     build for production
-  inspect   write a self-contained treemap HTML (dist/inspect.html)
+  inspect   write a self-contained treemap HTML (build.outDir/inspect.html)
   browsers  print supported browsers
-  clean     remove the dist dir
+  clean     remove the build output dir
 
 Options:
   -p, --port <n>       port, defaults to 3030
@@ -62,11 +62,12 @@ export default defineConfig({
     outDir: 'dist',
 
     // source maps for js and css
-    // true by default in development, off by default in production
-    sourceMaps: true,
+    // omit to use the default: enabled in development, off in production
+    // set true to force source maps in production, or false to disable them
+    sourceMaps: undefined,
 
-    // to turn off minification in production for any reason
-    minify: false,
+    // minify production JS and CSS
+    minify: true,
 
     // set to `true` to enable retries on chunk loads (5 attempts, exponential backoff)
     chunkLoadRetry: false
@@ -170,9 +171,45 @@ export default {
 
 The `html` helper is `String.raw`; it exists so editors can syntax-highlight HTML template literals. It does not escape interpolated values.
 
+## CSS Modules
+
+CSS modules are disabled by default:
+
+```js
+export default {
+  css: {
+    modules: false
+  }
+}
+```
+
+Set `css.modules: true` to make app CSS modular by default. Files ending in `.global.css` or `.global.scss` opt out:
+
+```js
+export default {
+  css: {
+    modules: true
+  }
+}
+```
+
+Set `css.modules.conventional: true` if you prefer the common `.module.css` / `.module.scss` opt-in convention:
+
+```js
+export default {
+  css: {
+    modules: {
+      conventional: true
+    }
+  }
+}
+```
+
+Any other object keys under `css.modules` are passed to `css-loader`'s modules options.
+
 ## Build Manifest
 
-`jetpack build` writes `dist/manifest.json` with the emitted asset URLs for each built target:
+`jetpack build` writes `${build.outDir}/manifest.json` with the emitted asset URLs for each built target:
 
 ```json
 {
@@ -240,7 +277,7 @@ config.assetBasePathname
 
 ### `jetpack/serve`
 
-Factory for middleware that serves your assets in both dev (by proxying to the dev server) and production (from `dist`). For example:
+Factory for middleware that serves your assets in both dev (by proxying to the dev server) and production (from `build.outDir`). For example:
 
 ```js
 import express from 'express'
@@ -284,4 +321,4 @@ configs.modern
 configs.legacy
 ```
 
-Build asset URLs live in `dist/manifest.json`, not in the resolved config object.
+Build asset URLs live in `${config.build.outDir}/manifest.json`, not in the resolved config object.

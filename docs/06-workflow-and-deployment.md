@@ -6,7 +6,7 @@ A few common shapes for projects that use jetpack.
 
 1. Develop with `jetpack`
 2. Build with `jetpack build`
-3. Deploy `dist/` to your static host
+3. Deploy `dist/` to your static host, or the directory configured as `build.outDir`
 
 ## Client + API in one project
 
@@ -25,13 +25,13 @@ app.get('/api/unicorns', (req, res) => {...})
 app.use(serve(config))
 ```
 
-`serve(config)` proxies to the dev server in development and serves `dist/` in production. Run both processes via two terminals or your preferred process manager.
+`serve(config)` proxies to the dev server in development and serves `config.build.outDir` in production. Run both processes via two terminals or your preferred process manager.
 
 Deploy by building (`jetpack build`) and running `node .`.
 
 ## Client and API deployed separately
 
-Deploy the client (`dist/`) to a CDN and the API to its own host. If the client calls the API at a relative path (e.g. `fetch('/api/unicorns')`), use jetpack's proxy in development:
+Deploy the client output (`dist/` by default) to a CDN and the API to its own host. If the client calls the API at a relative path (e.g. `fetch('/api/unicorns')`), use jetpack's proxy in development:
 
 ```js
 export default {

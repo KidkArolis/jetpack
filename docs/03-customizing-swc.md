@@ -1,6 +1,6 @@
 # Customizing SWC
 
-Jetpack uses [rspack's `builtin:swc-loader`](https://rspack.rs/guide/features/builtin-swc-loader) to handle `.js`/`.jsx`/`.ts`/`.tsx`. The loader picks up the top-level `target` for browser targets automatically.
+Jetpack uses [rspack's `builtin:swc-loader`](https://rspack.rs/guide/features/builtin-swc-loader) to handle `.js`/`.jsx`/`.ts`/`.tsx`. The loader picks up Jetpack's `target` option for browser targets automatically.
 
 The defaults jetpack applies are:
 

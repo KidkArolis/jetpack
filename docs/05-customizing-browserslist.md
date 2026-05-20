@@ -1,6 +1,6 @@
 # Customizing browserslist
 
-Jetpack compiles JS via `builtin:swc-loader` and CSS via `builtin:lightningcss-loader`. Both follow the [browserslist](https://github.com/browserslist/browserslist) convention. The top-level rspack `target` is set from your browserslist config and inherited by both loaders.
+Jetpack compiles JS via `builtin:swc-loader` and CSS via `builtin:lightningcss-loader`. Both follow the [browserslist](https://github.com/browserslist/browserslist) convention. The generated rspack config targets browsers from your browserslist config.
 
 By default jetpack builds a single _modern_ bundle using the `defaults` [browserslist query](https://browsersl.ist/#q=defaults):
 
