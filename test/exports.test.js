@@ -29,8 +29,30 @@ test('rspack-config resolves config input explicitly', async (t) => {
   const configs = await createRspackConfig({ command: 'build', dir: path.join(fixturesDir, 'pkg-basic') })
 
   t.truthy(configs.modern)
-  t.truthy(configs.legacy)
+  t.falsy(configs.legacy)
   t.is(configs.modern.mode, 'production')
+})
+
+test('rspack-config always resolves input instead of guessing by shape', async (t) => {
+  const configs = await createRspackConfig({
+    command: 'build',
+    dir: path.join(fixturesDir, 'pkg-basic'),
+    mode: 'production',
+    logLevels: {}
+  })
+
+  t.truthy(configs.modern)
+  t.is(configs.modern.mode, 'production')
+})
+
+test('rspack-config can generate a specific target set', async (t) => {
+  const configs = await createRspackConfig(
+    { command: 'build', dir: path.join(fixturesDir, 'pkg-basic') },
+    { target: 'all' }
+  )
+
+  t.truthy(configs.modern)
+  t.truthy(configs.legacy)
 })
 
 test('removed public entry points are not exported', async (t) => {

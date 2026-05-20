@@ -314,6 +314,26 @@ test('passes a small public context to the rspack hook', async (t) => {
     }
   })
 
+  t.deepEqual(contexts, [{ command: 'build', mode: 'production', target: 'modern', dir: dir('fixtures', 'pkg-src') }])
+})
+
+test('passes rspack hook context for each requested target', async (t) => {
+  const contexts = []
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    overrides: { target: 'all' },
+    config: null
+  })
+
+  createRspackConfig({
+    ...opts,
+    rspack(config, context) {
+      contexts.push(context)
+      return config
+    }
+  })
+
   t.deepEqual(contexts, [
     { command: 'build', mode: 'production', target: 'modern', dir: dir('fixtures', 'pkg-src') },
     { command: 'build', mode: 'production', target: 'legacy', dir: dir('fixtures', 'pkg-src') }
