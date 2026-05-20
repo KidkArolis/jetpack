@@ -87,9 +87,19 @@ export default {
 
 ## Browserslist
 
-Jetpack uses browserslist for JS transpilation, CSS syntax lowering, polyfill selection, and modern/legacy serving.
+Jetpack uses Browserslist for JS transpilation, CSS syntax lowering, polyfill selection, and modern/legacy serving.
 
-By default, the modern bundle uses `baseline widely available with downstream`. The legacy bundle uses the Browserslist `defaults` query. To override either bundle, define `modern` and `legacy` environments:
+By default, the modern bundle uses `baseline widely available with downstream`. The legacy bundle uses the Browserslist `defaults` query.
+
+For the default `target: 'modern'` build, a regular project Browserslist config customizes the modern bundle:
+
+```json
+{
+  "browserslist": ["last 2 versions"]
+}
+```
+
+When building both bundles with `target: 'all'`, define `modern` and `legacy` environments so each bundle has a distinct target. A regular Browserslist config applies to both bundle targets.
 
 ```json
 {

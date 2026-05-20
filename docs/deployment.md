@@ -71,7 +71,7 @@ export default {
 }
 ```
 
-Define `modern` and `legacy` browserslist environments:
+Define `modern` and `legacy` Browserslist environments so the two bundles target different browsers. A regular Browserslist config applies to both bundle targets.
 
 ```txt
 [modern]
