@@ -2,31 +2,34 @@
 
 **Breaking changes**
 
-- jetpack is now ESM. Import its entry points (e.g. `import { serve } from 'jetpack/serve'`) — `require('jetpack/...')` is no longer supported.
-- `jetpack.config.js` is loaded via `import()`. In projects with `"type": "module"`, use `export default { ... }`. CommonJS configs still work — keep `module.exports = { ... }` in projects without `"type": "module"`, or rename to `jetpack.config.cjs`.
-- The package root now exports `defineConfig` and `resolveConfig` only:
+- Jetpack is now ESM-only. Use `import` (for example, `import { serve } from 'jetpack/serve'`); `require('jetpack/...')` is no longer supported.
+- `jetpack.config.js` is loaded via `import()`. In projects with `"type": "module"`, use `export default { ... }`. For CommonJS config, use `jetpack.config.cjs` or keep `module.exports = { ... }` in projects without `"type": "module"`.
+- The package root now exports only `defineConfig` and `resolveConfig`:
   ```js
   import { defineConfig, resolveConfig } from 'jetpack'
   const config = await resolveConfig({ command: 'dev', dir: process.cwd() })
   ```
-  `resolveConfig` does not parse CLI arguments on import; pass `command`, `dir`, `entry`, and `overrides` explicitly.
-- Resolved config no longer includes build output fields like `assets` and `runtime`, or the derived `production` boolean. Use `mode === 'production'` instead. `jetpack build` writes emitted asset URLs to `dist/manifest.json`.
-- Removed the public `jetpack/options` entry point. Use `resolveConfig` from `jetpack`.
-- Removed the public `jetpack/proxy` entry point. Keep using the `proxy` config option for simple dev API forwarding.
+  If you call `resolveConfig` directly, pass `command`, `dir`, `entry`, and `overrides` explicitly.
+- Resolved config no longer includes `assets`, `runtime`, or `production`. Use `mode === 'production'`; emitted asset URLs are written to `dist/manifest.json`.
+- Removed `jetpack/options`. Use `resolveConfig` from `jetpack`.
+- Removed `jetpack/proxy`. Keep using the `proxy` config option for dev API forwarding.
 - Removed `jetpack/rspack.config`. Use `jetpack/rspack-config` for the generated rspack config factory.
-- `jetpack/serve` now exports a factory. Resolve config explicitly, then pass it to `serve(config)`.
+- `jetpack/serve` now exports a factory: resolve config explicitly, then pass it to `serve(config)`.
 - Replaced `--modern` / `--legacy` with `--target modern|legacy|all`.
 - The `rspack(config, options)` config hook now receives `rspack(config, context)`, where `context` is `{ command, mode, target, dir }`.
 - Removed the old `webpack` config hook alias. Use `rspack` instead.
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
-- Dropped the `-x` / `--exec` flag and the `exec` config option. Use `concurrently`, two terminals, or your task runner of choice to run a second process alongside jetpack.
-- Renamed `publicPath` to `assetBaseUrl`, renamed `dist` to `build.outDir`, removed the `static` config option, and removed `dir` from config files. Continue using `--dir` or `resolveConfig({ dir })` to select the project root.
-- Moved build-only config into `build`: use `build.outDir`, `build.sourceMaps`, `build.minify`, and `build.chunkLoadRetry`.
-- Moved document shell config into `html`: use `html.title`, `html.cspNonce`, and `html.render`.
+- Removed `-x` / `--exec` and the `exec` config option. Use your task runner of choice to run another process alongside Jetpack.
+- Renamed and moved several config options:
+  - `publicPath` -> `assetBaseUrl`
+  - `dist` -> `build.outDir`
+  - build options -> `build.outDir`, `build.sourceMaps`, `build.minify`, and `build.chunkLoadRetry`
+  - document shell options -> `html.title`, `html.cspNonce`, and `html.render`
+- Removed `static` and config-file `dir`. Use `--dir` or `resolveConfig({ dir })` to select the project root.
 - Replaced the `target: { modern, legacy }` config object with `target: 'modern' | 'legacy' | 'all'`.
 - Removed the `css.features` config option. Customize `builtin:lightningcss-loader` via the `rspack` config hook if needed.
 - Removed the resolved `react` option. React support remains automatic when `react` is installed.
-- Dropped `sass-resources-loader` and the `css.resources` config option. The same behaviour is built into modern `sass-loader` via its `additionalData` option — use it via the `rspack` config hook:
+- Removed `sass-resources-loader` and `css.resources`. Use `sass-loader`'s `additionalData` option via the `rspack` config hook:
   ```js
   rspack: (config) => {
     for (const rule of config.module.rules[0].oneOf) {
@@ -38,25 +41,23 @@
     }
   }
   ```
-- Updated to Rspack 2.0 — see the [Rspack v1 → v2 migration guide](https://rspack.rs/guide/migration/rspack_1.x) if you customise rspack via `jetpack.config.js`.
+- Updated to Rspack 2.0. If you customize rspack, see the [Rspack v1 -> v2 migration guide](https://rspack.rs/guide/migration/rspack_1.x).
 
 **Fixes**
 
-- `--no-hot` and `--no-minify` were silently broken; now work as expected.
-- Unknown bare commands now fail instead of being treated as entry paths.
-- Asset filenames now use `[contenthash:8]` instead of `[hash:8]` — actual content-based hashing for cache busting.
-- `jetpack inspect` now writes a self-contained `dist/inspect.html` treemap (no server, no `webpack-bundle-analyzer` dependency, ~30 KB single file). The HTML opens automatically in your browser in interactive runs.
+- Fixed `--no-hot` and `--no-minify`.
+- Unknown commands now fail instead of being treated as entry paths.
+- Asset filenames now use `[contenthash:8]` for better cache busting.
+- `jetpack inspect` now writes a self-contained `dist/inspect.html` treemap and opens it automatically in interactive runs.
 
 **Improvements**
 
-- `output.publicPath` is now `'auto'`: the bundle computes its runtime URL from the loaded script's location, so it works out of the box for CDN deployments and sub-path mounts without further config.
-- Reusable command modules no longer change `process.cwd()` or call `process.exit()`. The CLI wrapper owns process exits; commands return or throw.
+- Runtime asset URLs now work better for CDN deployments and sub-path mounts.
 - Added command-specific help, `dev --host`, `clean --yes`, and `clean --dry-run`.
 - Added `--log=all` and `--log=silent` presets.
-- Build output paths are validated before Jetpack removes or writes files.
 - Added a `define` option for build-time constants backed by `rspack.DefinePlugin`.
 - Expanded asset extension list: `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
-- Smaller install — dropped seven runtime dependencies in favour of Node built-ins.
+- Smaller install: dropped seven runtime dependencies in favour of Node built-ins.
 
 # 4.4.2
 
