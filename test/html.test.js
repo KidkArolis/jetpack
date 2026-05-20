@@ -23,7 +23,7 @@ test('renders default html with generated asset tags', (t) => {
   t.true(html.includes('<title>test app</title>'))
   t.true(html.includes('<link rel="stylesheet" href="/assets/bundle.css">'))
   t.true(html.includes('<script>\nconsole.log("runtime")\n</script>'))
-  t.true(html.includes('<script src="/assets/bundle.js" async></script>'))
+  t.true(html.includes('<script src="/assets/bundle.js" defer></script>'))
 })
 
 test('renders custom html function with pre-rendered tags', (t) => {
@@ -40,14 +40,14 @@ test('renders custom html function with pre-rendered tags', (t) => {
 
   t.is(
     html,
-    '<main><link rel="stylesheet" href="/assets/bundle.css"><script src="/assets/bundle.js" async></script></main>'
+    '<main><link rel="stylesheet" href="/assets/bundle.css"><script src="/assets/bundle.js" defer></script></main>'
   )
 })
 
 test('adds csp nonce placeholders to jetpack-owned scripts', (t) => {
   const html = renderHtml({ ...options, html: { ...options.html, cspNonce: true } }, manifest)
   t.true(html.includes('<script nonce="__JETPACK_CSP_NONCE__">'))
-  t.true(html.includes('<script src="/assets/bundle.js" nonce="__JETPACK_CSP_NONCE__" async></script>'))
+  t.true(html.includes('<script src="/assets/bundle.js" nonce="__JETPACK_CSP_NONCE__" defer></script>'))
 
   t.true(renderHtmlResponse(html, { cspNonce: 'test-nonce' }).includes('nonce="test-nonce"'))
 })
