@@ -87,7 +87,7 @@ Top-level options:
 | `entry`                 | `'.'`             | Entry module relative to the project root. Rspack resolves `.` through `package.json#main` or `index.js`. |
 | `port`                  | `3030`            | Dev server port.                                                                                          |
 | `host`                  | `'localhost'`     | Dev server host.                                                                                          |
-| `assetBaseUrl`          | `'/assets/'`      | Path or full URL prefix written into generated HTML and `manifest.json`. Runtime chunk loading uses the loaded script URL automatically. |
+| `assetBaseUrl`          | `'/assets/'`      | Path or full URL prefix written into generated HTML, `manifest.json`, and runtime chunk loading. |
 | `hot`                   | `true`            | Set `false` to disable hot reload, or use `{ enabled: false, quiet: true }` for object form.              |
 | `target`                | `'modern'`        | `modern`, `legacy`, or `all`. Dev and inspect support one target at a time.                               |
 | `polyfills`             | `'usage'`         | JavaScript runtime polyfills: `usage`, `entry`, or `false`.                                               |

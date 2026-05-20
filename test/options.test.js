@@ -421,6 +421,17 @@ test('resolves extensionless imports for supported js and typescript files', asy
   t.deepEqual(config.resolve.extensions, ['.tsx', '.ts', '.jsx', '.mjs', '...'])
 })
 
+test('uses assetBaseUrl as the runtime public path', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null
+  })
+  const config = createRspackConfig({ ...opts, assetBaseUrl: 'https://cdn.example.com/assets/' }).modern
+
+  t.is(config.output.publicPath, 'https://cdn.example.com/assets/')
+})
+
 test('production builds split initial and async chunks', async (t) => {
   const opts = await options({
     command: 'build',
