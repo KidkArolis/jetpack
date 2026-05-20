@@ -111,7 +111,10 @@ export default defineConfig({
   `,
 
   css: {
-    // css modules
+    // CSS Modules.
+    // false: all CSS is global
+    // true: app CSS is modular by default; *.global.css / *.global.scss opt out
+    // { conventional: true }: only *.module.css / *.module.scss opt in
     modules: false,
 
     // shortcut for setting lightningcss feature flags
