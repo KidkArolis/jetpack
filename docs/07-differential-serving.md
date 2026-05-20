@@ -37,15 +37,19 @@ Define which browsers count as modern vs legacy with a browserslist config using
 
 ## Differential serving
 
-`jetpack/serve` does it for you — it sniffs the user-agent and serves the modern or legacy HTML accordingly.
+`serve` from `jetpack/serve` does it for you — it sniffs the user-agent and serves the modern or legacy HTML accordingly.
 
 ```js
 import express from 'express'
-import jetpack from 'jetpack/serve'
+import { resolveConfig } from 'jetpack'
+import { serve } from 'jetpack/serve'
 
 const app = express()
+const config = await resolveConfig({
+  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev'
+})
 app.get('/api/data', (req, res) => res.send('hello'))
-app.use(jetpack)
+app.use(serve(config))
 app.listen(3000)
 ```
 

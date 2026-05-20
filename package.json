@@ -5,10 +5,8 @@
   "description": "Jetpack wraps webpack and nodemon to give you the best development workflow.",
   "exports": {
     ".": "./index.js",
-    "./options": "./options.js",
-    "./proxy": "./proxy.js",
     "./rspack": "./rspack.js",
-    "./rspack.config": "./rspack.config.js",
+    "./rspack-config": "./rspack-config.js",
     "./html": "./html.js",
     "./serve": "./serve.js"
   },
@@ -35,9 +33,7 @@
     "docs",
     "index.js",
     "html.js",
-    "options.js",
-    "proxy.js",
-    "rspack.config.js",
+    "rspack-config.js",
     "rspack.js",
     "serve.js"
   ],

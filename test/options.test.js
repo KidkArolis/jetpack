@@ -5,7 +5,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import options from '../lib/options.js'
 import createRspackConfig from '../lib/rspack.config.js'
-import publicOptions, { resolveOptions } from '../options.js'
+import { resolveConfig } from '../index.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const dir = (...subdir) => path.join(__dirname, ...subdir)
@@ -143,9 +143,9 @@ test('normalizes assetBaseUrl and assetBasePathname', async (t) => {
   t.is(opts.assetBasePathname, '/assets/')
 })
 
-test('public options export resolves without cli parsing', async (t) => {
-  const opts = await publicOptions({ command: 'dev', dir: dir('fixtures', 'pkg-src') })
-  const namedOpts = await resolveOptions({ command: 'dev', dir: dir('fixtures', 'pkg-src') })
+test('public config export resolves without cli parsing', async (t) => {
+  const opts = await resolveConfig({ command: 'dev', dir: dir('fixtures', 'pkg-src') })
+  const namedOpts = await options({ command: 'dev', dir: dir('fixtures', 'pkg-src') })
   t.deepEqual(opts, namedOpts)
 })
 

@@ -76,8 +76,13 @@ export default {
 **Mount jetpack into your own server** using `jetpack/serve` — proxies to the dev server in development, serves built files in production:
 
 ```js
-import jetpack from 'jetpack/serve'
-app.use(jetpack)
+import { resolveConfig } from 'jetpack'
+import { serve } from 'jetpack/serve'
+
+const config = await resolveConfig({
+  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev'
+})
+app.use(serve(config))
 ```
 
 See [Workflow and deployment](./docs/06-workflow-and-deployment.md).

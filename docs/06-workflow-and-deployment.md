@@ -14,14 +14,18 @@ Point `package.json#main` at the server entry and configure `entry` in `jetpack.
 
 ```js
 import express from 'express'
-import jetpack from 'jetpack/serve'
+import { resolveConfig } from 'jetpack'
+import { serve } from 'jetpack/serve'
 
 const app = express()
+const config = await resolveConfig({
+  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev'
+})
 app.get('/api/unicorns', (req, res) => {...})
-app.use(jetpack)
+app.use(serve(config))
 ```
 
-`jetpack/serve` proxies to the dev server in development and serves `dist/` in production. Run both processes via two terminals or your preferred process manager.
+`serve(config)` proxies to the dev server in development and serves `dist/` in production. Run both processes via two terminals or your preferred process manager.
 
 Deploy by building (`jetpack build`) and running `node .`.
 

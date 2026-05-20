@@ -1,5 +1,6 @@
 import express from 'express'
-import jetpackServe from '../../serve.js'
+import { resolveConfig } from '../../index.js'
+import { serve } from '../../serve.js'
 
 const app = express()
 app.use((_req, res, next) => {
@@ -8,7 +9,12 @@ app.use((_req, res, next) => {
   }
   next()
 })
-app.use(jetpackServe)
+
+const config = await resolveConfig({
+  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev',
+  dir: process.cwd()
+})
+app.use(serve(config))
 
 const port = Number(process.env.PORT)
 app.listen(port, () => {

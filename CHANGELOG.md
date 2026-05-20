@@ -2,17 +2,19 @@
 
 **Breaking changes**
 
-- jetpack is now ESM. Import its entry points (e.g. `import jetpack from 'jetpack/serve'`) — `require('jetpack/...')` is no longer supported.
+- jetpack is now ESM. Import its entry points (e.g. `import { createServe } from 'jetpack/serve'`) — `require('jetpack/...')` is no longer supported.
 - `jetpack.config.js` is loaded via `import()`. In projects with `"type": "module"`, use `export default { ... }`. CommonJS configs still work — keep `module.exports = { ... }` in projects without `"type": "module"`, or rename to `jetpack.config.cjs`.
-- `jetpack/options` now exports an async function:
+- The package root now exports `defineConfig` and `resolveConfig` only:
   ```js
-  import getOptions from 'jetpack/options'
-  const options = await getOptions({ command: 'dev', dir: process.cwd() })
+  import { defineConfig, resolveConfig } from 'jetpack'
+  const config = await resolveConfig({ command: 'dev', dir: process.cwd() })
   ```
-  It no longer parses CLI arguments on import; pass `command`, `dir`, `entry`, and `overrides` explicitly.
-- `jetpack/options` no longer includes build output fields like `assets` and `runtime`. `jetpack build` writes emitted asset URLs to `dist/manifest.json`.
-- `import 'jetpack'` now exposes the root library API instead of the generated rspack config. Use `jetpack/rspack.config` for the generated rspack config entry point.
-- `jetpack/rspack.config` now exports an async function returning the rspack config. `rspack --config node_modules/jetpack/rspack.config.js` still works (rspack supports async config functions).
+  `resolveConfig` does not parse CLI arguments on import; pass `command`, `dir`, `entry`, and `overrides` explicitly.
+- Resolved config no longer includes build output fields like `assets` and `runtime`. `jetpack build` writes emitted asset URLs to `dist/manifest.json`.
+- Removed the public `jetpack/options` entry point. Use `resolveConfig` from `jetpack`.
+- Removed the public `jetpack/proxy` entry point. Keep using the `proxy` config option for simple dev API forwarding.
+- Removed `jetpack/rspack.config`. Use `jetpack/rspack-config` for the generated rspack config factory.
+- `jetpack/serve` now exports a factory. Resolve config explicitly, then pass it to `createServe(config)`.
 - Replaced `--modern` / `--legacy` with `--target modern|legacy|all`.
 - The `rspack(config, options)` config hook now receives `rspack(config, context)`, where `context` is `{ command, mode, target, root }`.
 - Removed the old `webpack` config hook alias. Use `rspack` instead.

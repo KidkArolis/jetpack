@@ -220,22 +220,38 @@ Jetpack exposes the following entry points.
 The package root exposes the small library API:
 
 ```js
-import { defineConfig, resolveOptions, html } from 'jetpack'
+import { defineConfig, resolveConfig } from 'jetpack'
 ```
 
 Use `defineConfig` in `jetpack.config.js` when you want to make the config intent explicit without changing runtime behavior.
+Use `resolveConfig` when an API needs Jetpack's resolved config object:
+
+```js
+const config = await resolveConfig({
+  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev',
+  dir: process.cwd()
+})
+config.production
+config.port
+config.assetBaseUrl
+config.assetBasePathname
+```
 
 ### `jetpack/serve`
 
-Middleware that serves your assets in both dev (by proxying to the dev server) and production (from `dist`). For example:
+Factory for middleware that serves your assets in both dev (by proxying to the dev server) and production (from `dist`). For example:
 
 ```js
 import express from 'express'
-import jetpack from 'jetpack/serve'
+import { resolveConfig } from 'jetpack'
+import { serve } from 'jetpack/serve'
 
 const app = express()
+const config = await resolveConfig({
+  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev'
+})
 app.get('/api/unicorns', (req, res) => {...})
-app.use(jetpack)
+app.use(serve(config))
 ```
 
 When `cspNonce: true` is enabled, `jetpack/serve` replaces nonce placeholders in `index.html` with `res.locals.cspNonce`.
@@ -251,47 +267,20 @@ html`<div>${'syntax highlighting helper only'}</div>`
 renderHtmlResponse(indexHtml, { cspNonce: res.locals.cspNonce })
 ```
 
-### `jetpack/options`
-
-Reads the resolved jetpack configuration. This API does not parse `process.argv`; pass CLI-like values explicitly when you need them.
-
-```js
-import getOptions, { resolveOptions } from 'jetpack/options'
-
-const options = await getOptions({
-  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev',
-  dir: process.cwd()
-})
-options.production
-options.port
-options.assetBaseUrl
-options.assetBasePathname
-
-// named export for clarity when you prefer it
-await resolveOptions({ command: 'dev', dir: './app', entry: './client.js' })
-```
-
-Build asset URLs live in `dist/manifest.json`, not in the resolved options object.
-
-### `jetpack/proxy`
-
-Proxy helper for customising proxy behaviour via a function.
-
-```js
-import proxy from 'jetpack/proxy'
-
-export default {
-  proxy: (app) => {
-    app.post('/custom', (req, res) => res.send(422))
-    app.get('/api/*', proxy('http://localhost:3000'))
-  }
-}
-```
-
 ### `jetpack/rspack`
 
 Re-exports the rspack module so you can use its plugins.
 
-### `jetpack/rspack.config`
+### `jetpack/rspack-config`
 
-The full rspack config jetpack generates. Can be passed to `rspack` directly if you want to invoke it without the Jetpack CLI. The package root no longer points at this file; import this entry point explicitly for generated rspack config behavior.
+The full rspack config Jetpack generates. It accepts either a resolved config object or the same input as `resolveConfig`.
+
+```js
+import createRspackConfig from 'jetpack/rspack-config'
+
+const configs = await createRspackConfig({ command: 'build', dir: process.cwd() })
+configs.modern
+configs.legacy
+```
+
+Build asset URLs live in `dist/manifest.json`, not in the resolved config object.
