@@ -154,8 +154,9 @@ import createRspackConfig from 'jetpack/rspack-config'
 ```js
 const config = await resolveConfig({ command: 'build', dir: process.cwd() })
 config.mode
+config.target // 'modern', 'legacy', or 'all'
 config.build.outDir
 config.assetBaseUrl
 ```
 
-`jetpack build` writes emitted asset URLs to `${config.build.outDir}/manifest.json`; build assets do not live in the resolved config object.
+`resolveConfig()` returns project config only. CLI command flags such as `--print-config`, `--yes`, `--dry-run`, and `--coverage` are not included. `jetpack build` writes emitted asset URLs to `${config.build.outDir}/manifest.json`; build assets do not live in the resolved config object.

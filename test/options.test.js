@@ -23,10 +23,7 @@ const base = (pkg, extra = {}) => {
       minify: true,
       chunkLoadRetry: false
     },
-    target: {
-      modern: true,
-      legacy: false
-    },
+    target: 'modern',
     hot: { enabled: true, quiet: false },
     port: 3030,
     host: 'localhost',
@@ -37,7 +34,6 @@ const base = (pkg, extra = {}) => {
     },
     proxy: {},
     define: {},
-    coverage: false,
     assetBaseUrl: '/assets/',
     assetBasePathname: '/assets/',
     css: {
@@ -193,7 +189,25 @@ test('accepts string targets', async (t) => {
     dir: dir('fixtures', 'pkg-src'),
     overrides: { target: 'all' }
   })
-  t.deepEqual(opts.target, { modern: true, legacy: true })
+  t.is(opts.target, 'all')
+})
+
+test('resolved config does not include cli runtime flags', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    overrides: {
+      printConfig: true,
+      yes: true,
+      dryRun: true,
+      coverage: 'US'
+    }
+  })
+
+  t.false('printConfig' in opts)
+  t.false('yes' in opts)
+  t.false('dryRun' in opts)
+  t.false('coverage' in opts)
 })
 
 test('accepts explicit mode independently of command', async (t) => {

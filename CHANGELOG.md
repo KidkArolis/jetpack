@@ -27,6 +27,8 @@
   - document shell options -> `html.title`, `html.cspNonce`, and `html.render`
 - Removed `static` and config-file `dir`. Use `--dir` or `resolveConfig({ dir })` to select the project root.
 - Replaced the `target: { modern, legacy }` config object with `target: 'modern' | 'legacy' | 'all'`.
+- Resolved config now keeps that same `target: 'modern' | 'legacy' | 'all'` shape instead of returning `{ modern, legacy }`.
+- Resolved config no longer includes CLI-only command flags such as `printConfig`, `yes`, `dryRun`, or `coverage`.
 - Removed the `css.features` config option. Customize `builtin:lightningcss-loader` via the `rspack` config hook if needed.
 - Removed the resolved `react` option. React support remains automatic when `react` is installed.
 - Removed `sass-resources-loader` and `css.resources`. Use `sass-loader`'s `additionalData` option via the `rspack` config hook:
