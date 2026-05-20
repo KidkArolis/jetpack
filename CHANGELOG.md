@@ -16,6 +16,7 @@
 - Removed `jetpack/rspack.config`. Use `jetpack/rspack-config` for the generated rspack config factory.
 - `jetpack/serve` now exports a factory: resolve config explicitly, then pass it to `serve(config)`.
 - Replaced `--modern` / `--legacy` with `--target modern|legacy|all`.
+- The implicit modern browser target changed from Browserslist `defaults` to `baseline widely available with downstream`. Legacy still defaults to Browserslist `defaults`.
 - The `rspack(config, options)` config hook now receives `rspack(config, context)`, where `context` is `{ command, mode, target, dir, findLoader }`.
 - Removed the old `webpack` config hook alias. Use `rspack` instead.
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).

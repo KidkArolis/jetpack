@@ -3,10 +3,10 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import browserslist from 'browserslist'
 import options from '../lib/options.js'
 import createRspackConfig from '../lib/rspack.config.js'
 import { resolveConfig } from '../index.js'
+import { targetQuery } from '../lib/browsers.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const dir = (...subdir) => path.join(__dirname, ...subdir)
@@ -546,7 +546,7 @@ function swcEnv(config) {
     .use[0].options.env
 }
 
-test('delegates to browserslist defaults when no browserslist config exists', async (t) => {
+test('uses Jetpack modern defaults when no browserslist config exists', async (t) => {
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
@@ -554,8 +554,25 @@ test('delegates to browserslist defaults when no browserslist config exists', as
   })
   const config = createRspackConfig(opts).modern
 
-  t.deepEqual(config.target, ['web', `browserslist:${browserslist.defaults.join(', ')}`])
-  t.false('targets' in swcEnv(config))
+  const targets = targetQuery({ ...opts, bundleTarget: 'modern' })
+
+  t.deepEqual(config.target, ['web', `browserslist:${targets.join(', ')}`])
+  t.deepEqual(swcEnv(config).targets, targets)
+})
+
+test('uses browserslist defaults for legacy when no browserslist config exists', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null,
+    overrides: { target: 'legacy' }
+  })
+  const config = createRspackConfig(opts).legacy
+
+  const targets = targetQuery({ ...opts, bundleTarget: 'legacy' })
+
+  t.deepEqual(config.target, ['web', `browserslist:${targets.join(', ')}`])
+  t.deepEqual(swcEnv(config).targets, targets)
 })
 
 test('uses project browserslist config when present', async (t) => {
@@ -565,7 +582,7 @@ test('uses project browserslist config when present', async (t) => {
     config: null
   })
   const config = createRspackConfig(opts).modern
-  const targets = ['last 4 versions', '> 1%', 'not dead']
+  const targets = targetQuery({ ...opts, bundleTarget: 'modern' })
 
   t.deepEqual(config.target, ['web', `browserslist:${targets.join(', ')}`])
   t.deepEqual(swcEnv(config).targets, targets)

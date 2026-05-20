@@ -65,11 +65,10 @@ Define `modern` and `legacy` browserslist environments:
 
 ```txt
 [modern]
-last 1 version
-> 1%
+baseline widely available with downstream
 
 [legacy]
-> 0.1%
+defaults
 ```
 
 `jetpack build` writes `index.html` for modern browsers and `index.legacy.html` for legacy browsers. `serve(config)` chooses the right HTML file from the request user-agent.

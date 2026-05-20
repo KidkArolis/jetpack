@@ -61,7 +61,7 @@ test('dev mode includes source-map devtool', async (t) => {
   t.regex(stripAnsi(result.stdout), /devtool:\s*'source-map'/)
 })
 
-test.serial('build uses browserslist defaults when no browserslist config exists', async (t) => {
+test.serial('build uses Jetpack browser defaults when no browserslist config exists', async (t) => {
   const dir = await setupTmpFixture('pkg-src')
 
   try {
