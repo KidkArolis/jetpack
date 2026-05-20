@@ -341,6 +341,17 @@ test('passes rspack hook context for each requested target', async (t) => {
   ])
 })
 
+test('resolves extensionless imports for supported js and typescript files', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    config: null
+  })
+  const config = createRspackConfig(opts).modern
+
+  t.deepEqual(config.resolve.extensions, ['.tsx', '.ts', '.jsx', '.mjs', '...'])
+})
+
 function swcEnv(config) {
   return config.module.rules[0].oneOf.find((rule) => rule.use?.some((loader) => loader.loader === 'builtin:swc-loader'))
     .use[0].options.env
