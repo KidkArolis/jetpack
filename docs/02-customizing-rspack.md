@@ -7,7 +7,7 @@ import rspack from 'jetpack/rspack'
 import WorkboxRspackPlugin from '@aaroon/workbox-rspack-plugin'
 
 export default {
-  rspack: (config, options) => {
+  rspack: (config, context) => {
     // unshift to run before other loaders — we're overriding jetpack's svg handling
     config.module.rules[0].oneOf.unshift({
       test: /\.svg$/,
@@ -21,7 +21,7 @@ export default {
       })
     )
 
-    if (options.production) {
+    if (context.mode === 'production') {
       config.plugins.push(
         new WorkboxRspackPlugin.GenerateSW({
           /* ... */
@@ -33,3 +33,5 @@ export default {
   }
 }
 ```
+
+The second argument is `{ command, mode, target, root }`.

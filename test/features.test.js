@@ -34,8 +34,14 @@ test('--print-config prints the rspack config to stdout', async (t) => {
   t.regex(out, /assetModuleFilename:/)
 })
 
-test('--print-config --legacy prints the legacy config', async (t) => {
-  const result = await runJetpack(['build', '--print-config', '--legacy', '--dir', path.join(fixturesDir, 'pkg-basic')])
+test('--print-config --target=legacy prints the legacy config', async (t) => {
+  const result = await runJetpack([
+    'build',
+    '--print-config',
+    '--target=legacy',
+    '--dir',
+    path.join(fixturesDir, 'pkg-basic')
+  ])
   t.is(result.exitCode, 0)
   const out = stripAnsi(result.stdout)
   t.regex(out, /Legacy config/)

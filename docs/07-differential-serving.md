@@ -11,8 +11,8 @@ Out of the box, jetpack only builds a modern bundle. No differential serving nee
 Build both bundles via CLI:
 
 ```
-jetpack build --modern --legacy
-jetpack build -ml
+jetpack build --target all
+jetpack build -t all
 ```
 
 …or in `jetpack.config.js`:
@@ -58,4 +58,5 @@ To see what each bundle will target:
 ```
 $ jetpack browsers
 $ jetpack browsers --coverage=GB
+$ jetpack browsers --target all
 ```

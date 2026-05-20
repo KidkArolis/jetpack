@@ -1,7 +1,10 @@
 import test from 'ava'
+import fs from 'node:fs/promises'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import options from '../lib/options.js'
+import createRspackConfig from '../lib/rspack.config.js'
 import publicOptions, { resolveOptions } from '../options.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -10,6 +13,8 @@ const dir = (...subdir) => path.join(__dirname, ...subdir)
 const base = (pkg, extra = {}) =>
   Object.assign(
     {
+      command: 'dev',
+      mode: 'development',
       production: false,
       logLevels: { info: false, progress: false, none: false },
       dir: dir('fixtures', pkg),
@@ -22,6 +27,7 @@ const base = (pkg, extra = {}) =>
       react: false,
       hot: { enabled: true, quiet: false },
       port: 3030,
+      host: 'localhost',
       sourceMaps: 'source-map',
       title: 'jetpack',
       cspNonce: false,
@@ -56,7 +62,8 @@ test('accepts explicit overrides', async (t) => {
     dir: dir('fixtures', 'pkg-swoosh'),
     overrides: {
       hot: false,
-      port: 2800
+      port: 2800,
+      host: '127.0.0.1'
     }
   })
   t.deepEqual(
@@ -64,7 +71,8 @@ test('accepts explicit overrides', async (t) => {
     base('pkg-swoosh', {
       hot: { enabled: false, quiet: false },
       entry: './some/path',
-      port: 2800
+      port: 2800,
+      host: '127.0.0.1'
     })
   )
 })
@@ -139,4 +147,86 @@ test('public options export resolves without cli parsing', async (t) => {
   const opts = await publicOptions({ command: 'dev', dir: dir('fixtures', 'pkg-src') })
   const namedOpts = await resolveOptions({ command: 'dev', dir: dir('fixtures', 'pkg-src') })
   t.deepEqual(opts, namedOpts)
+})
+
+test('accepts string targets', async (t) => {
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    overrides: { target: 'all' }
+  })
+  t.deepEqual(opts.target, { modern: true, legacy: true })
+})
+
+test('rejects invalid targets', async (t) => {
+  await t.throwsAsync(
+    options({
+      command: 'build',
+      dir: dir('fixtures', 'pkg-src'),
+      overrides: { target: 'ancient' }
+    }),
+    { message: 'Invalid target "ancient". Expected modern, legacy, or all.' }
+  )
+})
+
+test('rejects targets that do not apply to the command', async (t) => {
+  await t.throwsAsync(
+    options({
+      command: 'dev',
+      dir: dir('fixtures', 'pkg-src'),
+      overrides: { target: 'all' }
+    }),
+    { message: 'Command "dev" only supports one target at a time. Use --target modern or --target legacy.' }
+  )
+})
+
+test('rejects output paths that point at or outside the project root', async (t) => {
+  const src = dir('fixtures', 'pkg-src')
+  const projectRootDist = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-options-'))
+  const outsideDist = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-options-'))
+  await fs.cp(src, projectRootDist, { recursive: true })
+  await fs.cp(src, outsideDist, { recursive: true })
+  t.teardown(() => fs.rm(projectRootDist, { recursive: true, force: true }))
+  t.teardown(() => fs.rm(outsideDist, { recursive: true, force: true }))
+
+  await fs.writeFile(path.join(projectRootDist, 'jetpack.config.mjs'), 'export default { dist: "." }\n')
+  await t.throwsAsync(
+    options({
+      command: 'build',
+      dir: projectRootDist
+    }),
+    { message: 'dist must not point to the project root.' }
+  )
+
+  await fs.writeFile(path.join(outsideDist, 'jetpack.config.mjs'), 'export default { dist: "../outside" }\n')
+  await t.throwsAsync(
+    options({
+      command: 'build',
+      dir: outsideDist
+    }),
+    { message: 'dist must stay inside the project root.' }
+  )
+})
+
+test('passes a small public context to the rspack hook', async (t) => {
+  const contexts = []
+  const opts = await options({
+    command: 'build',
+    dir: dir('fixtures', 'pkg-src'),
+    overrides: {},
+    config: null
+  })
+
+  createRspackConfig({
+    ...opts,
+    rspack(config, context) {
+      contexts.push(context)
+      return config
+    }
+  })
+
+  t.deepEqual(contexts, [
+    { command: 'build', mode: 'production', target: 'modern', root: dir('fixtures', 'pkg-src') },
+    { command: 'build', mode: 'production', target: 'legacy', root: dir('fixtures', 'pkg-src') }
+  ])
 })

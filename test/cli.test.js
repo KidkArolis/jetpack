@@ -30,10 +30,23 @@ test('--help prints the usage banner', async (t) => {
   t.regex(result.stdout, /--port/)
 })
 
+test('command help prints command-specific usage', async (t) => {
+  const result = await runJetpack(['build', '--help'])
+  t.is(result.exitCode, 0)
+  t.regex(result.stdout, /Usage:\s*jetpack build/)
+  t.regex(result.stdout, /--target/)
+})
+
 test('-h is an alias for --help', async (t) => {
   const result = await runJetpack(['-h'])
   t.is(result.exitCode, 0)
   t.regex(result.stdout, /Usage:\s*jetpack/)
+})
+
+test('unknown bare commands fail', async (t) => {
+  const result = await runJetpack(['buidl'])
+  t.is(result.exitCode, 1)
+  t.regex(result.stderr, /Unknown command "buidl"/)
 })
 
 test('--no-hot is parsed and reflected in the resolved config', async (t) => {
@@ -42,6 +55,11 @@ test('--no-hot is parsed and reflected in the resolved config', async (t) => {
   // When hot is disabled, HotModuleReplacementPlugin is not pushed in dev,
   // but in build mode we just check the build succeeds with --no-hot present.
   // The flag is exercised in cli.js — that's enough for coverage.
+})
+
+test('-r is an alias for --no-hot', async (t) => {
+  const result = await runJetpack(['build', '--print-config', '-r', '--dir', path.join(fixturesDir, 'pkg-basic')])
+  t.is(result.exitCode, 0)
 })
 
 test('--no-minify disables minification', async (t) => {
@@ -55,6 +73,44 @@ test('--no-minify disables minification', async (t) => {
   t.is(result.exitCode, 0)
   // minimizer array stays empty when --no-minify is passed
   t.regex(result.stdout.replace(/\[[0-9;]*m/g, ''), /minimizer:\s*\[\s*\]/)
+})
+
+test('-u is an alias for --no-minify', async (t) => {
+  const result = await runJetpack(['build', '--print-config', '-u', '--dir', path.join(fixturesDir, 'pkg-basic')])
+  t.is(result.exitCode, 0)
+  t.regex(result.stdout.replace(/\[[0-9;]*m/g, ''), /minimizer:\s*\[\s*\]/)
+})
+
+test('--target controls the bundle target', async (t) => {
+  const result = await runJetpack([
+    'build',
+    '--print-config',
+    '--target=legacy',
+    '--dir',
+    path.join(fixturesDir, 'pkg-basic')
+  ])
+  t.is(result.exitCode, 0)
+  const stdout = result.stdout.replace(/\[[0-9;]*m/g, '')
+  t.regex(stdout, /Legacy config/)
+  t.notRegex(stdout, /Modern config/)
+})
+
+test('--log=all enables info and progress logging', async (t) => {
+  const result = await runJetpack([
+    'build',
+    '--print-config',
+    '--log=all',
+    '--dir',
+    path.join(fixturesDir, 'pkg-basic')
+  ])
+  t.is(result.exitCode, 0)
+  t.regex(result.stdout, /Building for production/)
+})
+
+test('invalid --target fails', async (t) => {
+  const result = await runJetpack(['build', '--target=ancient', '--dir', path.join(fixturesDir, 'pkg-basic')])
+  t.is(result.exitCode, 1)
+  t.regex(result.stderr, /Invalid target "ancient"/)
 })
 
 test('positional path is used as the entry', async (t) => {

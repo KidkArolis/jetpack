@@ -30,8 +30,8 @@ test('jetpack browsers --coverage=US scopes coverage', async (t) => {
   t.regex(result.stdout, /\[modern coverage US\]/i)
 })
 
-test('jetpack browsers --legacy prints legacy info', async (t) => {
-  const result = await runJetpack(['browsers', '--legacy', '--dir', path.join(fixturesDir, 'pkg-basic')])
+test('jetpack browsers --target=legacy prints legacy info', async (t) => {
+  const result = await runJetpack(['browsers', '--target=legacy', '--dir', path.join(fixturesDir, 'pkg-basic')])
   t.is(result.exitCode, 0)
   t.regex(result.stdout, /\[legacy query\]/i)
   t.regex(result.stdout, /\[legacy browsers\]/i)
@@ -69,6 +69,43 @@ test.serial('jetpack clean keeps dist when not confirmed', async (t) => {
     const result = await runJetpack(['clean', '--dir', dir], { input: 'n\n' })
     t.is(result.exitCode, 0)
     t.true(existsSync(path.join(dir, 'dist')), 'dist should still exist when user declines')
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack clean --yes removes dist without prompting', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic')
+  try {
+    const build = await runJetpack(['build', '--log=info', '--dir', dir], {
+      cwd: os.tmpdir(),
+      env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+    })
+    t.is(build.exitCode, 0)
+    t.true(existsSync(path.join(dir, 'dist')))
+
+    const result = await runJetpack(['clean', '--yes', '--dir', dir])
+    t.is(result.exitCode, 0)
+    t.false(existsSync(path.join(dir, 'dist')))
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack clean --dry-run keeps dist', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic')
+  try {
+    const build = await runJetpack(['build', '--log=info', '--dir', dir], {
+      cwd: os.tmpdir(),
+      env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+    })
+    t.is(build.exitCode, 0)
+    t.true(existsSync(path.join(dir, 'dist')))
+
+    const result = await runJetpack(['clean', '--dry-run', '--dir', dir])
+    t.is(result.exitCode, 0)
+    t.regex(result.stdout, /Would remove/)
+    t.true(existsSync(path.join(dir, 'dist')))
   } finally {
     await fs.rm(dir, { recursive: true, force: true })
   }

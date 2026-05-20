@@ -18,14 +18,14 @@ Commands:
 
 Options:
   -p, --port <n>       port, defaults to 3030
+  --host <host>        host for the dev server, defaults to localhost
   -d, --dir [path]     run jetpack in the context of this directory
   -c, --config [path]  config file to use, defaults to jetpack.config.js
   -r, --no-hot         disable hot reloading
   -u, --no-minify      disable minification
-  -m, --modern         build a modern bundle
-  -l, --legacy         build a legacy bundle
+  -t, --target <name>  bundle target: modern, legacy, all
   -i, --print-config   print the rspack config object used in the current command
-  -o, --log [levels]   select log levels: info, progress, none
+  -o, --log [levels]   select log levels: info, progress, all, silent
   -v, --version        print the version of jetpack and rspack
   -h, --help           display help for command
 ```
@@ -42,8 +42,9 @@ export default defineConfig({
   // defaults to '.' — rspack resolves it via package.json main / index.js
   entry: '.',
 
-  // port of the dev server
+  // port and host of the dev server
   port: 3030,
+  host: 'localhost',
 
   // build output path relative to the project root
   dist: 'dist',
@@ -127,9 +128,9 @@ export default defineConfig({
   },
 
   // rspack config transform fn — see 02-customizing-rspack.md
-  rspack: (config, options) => {
+  rspack: (config, context) => {
     // config: the rspack config jetpack generated
-    // options: this jetpack options object including defaults (has options.production)
+    // context: { command, mode, target, root }
   }
 })
 ```

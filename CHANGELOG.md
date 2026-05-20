@@ -13,6 +13,9 @@
 - `jetpack/options` no longer includes build output fields like `assets` and `runtime`. `jetpack build` writes emitted asset URLs to `dist/manifest.json`.
 - `import 'jetpack'` now exposes the root library API instead of the generated rspack config. Use `jetpack/rspack.config` for the generated rspack config entry point.
 - `jetpack/rspack.config` now exports an async function returning the rspack config. `rspack --config node_modules/jetpack/rspack.config.js` still works (rspack supports async config functions).
+- Replaced `--modern` / `--legacy` with `--target modern|legacy|all`.
+- The `rspack(config, options)` config hook now receives `rspack(config, context)`, where `context` is `{ command, mode, target, root }`.
+- Removed the old `webpack` config hook alias. Use `rspack` instead.
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
 - Dropped the `-x` / `--exec` flag and the `exec` config option. Use `concurrently`, two terminals, or your task runner of choice to run a second process alongside jetpack.
 - Renamed `publicPath` to `assetBaseUrl`, removed the `static` config option, and removed `dir` from config files. Continue using `--dir` or `resolveOptions({ dir })` to select the project root.
@@ -33,6 +36,7 @@
 **Fixes**
 
 - `--no-hot` and `--no-minify` were silently broken; now work as expected.
+- Unknown bare commands now fail instead of being treated as entry paths.
 - Asset filenames now use `[contenthash:8]` instead of `[hash:8]` — actual content-based hashing for cache busting.
 - `jetpack inspect` now writes a self-contained `dist/inspect.html` treemap (no server, no `webpack-bundle-analyzer` dependency, ~30 KB single file). The HTML opens automatically in your browser in interactive runs.
 
@@ -40,6 +44,9 @@
 
 - `output.publicPath` is now `'auto'`: the bundle computes its runtime URL from the loaded script's location, so it works out of the box for CDN deployments and sub-path mounts without further config.
 - Reusable command modules no longer change `process.cwd()` or call `process.exit()`. The CLI wrapper owns process exits; commands return or throw.
+- Added command-specific help, `dev --host`, `clean --yes`, and `clean --dry-run`.
+- Added `--log=all` and `--log=silent` presets.
+- Build output paths are validated before Jetpack removes or writes files.
 - Added a `define` option for build-time constants backed by `rspack.DefinePlugin`.
 - Expanded asset extension list: `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
 - Smaller install — dropped seven runtime dependencies in favour of Node built-ins.
