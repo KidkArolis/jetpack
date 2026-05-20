@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "dependencies": {
-    "serve": "^14.2.4"
-  },
   "scripts": {
     "start": "../../bin/jetpack"
   }

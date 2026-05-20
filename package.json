@@ -68,7 +68,8 @@
     "c8": "^11.0.0",
     "oxfmt": "^0.51.0",
     "oxlint": "^1.66.0",
-    "string-replace-loader": "^3.3.0"
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   },
   "ava": {
     "files": [
