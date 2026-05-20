@@ -2,6 +2,7 @@ import test from 'ava'
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import os from 'node:os'
+import http from 'node:http'
 import { fileURLToPath } from 'node:url'
 import { getFreePort, startNode, runJetpack } from './helpers/process.js'
 
@@ -29,6 +30,13 @@ async function startServeHarness({ cwd, port, env }) {
     cwd,
     env: { ...process.env, PORT: String(port), ...env },
     readyMatcher: new RegExp(`harness listening on ${port}`)
+  })
+}
+
+function startBackend(port, handler) {
+  return new Promise((resolve) => {
+    const server = http.createServer(handler)
+    server.listen(port, () => resolve(server))
   })
 }
 
@@ -174,6 +182,45 @@ test.serial('jetpack/serve returns error page when dev server is not running', a
     t.regex(await res.text(), /jetpack not running|Failed to connect/i)
   } finally {
     await harnessProc.kill()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack/serve stays alive when dev server response aborts mid-stream', async (t) => {
+  const devPort = await getFreePort()
+  const servePort = await getFreePort()
+  const dir = await setupTmpFixture('pkg-basic', { port: devPort })
+
+  const backend = await startBackend(devPort, (req, res) => {
+    if (req.url === '/health') {
+      res.writeHead(200, { 'content-type': 'application/json' })
+      res.end(JSON.stringify({ ok: true }))
+      return
+    }
+
+    res.writeHead(200, { 'content-type': 'text/plain' })
+    res.write('partial')
+    setTimeout(() => res.socket.destroy(), 20)
+  })
+
+  const harnessProc = await startServeHarness({
+    cwd: dir,
+    port: servePort,
+    env: { NODE_ENV: 'development' }
+  })
+
+  try {
+    await t.throwsAsync(async () => {
+      const res = await fetch(`http://localhost:${servePort}/partial`)
+      await res.text()
+    })
+
+    const res = await fetch(`http://localhost:${servePort}/health`)
+    t.is(res.status, 200)
+    t.deepEqual(await res.json(), { ok: true })
+  } finally {
+    await harnessProc.kill()
+    backend.close()
     await fs.rm(dir, { recursive: true, force: true })
   }
 })

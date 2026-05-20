@@ -82,3 +82,46 @@ test.serial('jetpack dev returns 502 when upstream proxy target is unreachable',
     await fs.rm(dir, { recursive: true, force: true })
   }
 })
+
+test.serial('jetpack dev stays alive when upstream proxy response aborts mid-stream', async (t) => {
+  const jetpackPort = await getFreePort()
+
+  const { server: backend, port: backendPort } = await startBackend((req, res) => {
+    if (req.url === '/api/health') {
+      res.writeHead(200, { 'content-type': 'application/json' })
+      res.end(JSON.stringify({ ok: true }))
+      return
+    }
+
+    res.writeHead(200, { 'content-type': 'text/plain' })
+    res.write('partial')
+    setTimeout(() => res.socket.destroy(), 20)
+  })
+
+  const dir = await setupTmpFixture('pkg-basic', {
+    port: jetpackPort,
+    proxy: {
+      '/api/partial': `http://localhost:${backendPort}/partial`,
+      '/api/health': `http://localhost:${backendPort}/health`
+    }
+  })
+
+  const dev = await startJetpack(['--dir', dir, '--port', String(jetpackPort), '--log=info'], {
+    readyMatcher: new RegExp(`Asset server http://localhost:${jetpackPort}`)
+  })
+
+  try {
+    await t.throwsAsync(async () => {
+      const res = await fetch(`http://localhost:${jetpackPort}/api/partial`)
+      await res.text()
+    })
+
+    const res = await fetch(`http://localhost:${jetpackPort}/api/health`)
+    t.is(res.status, 200)
+    t.deepEqual(await res.json(), { ok: true })
+  } finally {
+    await dev.kill()
+    backend.close()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
