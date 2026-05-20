@@ -36,27 +36,21 @@ Jetpack can also be configured using `jetpack.config.js` (or `.mjs`/`.cjs`). Her
 
 ```js
 export default {
-  // directory to run jetpack in
-  dir: '.',
-
-  // entry module path relative to dir
+  // entry module path relative to the project root
   // defaults to '.' — rspack resolves it via package.json main / index.js
   entry: '.',
 
   // port of the dev server
   port: 3030,
 
-  // relative path to a static assets dir (files served from /assets/* without rspack processing)
-  static: 'assets',
-
-  // build output path relative to dir
+  // build output path relative to the project root
   dist: 'dist',
 
   // used to build the static asset URLs embedded in index.html
   // (e.g. 'https://cdn.example.com/assets/'). Inside the bundle, chunk URLs
   // are resolved at runtime from the loaded script's location — works for
   // CDN and sub-path deployments without further config.
-  publicPath: '/assets/',
+  assetBaseUrl: '/assets/',
 
   // hot reloading
   hot: true,
@@ -72,6 +66,12 @@ export default {
 
   // set to `true` to enable retries on chunk loads (5 attempts, exponential backoff)
   chunkLoadRetry: false,
+
+  // build-time constants injected with rspack.DefinePlugin
+  define: {
+    'process.env.NODE_ENV': process.env.NODE_ENV || 'development',
+    'process.env.RELEASE_ENV': process.env.RELEASE_ENV || 'dev'
+  },
 
   // proxy certain requests to a different server
   // e.g. { '/api/*': 'http://localhost:3000',
@@ -175,6 +175,22 @@ import { renderHtmlResponse } from 'jetpack/html'
 res.send(renderHtmlResponse(indexHtml, { cspNonce: res.locals.cspNonce }))
 ```
 
+## Define
+
+Use `define` for build-time constants. Values are JSON-stringified and passed to `rspack.DefinePlugin`.
+
+```js
+export default {
+  define: {
+    __RELEASE_ENV__: 'prd',
+    'process.env.RELEASE_ENV': 'prd',
+    'process.env.POSTHOG_ENABLED': true
+  }
+}
+```
+
+Jetpack only defines the exact keys you provide. For example, defining `'process.env.NODE_ENV'` replaces `process.env.NODE_ENV` reads, but does not create a browser runtime `process` object. For unusual compatibility needs, use the `rspack` config hook directly.
+
 ## Modules
 
 Jetpack exposes the following entry points.
@@ -207,18 +223,24 @@ renderHtmlResponse(indexHtml, { cspNonce: res.locals.cspNonce })
 
 ### `jetpack/options`
 
-Reads the resolved jetpack configuration. Useful for server-side HTML rendering, accessing the asset list, etc.
+Reads the resolved jetpack configuration. Useful for server-side HTML rendering, accessing the asset list, etc. This API does not parse `process.argv`; pass CLI-like values explicitly when you need them.
 
 ```js
-import getOptions from 'jetpack/options'
+import getOptions, { resolveOptions } from 'jetpack/options'
 
-const options = await getOptions()
+const options = await getOptions({
+  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev',
+  dir: process.cwd()
+})
 options.production
 options.port
 options.assets.js // string[]: URLs of js entry chunks
 options.assets.css // string[]: URLs of css entry chunks
 options.assets.runtime // string[]: URL of runtime chunk
 options.runtime // string: inlined runtime script content
+
+// named export for clarity when you prefer it
+await resolveOptions({ command: 'dev', dir: './app', entry: './client.js' })
 ```
 
 ### `jetpack/proxy`

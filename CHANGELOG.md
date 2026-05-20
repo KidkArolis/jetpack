@@ -7,11 +7,13 @@
 - `jetpack/options` now exports an async function:
   ```js
   import getOptions from 'jetpack/options'
-  const options = await getOptions()
+  const options = await getOptions({ command: 'dev', dir: process.cwd() })
   ```
+  It no longer parses CLI arguments on import; pass `command`, `dir`, `entry`, and `overrides` explicitly.
 - `jetpack/rspack.config` now exports an async function returning the rspack config. `rspack --config node_modules/jetpack/rspack.config.js` still works (rspack supports async config functions).
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
 - Dropped the `-x` / `--exec` flag and the `exec` config option. Use `concurrently`, two terminals, or your task runner of choice to run a second process alongside jetpack.
+- Renamed `publicPath` to `assetBaseUrl`, removed the `static` config option, and removed `dir` from config files. Continue using `--dir` or `resolveOptions({ dir })` to select the project root.
 - Dropped `sass-resources-loader` and the `css.resources` config option. The same behaviour is built into modern `sass-loader` via its `additionalData` option — use it via the `rspack` config hook:
   ```js
   rspack: (config) => {
@@ -35,6 +37,7 @@
 **Improvements**
 
 - `output.publicPath` is now `'auto'`: the bundle computes its runtime URL from the loaded script's location, so it works out of the box for CDN deployments and sub-path mounts without further config.
+- Added a `define` option for build-time constants backed by `rspack.DefinePlugin`.
 - Expanded asset extension list: `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
 - Smaller install — dropped seven runtime dependencies in favour of Node built-ins.
 

@@ -105,3 +105,59 @@ test.serial('chunkLoadRetry default (false) does not inject retry runtime', asyn
     await fs.rm(dir, { recursive: true, force: true })
   }
 })
+
+test.serial('define injects build-time constants', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic', {
+    minify: false,
+    define: {
+      __JETPACK_DEFINED__: 'custom-value',
+      'process.env.RELEASE_ENV': 'staging'
+    }
+  })
+  await fs.writeFile(
+    path.join(dir, 'index.js'),
+    `
+      document.querySelector('#root').innerHTML = [
+        __JETPACK_DEFINED__,
+        process.env.RELEASE_ENV
+      ].join(':')
+    `
+  )
+
+  try {
+    const build = await runJetpack(['build', '--log=info', '--dir', dir], {
+      cwd: os.tmpdir(),
+      env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+    })
+    t.is(build.exitCode, 0, `build failed: ${build.all}`)
+    const assetsDir = path.join(dir, 'dist', 'assets')
+    const files = await fs.readdir(assetsDir)
+    const bundleFile = files.find((f) => f.startsWith('bundle.') && f.endsWith('.js'))
+    const bundle = await fs.readFile(path.join(assetsDir, bundleFile), 'utf8')
+    t.true(bundle.includes('"custom-value"'))
+    t.true(bundle.includes('"staging"'))
+    t.false(bundle.includes('__JETPACK_DEFINED__'))
+    t.false(bundle.includes('process.env.RELEASE_ENV'))
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('assetBaseUrl controls generated html asset urls', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic', {
+    assetBaseUrl: 'https://cdn.example.com/client-assets'
+  })
+
+  try {
+    const build = await runJetpack(['build', '--log=info', '--dir', dir], {
+      cwd: os.tmpdir(),
+      env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+    })
+    t.is(build.exitCode, 0, `build failed: ${build.all}`)
+    const index = await fs.readFile(path.join(dir, 'dist', 'index.html'), 'utf8')
+    t.regex(index, /https:\/\/cdn\.example\.com\/client-assets\/bundle\..*\.css/)
+    t.regex(index, /https:\/\/cdn\.example\.com\/client-assets\/bundle\..*\.js/)
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
