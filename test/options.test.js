@@ -23,7 +23,6 @@ const base = (pkg, extra = {}) =>
         modern: true,
         legacy: false
       },
-      react: false,
       hot: { enabled: true, quiet: false },
       port: 3030,
       host: 'localhost',
@@ -39,11 +38,7 @@ const base = (pkg, extra = {}) =>
       assetBaseUrl: '/assets/',
       assetBasePathname: '/assets/',
       css: {
-        modules: false,
-        features: {
-          include: null,
-          exclude: null
-        }
+        modules: false
       }
     },
     extra
@@ -120,13 +115,7 @@ test('creates options object from jetpack.config.js', async (t) => {
       port: 1234,
       logLevels: { info: true, progress: false, none: false },
       title: 'testing',
-      entry: './app/client',
-      css: {
-        modules: false,
-        features: {
-          'nesting-rules': true
-        }
-      }
+      entry: './app/client'
     })
   )
 })
@@ -188,6 +177,17 @@ test('rejects invalid targets', async (t) => {
       overrides: { target: 'ancient' }
     }),
     { message: 'Invalid target "ancient". Expected modern, legacy, or all.' }
+  )
+})
+
+test('rejects old target object form', async (t) => {
+  await t.throwsAsync(
+    options({
+      command: 'build',
+      dir: dir('fixtures', 'pkg-src'),
+      overrides: { target: { modern: true, legacy: true } }
+    }),
+    { message: 'Invalid target "[object Object]". Expected modern, legacy, or all.' }
   )
 })
 

@@ -11,7 +11,7 @@ Firefox ESR
 not dead
 ```
 
-If you turn on differential builds (`target: { modern: true, legacy: true }`), you'll want to define two browserslist environments named `modern` and `legacy`.
+If you turn on differential builds (`target: 'all'`), you'll want to define two browserslist environments named `modern` and `legacy`.
 
 ### `package.json`
 

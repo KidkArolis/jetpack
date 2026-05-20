@@ -7,7 +7,7 @@ The defaults jetpack applies are:
 ```js
 {
   env: {
-    targets: /* derived from browserslist + your target.modern/target.legacy */,
+    targets: /* derived from browserslist + the current bundle target */,
     coreJs: /* major.minor from the installed core-js */,
     mode: 'usage'
   },

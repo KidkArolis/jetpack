@@ -19,7 +19,7 @@ jetpack build -t all
 
 ```js
 export default {
-  target: { modern: true, legacy: true }
+  target: 'all'
 }
 ```
 

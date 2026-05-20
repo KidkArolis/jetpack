@@ -2,10 +2,7 @@ import rspackConfigForTests from '../../helpers/rspackConfigForTests.js'
 
 export default {
   minify: false,
-  target: {
-    modern: true,
-    legacy: true
-  },
+  target: 'all',
   rspack(config) {
     delete config.optimization.splitChunks
     delete config.optimization.runtimeChunk

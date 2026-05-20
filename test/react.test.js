@@ -18,7 +18,7 @@ test.before(async () => {
   }
 })
 
-test.serial('jetpack build compiles JSX with react: true', async (t) => {
+test.serial('jetpack build compiles JSX when react is installed', async (t) => {
   // build inline (not in a tmpdir) so we get the example's node_modules.
   // Clean dist beforehand so we don't read stale assets.
   await fs.rm(path.join(reactExample, 'dist'), { recursive: true, force: true })

@@ -115,20 +115,11 @@ export default defineConfig({
     // false: all CSS is global
     // true: app CSS is modular by default; *.global.css / *.global.scss opt out
     // { conventional: true }: only *.module.css / *.module.scss opt in
-    modules: false,
-
-    // shortcut for setting lightningcss feature flags
-    // see https://rspack.dev/guide/features/builtin-lightningcss-loader#options
-    features: {
-      include: {},
-      exclude: {}
-    }
+    modules: false
   },
 
-  target: {
-    modern: true,
-    legacy: false
-  },
+  // bundle target: "modern", "legacy", or "all"
+  target: 'modern',
 
   // rspack config transform fn — see 02-customizing-rspack.md
   rspack: (config, context) => {
