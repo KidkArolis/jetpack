@@ -74,7 +74,7 @@ async function setupSplittingFixture(config) {
 }
 
 test.serial('chunkLoadRetry: true injects retry runtime into bundle', async (t) => {
-  const dir = await setupSplittingFixture({ chunkLoadRetry: true, minify: false })
+  const dir = await setupSplittingFixture({ build: { chunkLoadRetry: true, minify: false } })
   try {
     const build = await runJetpack(['build', '--log=info', '--dir', dir], {
       cwd: os.tmpdir(),
@@ -95,7 +95,7 @@ test.serial('chunkLoadRetry: true injects retry runtime into bundle', async (t) 
 })
 
 test.serial('chunkLoadRetry default (false) does not inject retry runtime', async (t) => {
-  const dir = await setupSplittingFixture({ minify: false })
+  const dir = await setupSplittingFixture({ build: { minify: false } })
   try {
     const build = await runJetpack(['build', '--log=info', '--dir', dir], {
       cwd: os.tmpdir(),
@@ -114,7 +114,9 @@ test.serial('chunkLoadRetry default (false) does not inject retry runtime', asyn
 
 test.serial('define injects build-time constants', async (t) => {
   const dir = await setupTmpFixture('pkg-basic', {
-    minify: false,
+    build: {
+      minify: false
+    },
     define: {
       __JETPACK_DEFINED__: 'custom-value',
       'process.env.RELEASE_ENV': 'staging'

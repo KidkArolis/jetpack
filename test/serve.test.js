@@ -64,7 +64,7 @@ test.serial('jetpack/serve serves built files in production', async (t) => {
 })
 
 test.serial('jetpack/serve replaces CSP nonce placeholders in production', async (t) => {
-  const dir = await setupTmpFixture('pkg-basic', { cspNonce: true })
+  const dir = await setupTmpFixture('pkg-basic', { html: { cspNonce: true } })
   const build = await runJetpack(['build', '--log=info', '--dir', dir], {
     cwd: os.tmpdir(),
     env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
@@ -128,7 +128,7 @@ test.serial('jetpack/serve proxies to dev server in development', async (t) => {
 test.serial('jetpack/serve replaces CSP nonce placeholders when proxying dev server', async (t) => {
   const devPort = await getFreePort()
   const servePort = await getFreePort()
-  const dir = await setupTmpFixture('pkg-basic', { port: devPort, cspNonce: true })
+  const dir = await setupTmpFixture('pkg-basic', { port: devPort, html: { cspNonce: true } })
 
   const dev = await startNode(
     path.join(__dirname, '..', 'bin', 'jetpack'),

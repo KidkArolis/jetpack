@@ -1,3 +1,5 @@
 export default {
-  minify: false
+  build: {
+    minify: false
+  }
 }

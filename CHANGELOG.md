@@ -20,7 +20,9 @@
 - Removed the old `webpack` config hook alias. Use `rspack` instead.
 - Dropped the implicit `./src/index.js` entry fallback. If your project has source under `./src/` and no `main` field in `package.json`, add `"main": "src/index.js"` (or set `entry: './src'` in `jetpack.config.js`).
 - Dropped the `-x` / `--exec` flag and the `exec` config option. Use `concurrently`, two terminals, or your task runner of choice to run a second process alongside jetpack.
-- Renamed `publicPath` to `assetBaseUrl`, renamed `dist` to `outDir`, removed the `static` config option, and removed `dir` from config files. Continue using `--dir` or `resolveConfig({ dir })` to select the project root.
+- Renamed `publicPath` to `assetBaseUrl`, renamed `dist` to `build.outDir`, removed the `static` config option, and removed `dir` from config files. Continue using `--dir` or `resolveConfig({ dir })` to select the project root.
+- Moved build-only config into `build`: use `build.outDir`, `build.sourceMaps`, `build.minify`, and `build.chunkLoadRetry`.
+- Moved document shell config into `html`: use `html.title`, `html.cspNonce`, and `html.render`.
 - Replaced the `target: { modern, legacy }` config object with `target: 'modern' | 'legacy' | 'all'`.
 - Removed the `css.features` config option. Customize `builtin:lightningcss-loader` via the `rspack` config hook if needed.
 - Removed the resolved `react` option. React support remains automatic when `react` is installed.

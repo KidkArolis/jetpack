@@ -46,9 +46,6 @@ export default defineConfig({
   port: 3030,
   host: 'localhost',
 
-  // build output path relative to the project root
-  outDir: 'dist',
-
   // used to build the static asset URLs embedded in index.html
   // (e.g. 'https://cdn.example.com/assets/'). Inside the bundle, chunk URLs
   // are resolved at runtime from the loaded script's location — works for
@@ -60,15 +57,20 @@ export default defineConfig({
   // or with options:
   // hot: { quiet: true },  // silence HMR logs in browser console
 
-  // source maps for js and css
-  // true by default in development, off by default in production
-  sourceMaps: true,
+  build: {
+    // build output path relative to the project root
+    outDir: 'dist',
 
-  // to turn off minification in production for any reason
-  minify: false,
+    // source maps for js and css
+    // true by default in development, off by default in production
+    sourceMaps: true,
 
-  // set to `true` to enable retries on chunk loads (5 attempts, exponential backoff)
-  chunkLoadRetry: false,
+    // to turn off minification in production for any reason
+    minify: false,
+
+    // set to `true` to enable retries on chunk loads (5 attempts, exponential backoff)
+    chunkLoadRetry: false
+  },
 
   // build-time constants injected with rspack.DefinePlugin
   define: {
@@ -86,29 +88,31 @@ export default defineConfig({
   // configure logging
   log: 'info,progress',
 
-  // page title (defaults to package.json#name or 'jetpack')
-  title: 'jetpack',
+  html: {
+    // page title (defaults to package.json#name or 'jetpack')
+    title: 'jetpack',
 
-  // add nonce placeholders to jetpack-owned script tags
-  // replace them per request with `renderHtmlResponse` from `jetpack/html`
-  cspNonce: false,
+    // add nonce placeholders to jetpack-owned script tags
+    // replace them per request with `renderHtmlResponse` from `jetpack/html`
+    cspNonce: false,
 
-  // custom index.html renderer. If omitted, jetpack renders a default app shell.
-  html: ({ html, title, tags, cspNonceAttr }) => html`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-        <title>${title}</title>
-        ${tags.css}
-      </head>
-      <body>
-        <div id="root"></div>
-        ${tags.runtime} ${tags.js}
-      </body>
-    </html>
-  `,
+    // custom index.html renderer. If omitted, jetpack renders a default app shell.
+    render: ({ html, title, tags, cspNonceAttr }) => html`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+          <title>${title}</title>
+          ${tags.css}
+        </head>
+        <body>
+          <div id="root"></div>
+          ${tags.runtime} ${tags.js}
+        </body>
+      </html>
+    `
+  },
 
   css: {
     // CSS Modules.
@@ -133,32 +137,34 @@ export default defineConfig({
 
 By default, Jetpack renders a small app shell with `<div id="root"></div>` and injects generated CSS, runtime, and JS tags.
 
-For full control, provide an `html` function. Jetpack passes the resolved options, the current build manifest, and pre-rendered tag groups so custom HTML does not need to loop over assets.
+For full control, provide an `html.render` function. Jetpack passes the resolved options, the current build manifest, and pre-rendered tag groups so custom HTML does not need to loop over assets.
 
 ```js
 export default {
-  cspNonce: true,
-  html: ({ html, title, tags, manifest, cspNonceAttr, mode }) => html`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8" />
-        <title>${title}</title>
-        ${tags.css}
-        ${mode === 'production'
-          ? html`
-              <script ${cspNonceAttr}>
-                window.analytics = true
-              </script>
-            `
-          : ''}
-      </head>
-      <body>
-        <div id="root"></div>
-        ${tags.runtime} ${tags.js}
-      </body>
-    </html>
-  `
+  html: {
+    cspNonce: true,
+    render: ({ html, title, tags, manifest, cspNonceAttr, mode }) => html`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>${title}</title>
+          ${tags.css}
+          ${mode === 'production'
+            ? html`
+                <script ${cspNonceAttr}>
+                  window.analytics = true
+                </script>
+              `
+            : ''}
+        </head>
+        <body>
+          <div id="root"></div>
+          ${tags.runtime} ${tags.js}
+        </body>
+      </html>
+    `
+  }
 }
 ```
 
@@ -181,7 +187,7 @@ The `html` helper is `String.raw`; it exists so editors can syntax-highlight HTM
 
 The resolved options describe what Jetpack should do. The manifest describes what the build produced.
 
-When `cspNonce: true` is set, Jetpack inserts `__JETPACK_CSP_NONCE__` into script nonces and exposes `cspNonce` and `cspNonceAttr` to the HTML renderer. Replace the placeholder per request:
+When `html.cspNonce: true` is set, Jetpack inserts `__JETPACK_CSP_NONCE__` into script nonces and exposes `cspNonce` and `cspNonceAttr` to the HTML renderer. Replace the placeholder per request:
 
 ```js
 import { renderHtmlResponse } from 'jetpack/html'
@@ -227,7 +233,7 @@ const config = await resolveConfig({
 })
 config.mode
 config.port
-config.outDir
+config.build.outDir
 config.assetBaseUrl
 config.assetBasePathname
 ```
@@ -249,7 +255,7 @@ app.get('/api/unicorns', (req, res) => {...})
 app.use(serve(config))
 ```
 
-When `cspNonce: true` is enabled, `jetpack/serve` replaces nonce placeholders in `index.html` with `res.locals.cspNonce`.
+When `html.cspNonce: true` is enabled, `jetpack/serve` replaces nonce placeholders in `index.html` with `res.locals.cspNonce`.
 
 ### `jetpack/html`
 

@@ -3,8 +3,11 @@ import { renderHtml, renderHtmlResponse } from '../lib/html.js'
 
 const options = {
   mode: 'development',
-  title: 'test app',
-  cspNonce: false
+  html: {
+    title: 'test app',
+    cspNonce: false,
+    render: null
+  }
 }
 
 const manifest = {
@@ -25,9 +28,13 @@ test('renders default html with generated asset tags', (t) => {
 
 test('renders custom html function with pre-rendered tags', (t) => {
   const html = renderHtml(
-    Object.assign({}, options, {
-      html: ({ html, tags }) => html`<main>${tags.css}${tags.js}</main>`
-    }),
+    {
+      ...options,
+      html: {
+        ...options.html,
+        render: ({ html, tags }) => html`<main>${tags.css}${tags.js}</main>`
+      }
+    },
     manifest
   )
 
@@ -38,7 +45,7 @@ test('renders custom html function with pre-rendered tags', (t) => {
 })
 
 test('adds csp nonce placeholders to jetpack-owned scripts', (t) => {
-  const html = renderHtml(Object.assign({}, options, { cspNonce: true }), manifest)
+  const html = renderHtml({ ...options, html: { ...options.html, cspNonce: true } }, manifest)
   t.true(html.includes('<script nonce="__JETPACK_CSP_NONCE__">'))
   t.true(html.includes('<script src="/assets/bundle.js" nonce="__JETPACK_CSP_NONCE__" async></script>'))
 

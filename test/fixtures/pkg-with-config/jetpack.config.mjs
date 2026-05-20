@@ -1,6 +1,8 @@
 export default {
   port: 1234,
   entry: './app/client',
-  title: 'testing',
+  html: {
+    title: 'testing'
+  },
   verbose: true
 }
