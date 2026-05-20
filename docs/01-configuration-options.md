@@ -35,7 +35,9 @@ Options:
 Jetpack can also be configured using `jetpack.config.js` (or `.mjs`/`.cjs`). Here are all of the available options.
 
 ```js
-export default {
+import { defineConfig } from 'jetpack'
+
+export default defineConfig({
   // entry module path relative to the project root
   // defaults to '.' — rspack resolves it via package.json main / index.js
   entry: '.',
@@ -129,7 +131,7 @@ export default {
     // config: the rspack config jetpack generated
     // options: this jetpack options object including defaults (has options.production)
   }
-}
+})
 ```
 
 ## HTML Template
@@ -212,6 +214,16 @@ Jetpack only defines the exact keys you provide. For example, defining `'process
 
 Jetpack exposes the following entry points.
 
+### `jetpack`
+
+The package root exposes the small library API:
+
+```js
+import { defineConfig, resolveOptions, html } from 'jetpack'
+```
+
+Use `defineConfig` in `jetpack.config.js` when you want to make the config intent explicit without changing runtime behavior.
+
 ### `jetpack/serve`
 
 Middleware that serves your assets in both dev (by proxying to the dev server) and production (from `dist`). For example:
@@ -281,4 +293,4 @@ Re-exports the rspack module so you can use its plugins.
 
 ### `jetpack/rspack.config`
 
-The full rspack config jetpack generates. Used internally; can be passed to `rspack` directly if you want to invoke it without `jetpack`.
+The full rspack config jetpack generates. Can be passed to `rspack` directly if you want to invoke it without the Jetpack CLI. The package root no longer points at this file; import this entry point explicitly for generated rspack config behavior.
