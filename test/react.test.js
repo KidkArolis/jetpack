@@ -4,6 +4,9 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { getFreePort, runJetpack, startJetpack } from './helpers/process.js'
+import resolveOptions from '../lib/options.js'
+import createRspackConfig from '../lib/rspack.config.js'
+import { addJetpackOverlayEntry } from '../lib/overlay/server.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const reactExample = path.join(__dirname, '..', 'examples', 'with-react')
@@ -62,11 +65,31 @@ test.serial('dev with react wraps createRoot error callbacks for the overlay', a
     const res = await fetch(`http://127.0.0.1:${port}/assets/bundle.js`)
     t.is(res.status, 200)
     const body = await res.text()
-    t.regex(body, /lib\/overlay\/reactDomClient\.js/)
+    t.regex(body, /reactDomClient\.js/)
     t.regex(body, /withOverlayCallbacks/)
     t.regex(body, /onCaughtError/)
     t.regex(body, /__JETPACK_ERROR_OVERLAY__/)
   } finally {
     await server.kill()
   }
+})
+
+test('dev overlay react-dom/client alias overrides user aliases', async (t) => {
+  const opts = await resolveOptions({
+    command: 'dev',
+    mode: 'development',
+    dir: reactExample,
+    overrides: {
+      rspack(config) {
+        config.resolve.alias['react-dom/client$'] = '/custom/react-dom-client.js'
+      }
+    }
+  })
+  const config = createRspackConfig(opts).modern
+
+  t.is(config.resolve.alias['react-dom/client$'], '/custom/react-dom-client.js')
+  addJetpackOverlayEntry(config)
+
+  t.regex(config.resolve.alias['react-dom/client$'], /lib[/\\]overlay[/\\]reactDomClient\.js$/)
+  t.regex(config.resolve.alias.__jetpack_original_react_dom_client__, /node_modules[/\\]react-dom[/\\]client\.js$/)
 })

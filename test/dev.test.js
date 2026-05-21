@@ -123,6 +123,34 @@ test.serial('dev server injects Rspack dev-server client for HMR', async (t) => 
   }
 })
 
+test.serial('dev.overlay false disables the runtime overlays', async (t) => {
+  const port = await getFreePort()
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-dev-overlay-off-'))
+  await fs.writeFile(path.join(dir, 'package.json'), JSON.stringify({ name: 'dev-overlay-off', main: 'index.js' }))
+  await fs.writeFile(path.join(dir, 'index.js'), 'document.querySelector("#root").textContent = "loaded";\n')
+  await fs.writeFile(path.join(dir, 'jetpack.config.mjs'), 'export default { dev: { overlay: false } }\n')
+
+  const server = await startJetpack(
+    ['dev', '--dir', dir, '--host', '127.0.0.1', '--port', String(port), '--log=info'],
+    {
+      readyMatcher: new RegExp(`Asset server http://127\\.0\\.0\\.1:${port}`)
+    }
+  )
+
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}/assets/bundle.js`)
+    const body = await res.text()
+    t.is(res.status, 200)
+    t.regex(body, /@rspack\/dev-server\/client/)
+    t.regex(body, /overlay=false/)
+    t.notRegex(body, /lib\/overlay\/client\.js/)
+    t.notRegex(body, /__jetpack\/overlay-events/)
+  } finally {
+    await server.kill()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
 test.serial('dev injects Jetpack runtime overlay and resolves original source frames', async (t) => {
   const port = await getFreePort()
   const server = await startDevOnHost('pkg-basic', port)
