@@ -44,6 +44,24 @@ test('renders custom html function with pre-rendered tags', (t) => {
   )
 })
 
+test('trims leading whitespace from rendered html', (t) => {
+  const html = renderHtml(
+    {
+      ...options,
+      html: {
+        ...options.html,
+        render: ({ html, tags }) => html`
+          <!DOCTYPE html>
+          ${tags.js}
+        `
+      }
+    },
+    manifest
+  )
+
+  t.true(html.startsWith('<!DOCTYPE html>'))
+})
+
 test('adds csp nonce placeholders to jetpack-owned scripts', (t) => {
   const html = renderHtml({ ...options, html: { ...options.html, cspNonce: true } }, manifest)
   t.true(html.includes('<script nonce="__JETPACK_CSP_NONCE__">'))
