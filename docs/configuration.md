@@ -11,6 +11,9 @@ export default defineConfig({
   host: 'localhost',
   assetBaseUrl: '/assets/',
   hot: true,
+  dev: {
+    overlay: true
+  },
   target: 'modern',
   polyfills: 'usage',
   transpileDependencies: true,
@@ -89,6 +92,7 @@ Top-level options:
 | `host`                  | `'localhost'`     | Dev server host.                                                                                          |
 | `assetBaseUrl`          | `'/assets/'`      | Path or full URL prefix written into generated HTML, `manifest.json`, and runtime chunk loading. |
 | `hot`                   | `true`            | Set `false` to disable hot reload, or use `{ enabled: false, quiet: true }` for object form.              |
+| `dev.overlay`           | `true`            | Show Jetpack's development error overlay for build and runtime errors.                                    |
 | `target`                | `'modern'`        | `modern`, `legacy`, or `all`. Dev and inspect support one target at a time.                               |
 | `polyfills`             | `'usage'`         | JavaScript runtime polyfills: `usage`, `entry`, or `false`.                                               |
 | `transpileDependencies` | `true`            | Controls which packages in `node_modules` are passed through Jetpack's JS compiler.                       |

@@ -43,6 +43,7 @@
 - Added `assets.inlineLimit` to control which image assets are inlined as data URLs. Fonts and media are now emitted as files.
 - Added `transpileDependencies` to control dependency JS transpilation: use `true`, `false`, a package list, or `{ include, exclude }`.
 - Expanded asset extension list: `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
+- Replaced webpack dev middleware/HMR with Rspack dev-server and added Jetpack's development error overlay.
 - Smaller install: dropped seven runtime dependencies in favour of Node built-ins.
 
 # 4.4.2

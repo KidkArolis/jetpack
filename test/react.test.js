@@ -48,3 +48,25 @@ test.serial('dev server with react injects react-refresh runtime', async (t) => 
     await server.kill()
   }
 })
+
+test.serial('dev with react wraps createRoot error callbacks for the overlay', async (t) => {
+  const port = await getFreePort()
+  const server = await startJetpack(
+    ['dev', '--dir', reactExample, '--host', '127.0.0.1', '--port', String(port), '--log=info'],
+    {
+      readyMatcher: new RegExp(`Asset server http://127\\.0\\.0\\.1:${port}`),
+      timeout: 20000
+    }
+  )
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}/assets/bundle.js`)
+    t.is(res.status, 200)
+    const body = await res.text()
+    t.regex(body, /lib\/overlay\/reactDomClient\.js/)
+    t.regex(body, /withOverlayCallbacks/)
+    t.regex(body, /onCaughtError/)
+    t.regex(body, /__JETPACK_ERROR_OVERLAY__/)
+  } finally {
+    await server.kill()
+  }
+})

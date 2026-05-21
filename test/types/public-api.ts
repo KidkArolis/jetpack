@@ -10,6 +10,7 @@ const config = defineConfig({
   host: 'localhost',
   assetBaseUrl: '/assets/',
   hot: { quiet: true },
+  dev: { overlay: true },
   target: 'all',
   polyfills: 'usage',
   define: {

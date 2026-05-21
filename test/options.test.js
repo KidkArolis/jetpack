@@ -26,6 +26,7 @@ const base = (pkg, extra = {}) => {
     },
     target: 'modern',
     hot: { enabled: true, quiet: false },
+    dev: { overlay: true },
     port: 3030,
     host: 'localhost',
     html: {
@@ -111,6 +112,9 @@ test('accepts config-shaped overrides', async (t) => {
       assets: {
         inlineLimit: 1234
       },
+      dev: {
+        overlay: false
+      },
       transpileDependencies: false,
       rspack
     }
@@ -123,6 +127,7 @@ test('accepts config-shaped overrides', async (t) => {
     assetBaseUrl: 'https://cdn.example.com/app/',
     assetBasePathname: '/app/',
     hot: { enabled: false, quiet: true },
+    dev: { overlay: false },
     target: 'legacy',
     polyfills: false,
     define: { __TEST__: true },

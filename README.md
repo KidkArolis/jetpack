@@ -65,8 +65,9 @@ export default defineConfig({
   entry: '.',
   port: 3030,
   assetBaseUrl: '/assets/',
-  define: {
-    __APP_VERSION__: '1.0.0'
+
+  dev: {
+    overlay: true
   },
 
   build: {

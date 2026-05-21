@@ -124,7 +124,7 @@ test('positional path is used as the entry', async (t) => {
   const dir = path.join(fixturesDir, 'pkg-basic')
   const result = await runJetpack(['build', '--print-config', 'index.js', '--dir', dir])
   t.is(result.exitCode, 0)
-  t.regex(result.stdout.replace(/\[[0-9;]*m/g, ''), /entry:\s*\{[^}]*bundle:\s*'\.\/index\.js'/)
+  t.regex(result.stdout.replace(/\[[0-9;]*m/g, ''), /entry:\s*\{[^}]*bundle:\s*\[\s*'\.\/index\.js'\s*\]/)
 })
 
 test.serial('clean command via positional', async (t) => {

@@ -51,3 +51,24 @@ test('adds csp nonce placeholders to jetpack-owned scripts', (t) => {
 
   t.true(renderHtmlResponse(html, { cspNonce: 'test-nonce' }).includes('nonce="test-nonce"'))
 })
+
+test('adds anonymous crossorigin to dev bundle scripts', (t) => {
+  const html = renderHtml({ ...options, command: 'dev' }, manifest)
+  t.true(html.includes('<script src="/assets/bundle.js" crossorigin="anonymous" defer></script>'))
+})
+
+test('adds anonymous crossorigin to custom dev bundle scripts', (t) => {
+  const html = renderHtml(
+    {
+      ...options,
+      command: 'dev',
+      html: {
+        ...options.html,
+        render: '<script src="/assets/bundle.js" defer></script>'
+      }
+    },
+    manifest
+  )
+
+  t.is(html, '<script src="/assets/bundle.js" defer crossorigin="anonymous"></script>')
+})

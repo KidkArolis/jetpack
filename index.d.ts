@@ -23,6 +23,10 @@ export interface JetpackHotConfig {
   quiet?: boolean
 }
 
+export interface JetpackDevConfig {
+  overlay?: boolean
+}
+
 export interface JetpackBuildConfig {
   outDir?: string
   sourceMaps?: boolean | string | undefined
@@ -78,6 +82,7 @@ export interface JetpackConfig {
   host?: string
   assetBaseUrl?: string
   hot?: boolean | JetpackHotConfig
+  dev?: JetpackDevConfig
   target?: JetpackTarget
   polyfills?: JetpackPolyfills
   define?: Record<string, unknown>
@@ -118,6 +123,10 @@ export interface ResolvedJetpackHotConfig {
   quiet: boolean
 }
 
+export interface ResolvedJetpackDevConfig {
+  overlay: boolean
+}
+
 export interface ResolvedJetpackHtmlConfig {
   title: string
   cspNonce: boolean
@@ -143,6 +152,7 @@ export interface ResolvedJetpackConfig {
   assetBaseUrl: string
   assetBasePathname: string
   hot: ResolvedJetpackHotConfig
+  dev: ResolvedJetpackDevConfig
   define: Record<string, unknown>
   polyfills: JetpackPolyfills
   target: JetpackTarget
