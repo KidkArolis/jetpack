@@ -1,6 +1,6 @@
 import express from 'express'
 import { resolveConfig } from '../../index.js'
-import { serve } from '../../serve.js'
+import { serve, serveResolved } from '../../serve.js'
 
 const app = express()
 app.use((_req, res, next) => {
@@ -10,11 +10,15 @@ app.use((_req, res, next) => {
   next()
 })
 
-const config = await resolveConfig({
-  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev',
-  dir: process.cwd()
-})
-app.use(serve(config))
+if (process.env.SERVE_RESOLVED) {
+  const config = await resolveConfig({
+    command: process.env.NODE_ENV === 'production' ? 'build' : 'dev',
+    dir: process.cwd()
+  })
+  app.use(serveResolved(config))
+} else {
+  app.use(serve({ dir: process.cwd() }))
+}
 
 const port = Number(process.env.PORT)
 app.listen(port, () => {

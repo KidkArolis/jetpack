@@ -1,1 +1,1 @@
-export { default, default as serve } from './lib/serve.js'
+export { default, default as serve, serveResolved } from './lib/serve.js'

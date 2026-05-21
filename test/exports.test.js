@@ -5,7 +5,7 @@ import defineConfig, { resolveConfig } from 'jetpack'
 import { html, renderHtmlResponse } from 'jetpack/html'
 import rspack from 'jetpack/rspack'
 import createRspackConfig from 'jetpack/rspack-config'
-import { serve } from 'jetpack/serve'
+import { serve, serveResolved } from 'jetpack/serve'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, 'fixtures')
@@ -23,6 +23,8 @@ test('explicit public entry points expose specialist APIs', (t) => {
   t.is(typeof rspack, 'function')
   t.is(typeof createRspackConfig, 'function')
   t.is(typeof serve, 'function')
+  t.is(typeof serve.resolve, 'function')
+  t.is(typeof serveResolved, 'function')
 })
 
 test('rspack-config resolves config input explicitly', async (t) => {

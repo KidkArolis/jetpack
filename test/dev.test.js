@@ -168,6 +168,8 @@ test.serial('dev injects Jetpack runtime overlay and resolves original source fr
     t.true(generatedLine > 0)
     t.regex(bundle, /lib\/overlay\/client\.js/)
     t.regex(bundle, /connectBuildEvents/)
+    t.regex(bundle, /pagehide/)
+    t.regex(bundle, /beforeunload/)
     t.regex(bundle, /isBundlerMissingModuleError/)
     t.regex(bundle, /overlay=false/)
     t.notRegex(bundle, /require\("core-js\/modules\/es\.iterator/)

@@ -1,6 +1,6 @@
 import rspack, { DefinePlugin } from '../../rspack.js'
 import createRspackConfig from '../../rspack-config.js'
-import serve from '../../serve.js'
+import serve, { serveResolved } from '../../serve.js'
 import defineConfig, { resolveConfig, type JetpackConfig, type JetpackHtmlRenderContext } from '../../index.js'
 import { html, renderHtmlResponse } from '../../html.js'
 
@@ -76,11 +76,17 @@ const polyfills: 'usage' | 'entry' | false = resolved.polyfills
 const inlineLimit: number = resolved.assets.inlineLimit
 const configs = await createRspackConfig({ command: 'build' }, { target })
 const middleware = serve(resolved)
+const lazyMiddleware = serve({ dir: process.cwd() })
+const resolvedMiddleware = await serve.resolve({ dir: process.cwd(), command: 'dev' })
+const lowLevelMiddleware = serveResolved(resolved)
 const renderedTemplate = html`<div>${target}</div>`
 
 renderHtmlResponse(renderedTemplate, { cspNonce: 'nonce' })
 new DefinePlugin({ __TEST__: JSON.stringify(true) })
 rspack(configs.modern ?? {})
 middleware({}, {}, () => {})
+lazyMiddleware({}, {}, () => {})
+resolvedMiddleware({}, {}, () => {})
+lowLevelMiddleware({}, {}, () => {})
 void inlineLimit
 void polyfills

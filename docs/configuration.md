@@ -59,19 +59,19 @@ Commands:
 
 Useful options:
 
-| Option                | Description                                         |
-| --------------------- | --------------------------------------------------- |
-| `-p, --port <n>`      | Dev server port.                                    |
-| `--host <host>`       | Dev server host.                                    |
-| `-d, --dir <path>`    | Run Jetpack in another project directory.           |
-| `-c, --config <path>` | Use a specific config file.                         |
-| `-r, --no-hot`        | Disable hot reloading.                              |
-| `-u, --no-minify`     | Disable production minification.                    |
-| `-t, --target <name>` | Bundle target: `modern`, `legacy`, or `all`.        |
-| `-i, --print-config`  | Print the generated rspack config.                  |
+| Option                | Description                                                 |
+| --------------------- | ----------------------------------------------------------- |
+| `-p, --port <n>`      | Dev server port.                                            |
+| `--host <host>`       | Dev server host.                                            |
+| `-d, --dir <path>`    | Run Jetpack in another project directory.                   |
+| `-c, --config <path>` | Use a specific config file.                                 |
+| `-r, --no-hot`        | Disable hot reloading.                                      |
+| `-u, --no-minify`     | Disable production minification.                            |
+| `-t, --target <name>` | Bundle target: `modern`, `legacy`, or `all`.                |
+| `-i, --print-config`  | Print the generated rspack config.                          |
 | `-o, --log <levels>`  | Log levels: `info`, `progress`, `all`, `silent`, or `none`. |
-| `-v, --version`       | Print Jetpack and Rspack versions.                  |
-| `-h, --help`          | Print help.                                         |
+| `-v, --version`       | Print Jetpack and Rspack versions.                          |
+| `-h, --help`          | Print help.                                                 |
 
 Command-specific options:
 
@@ -90,7 +90,7 @@ Top-level options:
 | `entry`                 | `'.'`             | Entry module relative to the project root. Rspack resolves `.` through `package.json#main` or `index.js`. |
 | `port`                  | `3030`            | Dev server port.                                                                                          |
 | `host`                  | `'localhost'`     | Dev server host.                                                                                          |
-| `assetBaseUrl`          | `'/assets/'`      | Path or full URL prefix written into generated HTML, `manifest.json`, and runtime chunk loading. |
+| `assetBaseUrl`          | `'/assets/'`      | Path or full URL prefix written into generated HTML, `manifest.json`, and runtime chunk loading.          |
 | `hot`                   | `true`            | Set `false` to disable hot reload, or use `{ enabled: false, quiet: true }` for object form.              |
 | `dev.overlay`           | `true`            | Show Jetpack's development error overlay for build and runtime errors.                                    |
 | `target`                | `'modern'`        | `modern`, `legacy`, or `all`. Dev and inspect support one target at a time.                               |
@@ -104,12 +104,12 @@ Top-level options:
 
 Build options:
 
-| Option                 | Default  | Description                                                  |
-| ---------------------- | -------- | ------------------------------------------------------------ |
-| `build.outDir`         | `'dist'` | Output directory relative to the project root. It must stay inside the project root and cannot be `'.'`. |
+| Option                 | Default  | Description                                                                                                                      |
+| ---------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `build.outDir`         | `'dist'` | Output directory relative to the project root. It must stay inside the project root and cannot be `'.'`.                         |
 | `build.sourceMaps`     | dev only | Set `true` to force source maps, or `false` to disable them. Dev defaults to `'source-map'`; production defaults to `undefined`. |
-| `build.minify`         | `true`   | Minify production JS and CSS.                                |
-| `build.chunkLoadRetry` | `false`  | Enable retry runtime for failed async chunk loads with `true`, or configure it with `{ maxAttempts, base, multiplier }`. |
+| `build.minify`         | `true`   | Minify production JS and CSS.                                                                                                    |
+| `build.chunkLoadRetry` | `false`  | Enable retry runtime for failed async chunk loads with `true`, or configure it with `{ maxAttempts, base, multiplier }`.         |
 
 Asset options:
 
@@ -121,10 +121,10 @@ Images under the inline limit are emitted as data URLs. Larger images, fonts, au
 
 HTML options:
 
-| Option          | Default                     | Description                                          |
-| --------------- | --------------------------- | ---------------------------------------------------- |
-| `html.title`    | package name or `'jetpack'` | Page title for the default HTML shell.               |
-| `html.cspNonce` | `false`                     | Add nonce placeholders to Jetpack-owned script tags. |
+| Option          | Default                     | Description                                             |
+| --------------- | --------------------------- | ------------------------------------------------------- |
+| `html.title`    | package name or `'jetpack'` | Page title for the default HTML shell.                  |
+| `html.cspNonce` | `false`                     | Add nonce placeholders to Jetpack-owned script tags.    |
 | `html.render`   | `null`                      | Custom HTML renderer function, or a static HTML string. |
 
 CSS options:
@@ -237,7 +237,7 @@ import { renderHtmlResponse } from 'jetpack/html'
 res.send(renderHtmlResponse(indexHtml, { cspNonce: res.locals.cspNonce }))
 ```
 
-If you use `serve(config)` and set `res.locals.cspNonce`, the middleware applies `renderHtmlResponse()` for HTML responses in both development and production.
+If you use `serve()` from `jetpack/serve` and set `res.locals.cspNonce`, the middleware applies `renderHtmlResponse()` for HTML responses in both development and production.
 
 ## Define
 
@@ -270,7 +270,7 @@ Jetpack normalizes it with a trailing slash and derives `assetBasePathname` from
 
 ```js
 import { defineConfig, resolveConfig } from 'jetpack'
-import { serve } from 'jetpack/serve'
+import { serve, serveResolved } from 'jetpack/serve'
 import { html, renderHtmlResponse } from 'jetpack/html'
 import rspack from 'jetpack/rspack'
 import createRspackConfig from 'jetpack/rspack-config'
@@ -286,6 +286,26 @@ config.polyfills // 'usage', 'entry', or false
 config.build.outDir
 config.assetBaseUrl
 config.assetBasePathname
+```
+
+`serve()` returns server middleware and resolves config internally on the first request:
+
+```js
+app.use(serve())
+app.use(serve({ dir: clientDir }))
+```
+
+The default command is `build` when `NODE_ENV` is `production`, otherwise `dev`. The default directory is `process.cwd()`. If you already have a resolved config, use the low-level helper:
+
+```js
+const config = await resolveConfig({ command: 'build' })
+app.use(serveResolved(config))
+```
+
+If your server setup is already async and you prefer resolving before mounting, use `serve.resolve()`:
+
+```js
+app.use(await serve.resolve({ dir: clientDir }))
 ```
 
 Use `configFile` to point at a specific config file, or `configFile: false` to skip config file lookup.

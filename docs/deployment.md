@@ -25,21 +25,23 @@ If the client and API live together, point `package.json#main` at the server ent
 
 ```js
 import express from 'express'
-import { resolveConfig } from 'jetpack'
 import { serve } from 'jetpack/serve'
 
 const app = express()
-const config = await resolveConfig({
-  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev'
-})
 
 app.get('/api/unicorns', (req, res) => res.json([]))
-app.use(serve(config))
+app.use(serve())
 ```
 
-In development, run the API server and `jetpack` in separate processes. `serve(config)` proxies to the dev server and returns a helpful 502 HTML page for browser requests if the dev server is not running. In production, run `jetpack build` first and `serve(config)` serves `config.build.outDir`.
+In development, run the API server and `jetpack` in separate processes. `serve()` resolves Jetpack config on the first request and caches the middleware. It defaults to `process.cwd()` for the project directory, proxies to the dev server outside production, and returns a helpful 502 HTML page for browser requests if the dev server is not running. In production, run `jetpack build` first and `serve()` serves `build.outDir`.
 
-If you enable `html.cspNonce`, set `res.locals.cspNonce` before `serve(config)` runs. The middleware replaces Jetpack's nonce placeholders in development and production HTML responses.
+For monorepos where the API server and client app live in different packages, pass the client directory:
+
+```js
+app.use(serve({ dir: clientDir }))
+```
+
+If you enable `html.cspNonce`, set `res.locals.cspNonce` before `serve()` runs. The middleware replaces Jetpack's nonce placeholders in development and production HTML responses.
 
 ## Separate API
 
@@ -81,7 +83,7 @@ baseline widely available with downstream
 defaults
 ```
 
-`jetpack build` writes `index.html` for modern browsers and `index.legacy.html` for legacy browsers. `serve(config)` chooses the right HTML file from the request user-agent.
+`jetpack build` writes `index.html` for modern browsers and `index.legacy.html` for legacy browsers. `serve()` chooses the right HTML file from the request user-agent.
 
 To inspect browser targets:
 

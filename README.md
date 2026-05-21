@@ -100,17 +100,16 @@ export default {
 Or mount Jetpack into your own server:
 
 ```js
-import { resolveConfig } from 'jetpack'
 import { serve } from 'jetpack/serve'
 
-const config = await resolveConfig({
-  command: process.env.NODE_ENV === 'production' ? 'build' : 'dev'
-})
-
-app.use(serve(config))
+app.use(serve())
 ```
 
-In development, `serve(config)` proxies to the Jetpack dev server. In production, it serves `build.outDir` and chooses modern or legacy HTML when both bundles exist.
+`serve()` resolves Jetpack config on the first request and caches the middleware. It uses `process.cwd()` as the default project directory, proxies to the Jetpack dev server outside production, and serves `build.outDir` in production. For monorepos, pass the client directory:
+
+```js
+app.use(serve({ dir: clientDir }))
+```
 
 ## Docs
 

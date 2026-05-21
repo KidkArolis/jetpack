@@ -40,6 +40,24 @@ function startBackend(port, handler) {
   })
 }
 
+function request(port, path, { headers = {} } = {}) {
+  return new Promise((resolve, reject) => {
+    const req = http.request({ host: 'localhost', port, path, headers }, (res) => {
+      const chunks = []
+      res.on('data', (chunk) => chunks.push(chunk))
+      res.on('end', () => {
+        resolve({
+          status: res.statusCode,
+          headers: res.headers,
+          body: Buffer.concat(chunks).toString()
+        })
+      })
+    })
+    req.on('error', reject)
+    req.end()
+  })
+}
+
 test.serial('jetpack/serve serves built files in production', async (t) => {
   const dir = await setupTmpFixture('pkg-basic')
   const build = await runJetpack(['build', '--log=info', '--dir', dir], {
@@ -49,7 +67,7 @@ test.serial('jetpack/serve serves built files in production', async (t) => {
   t.is(build.exitCode, 0, `build failed: ${build.all}`)
 
   const port = await getFreePort()
-  const server = await startServeHarness({ cwd: dir, port, env: { NODE_ENV: 'production' } })
+  const server = await startServeHarness({ cwd: dir, port, env: { NODE_ENV: 'production', SERVE_RESOLVED: '1' } })
   try {
     const indexRes = await fetch(`http://localhost:${port}/`)
     const indexBody = await indexRes.text()
@@ -94,8 +112,208 @@ test.serial('jetpack/serve replaces CSP nonce placeholders in production', async
     t.is(res.status, 200)
     t.true(body.includes('nonce="request-nonce"'))
     t.false(body.includes('__JETPACK_CSP_NONCE__'))
+    t.is(res.headers.get('content-length'), null)
+    t.is(res.headers.get('content-encoding'), null)
+    t.is(res.headers.get('etag'), null)
+    t.is(res.headers.get('last-modified'), null)
+    t.is(res.headers.get('cache-control'), 'private, no-store')
   } finally {
     await server.kill()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack/serve resolves config lazily and serves built files in production', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic')
+  const build = await runJetpack(['build', '--log=info', '--dir', dir], {
+    cwd: os.tmpdir(),
+    env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+  })
+  t.is(build.exitCode, 0, `build failed: ${build.all}`)
+
+  const port = await getFreePort()
+  const server = await startServeHarness({ cwd: dir, port, env: { NODE_ENV: 'production' } })
+  try {
+    const res = await fetch(`http://localhost:${port}/`)
+    const body = await res.text()
+    t.is(res.status, 200)
+    t.regex(body, /<!doctype html>/i)
+  } finally {
+    await server.kill()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack/serve resolves config lazily and proxies in development', async (t) => {
+  const devPort = await getFreePort()
+  const servePort = await getFreePort()
+  const dir = await setupTmpFixture('pkg-basic', { port: devPort })
+
+  const dev = await startNode(
+    path.join(__dirname, '..', 'bin', 'jetpack'),
+    ['--dir', dir, '--port', String(devPort), '--log=info'],
+    {
+      readyMatcher: new RegExp(`Asset server http://localhost:${devPort}`)
+    }
+  )
+  try {
+    const harnessProc = await startServeHarness({
+      cwd: dir,
+      port: servePort,
+      env: { NODE_ENV: 'development' }
+    })
+    try {
+      const res = await fetch(`http://localhost:${servePort}/`)
+      const body = await res.text()
+      t.is(res.status, 200)
+      t.regex(body, /\/assets\/bundle\.js/)
+    } finally {
+      await harnessProc.kill()
+    }
+  } finally {
+    await dev.kill()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack/serve keeps normal dev proxy headers for assets with nonce enabled', async (t) => {
+  const devPort = await getFreePort()
+  const servePort = await getFreePort()
+  const dir = await setupTmpFixture('pkg-basic', { port: devPort })
+  let upstreamHeaders = null
+
+  const backend = await startBackend(devPort, (req, res) => {
+    upstreamHeaders = req.headers
+    res.writeHead(200, {
+      'content-type': 'application/javascript',
+      'cache-control': 'public, max-age=60'
+    })
+    res.end('console.log("asset")')
+  })
+
+  const harnessProc = await startServeHarness({
+    cwd: dir,
+    port: servePort,
+    env: { NODE_ENV: 'development', CSP_NONCE: 'asset-nonce' }
+  })
+
+  try {
+    const res = await request(servePort, '/assets/app.js', {
+      headers: {
+        accept: '*/*',
+        'accept-encoding': 'br, gzip',
+        'if-none-match': '"asset-etag"'
+      }
+    })
+
+    t.is(res.status, 200)
+    t.is(res.body, 'console.log("asset")')
+    t.is(upstreamHeaders['accept-encoding'], 'br, gzip')
+    t.is(upstreamHeaders['if-none-match'], '"asset-etag"')
+  } finally {
+    await harnessProc.kill()
+    backend.close()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack/serve requests transform-safe dev HTML when rewriting CSP nonces', async (t) => {
+  const devPort = await getFreePort()
+  const servePort = await getFreePort()
+  const dir = await setupTmpFixture('pkg-basic', { port: devPort })
+  let upstreamHeaders = null
+  const html = '<!doctype html><script nonce="__JETPACK_CSP_NONCE__"></script>'
+
+  const backend = await startBackend(devPort, (req, res) => {
+    upstreamHeaders = req.headers
+    res.writeHead(200, {
+      'content-type': 'text/html; charset=utf-8',
+      'content-length': Buffer.byteLength(html),
+      'content-encoding': 'gzip',
+      etag: '"upstream-etag"',
+      'last-modified': new Date('2026-01-01T00:00:00.000Z').toUTCString(),
+      'cache-control': 'public, max-age=60'
+    })
+    res.end(html)
+  })
+
+  const harnessProc = await startServeHarness({
+    cwd: dir,
+    port: servePort,
+    env: { NODE_ENV: 'development', CSP_NONCE: 'dev-nonce' }
+  })
+
+  try {
+    const res = await request(servePort, '/', {
+      headers: {
+        accept: 'text/html',
+        'accept-encoding': 'br, gzip',
+        'if-none-match': '"browser-etag"',
+        'if-modified-since': new Date('2026-01-01T00:00:00.000Z').toUTCString()
+      }
+    })
+
+    t.is(res.status, 200)
+    t.is(upstreamHeaders['accept-encoding'], 'identity')
+    t.false('if-none-match' in upstreamHeaders)
+    t.false('if-modified-since' in upstreamHeaders)
+    t.true(res.body.includes('nonce="dev-nonce"'))
+    t.false(res.body.includes('__JETPACK_CSP_NONCE__'))
+    t.is(res.headers['content-length'], undefined)
+    t.is(res.headers['content-encoding'], undefined)
+    t.is(res.headers.etag, undefined)
+    t.is(res.headers['last-modified'], undefined)
+    t.is(res.headers['cache-control'], 'private, no-store')
+  } finally {
+    await harnessProc.kill()
+    backend.close()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack/serve strips conditional dev HTML headers so nonce rewrites get a fresh body', async (t) => {
+  const devPort = await getFreePort()
+  const servePort = await getFreePort()
+  const dir = await setupTmpFixture('pkg-basic', { port: devPort })
+  let upstreamHeaders = null
+  const html = '<!doctype html><script nonce="__JETPACK_CSP_NONCE__"></script>'
+
+  const backend = await startBackend(devPort, (req, res) => {
+    upstreamHeaders = req.headers
+    if (req.headers['if-none-match']) {
+      res.writeHead(304, {
+        etag: '"upstream-etag"',
+        'content-encoding': 'gzip'
+      })
+      res.end()
+      return
+    }
+
+    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', etag: '"upstream-etag"' })
+    res.end(html)
+  })
+
+  const harnessProc = await startServeHarness({
+    cwd: dir,
+    port: servePort,
+    env: { NODE_ENV: 'development', CSP_NONCE: 'fresh-nonce' }
+  })
+
+  try {
+    const res = await request(servePort, '/', {
+      headers: {
+        accept: 'text/html',
+        'if-none-match': '"browser-etag"'
+      }
+    })
+
+    t.is(res.status, 200)
+    t.false('if-none-match' in upstreamHeaders)
+    t.true(res.body.includes('nonce="fresh-nonce"'))
+    t.false(res.body.includes('__JETPACK_CSP_NONCE__'))
+  } finally {
+    await harnessProc.kill()
+    backend.close()
     await fs.rm(dir, { recursive: true, force: true })
   }
 })
