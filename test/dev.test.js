@@ -300,6 +300,59 @@ test('dev build errors synthesize source frames when Rspack omits formatted code
   }
 })
 
+test('dev build errors strip ANSI and prefer matching source lines', async (t) => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-dev-ansi-build-error-'))
+  await fs.mkdir(path.join(dir, 'src/components/PublicProfile'), { recursive: true })
+  await fs.writeFile(
+    path.join(dir, 'src/components/PublicProfile/PublicProfile.tsx'),
+    [
+      "import React from 'react'",
+      '',
+      'const value = 1',
+      'const other = 2',
+      '',
+      'import {',
+      '  TextStyle,',
+      '  Tooltip,',
+      '  classNames,',
+      '  variationName,',
+      "} from '@humaans/client/celeste'",
+      "import 'foodie'",
+      "import { Button } from '@humaans/client/components/Button/index.js'"
+    ].join('\n')
+  )
+
+  try {
+    const event = createBuildErrorMessage(
+      [
+        {
+          details: [
+            "\u001B[31mModule not found: Can't resolve \u001B[33m'foodie'\u001B[39m in \u001B[36m'/repo/src/components/PublicProfile'\u001B[39m",
+            '  ╭─[10:0]',
+            ' 8 │ var _s = $RefreshSig$()',
+            " 9 │ import { TextStyle, Tooltip, classNames, variationName } from '@humaans/client/celeste'",
+            "10 │ import 'foodie';",
+            '   · ───────────────',
+            "11 │ import { Button } from '@humaans/client/components/Button/index.js'",
+            '  ╰────'
+          ].join('\n'),
+          moduleName: './src/components/PublicProfile/PublicProfile.tsx'
+        }
+      ],
+      { dir }
+    )
+
+    t.notRegex(event.message, /\u001B|\[\d+m/)
+    t.regex(event.message, /Can't resolve 'foodie'/)
+    t.truthy(event.codeFrame)
+    t.is(event.codeFrame.file, './src/components/PublicProfile/PublicProfile.tsx')
+    t.is(event.codeFrame.line, 12)
+    t.true(event.codeFrame.lines.some((line) => line.highlight && line.value === "import 'foodie'"))
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
 test.serial('dev converts SWC syntax errors into compact overlay code frames', async (t) => {
   const port = await getFreePort()
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-dev-syntax-error-'))
