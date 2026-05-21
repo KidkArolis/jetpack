@@ -2,10 +2,10 @@
   <img src="https://user-images.githubusercontent.com/324440/48484676-a1690280-e80e-11e8-9835-14c6b0c5bb98.png" alt="jetpack" title="jetpack">
 </p>
 
-<h4 align="center">Rspack made more convenient.</h4>
+<h4 align="center">Run and build web code with Rspack.</h4>
 <br />
 
-Jetpack is Rspack with the defaults already chosen. It runs a dev server, builds production assets, and stays out of your way until you need an escape hatch.
+Jetpack is preconfigured Rspack for web code: one command to start a dev server, one command to build production assets, and a config file only when you need it.
 
 ```sh
 npm install -g jetpack
