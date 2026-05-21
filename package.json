@@ -1,6 +1,6 @@
 {
   "name": "jetpack",
-  "version": "5.0.0-rc.0",
+  "version": "5.0.0-rc.1",
   "type": "module",
   "description": "Rspack made more convenient.",
   "exports": {
