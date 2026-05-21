@@ -342,7 +342,8 @@ test('dev build errors strip ANSI and prefer matching source lines', async (t) =
       { dir }
     )
 
-    t.notRegex(event.message, /\u001B|\[\d+m/)
+    t.false(event.message.includes(String.fromCharCode(27)))
+    t.notRegex(event.message, /\[\d+m/)
     t.regex(event.message, /Can't resolve 'foodie'/)
     t.truthy(event.codeFrame)
     t.is(event.codeFrame.file, './src/components/PublicProfile/PublicProfile.tsx')
