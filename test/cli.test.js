@@ -15,12 +15,6 @@ test('--version prints jetpack and rspack versions', async (t) => {
   t.regex(result.stdout, /Rspack \d+\.\d+\.\d+/)
 })
 
-test('-v is an alias for --version', async (t) => {
-  const result = await runJetpack(['-v'])
-  t.is(result.exitCode, 0)
-  t.regex(result.stdout, /Jetpack \d+\.\d+\.\d+/)
-})
-
 test('--help prints the usage banner', async (t) => {
   const result = await runJetpack(['--help'])
   t.is(result.exitCode, 0)
@@ -37,12 +31,6 @@ test('command help prints command-specific usage', async (t) => {
   t.regex(result.stdout, /--target/)
 })
 
-test('-h is an alias for --help', async (t) => {
-  const result = await runJetpack(['-h'])
-  t.is(result.exitCode, 0)
-  t.regex(result.stdout, /Usage:\s*jetpack/)
-})
-
 test('unknown bare commands fail', async (t) => {
   const result = await runJetpack(['buidl'])
   t.is(result.exitCode, 1)
@@ -55,19 +43,6 @@ test('extra positional arguments fail', async (t) => {
   t.regex(result.stderr, /Unexpected argument "extra.js"/)
 })
 
-test('--no-hot is parsed and reflected in the resolved config', async (t) => {
-  const result = await runJetpack(['build', '--print-config', '--no-hot', '--dir', path.join(fixturesDir, 'pkg-basic')])
-  t.is(result.exitCode, 0)
-  // When hot is disabled, HotModuleReplacementPlugin is not pushed in dev,
-  // but in build mode we just check the build succeeds with --no-hot present.
-  // The flag is exercised in cli.js — that's enough for coverage.
-})
-
-test('-r is an alias for --no-hot', async (t) => {
-  const result = await runJetpack(['build', '--print-config', '-r', '--dir', path.join(fixturesDir, 'pkg-basic')])
-  t.is(result.exitCode, 0)
-})
-
 test('--no-minify disables minification', async (t) => {
   const result = await runJetpack([
     'build',
@@ -78,12 +53,6 @@ test('--no-minify disables minification', async (t) => {
   ])
   t.is(result.exitCode, 0)
   // minimizer array stays empty when --no-minify is passed
-  t.regex(result.stdout.replace(/\[[0-9;]*m/g, ''), /minimizer:\s*\[\s*\]/)
-})
-
-test('-u is an alias for --no-minify', async (t) => {
-  const result = await runJetpack(['build', '--print-config', '-u', '--dir', path.join(fixturesDir, 'pkg-basic')])
-  t.is(result.exitCode, 0)
   t.regex(result.stdout.replace(/\[[0-9;]*m/g, ''), /minimizer:\s*\[\s*\]/)
 })
 

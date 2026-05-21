@@ -55,10 +55,8 @@ test('adds csp nonce placeholders to jetpack-owned scripts', (t) => {
 test('adds anonymous crossorigin to dev bundle scripts', (t) => {
   const html = renderHtml({ ...options, command: 'dev' }, manifest)
   t.true(html.includes('<script src="/assets/bundle.js" crossorigin="anonymous" defer></script>'))
-})
 
-test('adds anonymous crossorigin to custom dev bundle scripts', (t) => {
-  const html = renderHtml(
+  const customHtml = renderHtml(
     {
       ...options,
       command: 'dev',
@@ -70,5 +68,5 @@ test('adds anonymous crossorigin to custom dev bundle scripts', (t) => {
     manifest
   )
 
-  t.is(html, '<script src="/assets/bundle.js" defer crossorigin="anonymous"></script>')
+  t.is(customHtml, '<script src="/assets/bundle.js" defer crossorigin="anonymous"></script>')
 })

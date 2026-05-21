@@ -10,14 +10,11 @@ import { serve, serveResolved } from 'jetpack/serve'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, 'fixtures')
 
-test('package root exposes the library API', (t) => {
+test('public modules expose the library API', (t) => {
   const config = { entry: './client.js' }
 
   t.is(defineConfig(config), config)
   t.is(typeof resolveConfig, 'function')
-})
-
-test('explicit public entry points expose specialist APIs', (t) => {
   t.is(typeof html, 'function')
   t.is(typeof renderHtmlResponse, 'function')
   t.is(typeof rspack, 'function')
