@@ -4,6 +4,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { getFreePort, startJetpack } from './helpers/process.js'
+import { createBuildErrorMessage } from '../lib/overlay/server.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, 'fixtures')
@@ -266,6 +267,33 @@ test.serial('dev preserves multiple build errors for overlay pagination', async 
     t.is(event.errors[1].codeFrame.line, 2)
   } finally {
     await server.kill()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test('dev build errors synthesize source frames when Rspack omits formatted code', async (t) => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-dev-plain-build-error-'))
+  await fs.writeFile(
+    path.join(dir, 'index.js'),
+    ['import "missing-test-package";', 'document.querySelector("#root").textContent = "loaded";'].join('\n')
+  )
+
+  try {
+    const event = createBuildErrorMessage(
+      [
+        {
+          message: `Module not found: Can't resolve 'missing-test-package' in '${dir}'`,
+          moduleName: './index.js'
+        }
+      ],
+      { dir }
+    )
+
+    t.truthy(event.codeFrame)
+    t.is(event.codeFrame.file, './index.js')
+    t.is(event.codeFrame.line, 1)
+    t.true(event.codeFrame.lines.some((line) => line.highlight && line.value.includes('missing-test-package')))
+  } finally {
     await fs.rm(dir, { recursive: true, force: true })
   }
 })
