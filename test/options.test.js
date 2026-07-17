@@ -34,7 +34,6 @@ const base = (pkg, extra = {}) => {
       cspNonce: false,
       render: null
     },
-    proxy: {},
     define: {},
     polyfills: 'usage',
     assetBaseUrl: '/assets/',
@@ -96,7 +95,6 @@ test('accepts config-shaped overrides', async (t) => {
       target: 'legacy',
       polyfills: false,
       define: { __TEST__: true },
-      proxy: { '/api/*': 'http://localhost:3000' },
       log: 'silent',
       build: {
         outDir: 'build',
@@ -131,7 +129,6 @@ test('accepts config-shaped overrides', async (t) => {
     target: 'legacy',
     polyfills: false,
     define: { __TEST__: true },
-    proxy: { '/api/*': 'http://localhost:3000' },
     logLevels: { info: false, progress: false, none: true },
     build: {
       outDir: 'build',
@@ -249,6 +246,22 @@ test('rejects config options that moved into groups', async (t) => {
   await fs.writeFile(path.join(projectRoot, 'jetpack.config.mjs'), 'export default { minify: false }\n')
 
   await t.throwsAsync(options({ command: 'build', dir: projectRoot }), { message: 'minify moved to build.minify.' })
+})
+
+test('rejects the removed proxy config option', async (t) => {
+  const src = dir('fixtures', 'pkg-src')
+  const projectRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-options-'))
+  await fs.cp(src, projectRoot, { recursive: true })
+  t.teardown(() => fs.rm(projectRoot, { recursive: true, force: true }))
+
+  await fs.writeFile(path.join(projectRoot, 'jetpack.config.mjs'), 'export default { proxy: {} }\n')
+  await t.throwsAsync(options({ command: 'dev', dir: projectRoot }), {
+    message: 'proxy is no longer supported.'
+  })
+
+  await t.throwsAsync(options({ command: 'dev', dir: projectRoot, configFile: false, overrides: { proxy: {} } }), {
+    message: 'proxy is no longer supported.'
+  })
 })
 
 test('rejects invalid assets config', async (t) => {

@@ -3,8 +3,10 @@ import path from 'node:path'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import http from 'node:http'
+import express from 'express'
 import { fileURLToPath } from 'node:url'
 import { getFreePort, startNode, runJetpack } from './helpers/process.js'
+import { serve } from '../serve.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, 'fixtures')
@@ -37,6 +39,21 @@ function startBackend(port, handler) {
   return new Promise((resolve) => {
     const server = http.createServer(handler)
     server.listen(port, () => resolve(server))
+  })
+}
+
+function startMiddleware(middleware) {
+  const app = express()
+  app.use(middleware)
+
+  return new Promise((resolve) => {
+    const server = app.listen(0, () => resolve(server))
+  })
+}
+
+function closeServer(server) {
+  return new Promise((resolve, reject) => {
+    server.close((err) => (err ? reject(err) : resolve()))
   })
 }
 
@@ -85,6 +102,33 @@ test.serial('jetpack/serve serves built files in production', async (t) => {
     t.regex(assetRes.headers.get('content-type') || '', /javascript/)
   } finally {
     await server.kill()
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack/serve always resolves option-shaped input', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic')
+  const build = await runJetpack(['build', '--log=info', '--dir', dir], {
+    cwd: os.tmpdir(),
+    env: process.env.NODE_V8_COVERAGE ? { NODE_V8_COVERAGE: process.env.NODE_V8_COVERAGE } : {}
+  })
+  t.is(build.exitCode, 0, `build failed: ${build.all}`)
+
+  const middleware = serve({
+    command: 'build',
+    mode: 'production',
+    dir,
+    build: { outDir: 'missing' }
+  })
+  const server = await startMiddleware(middleware)
+  const port = server.address().port
+
+  try {
+    const res = await fetch(`http://localhost:${port}/`)
+    t.is(res.status, 200)
+    t.regex(await res.text(), /<!doctype html>/i)
+  } finally {
+    await closeServer(server)
     await fs.rm(dir, { recursive: true, force: true })
   }
 })

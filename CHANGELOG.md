@@ -7,9 +7,9 @@
 - Use ESM config in `"type": "module"` projects: `export default { ... }`. Use `jetpack.config.cjs` for CommonJS config.
 - Public API exports were trimmed:
   - `jetpack` now exports only `defineConfig` and `resolveConfig`
-  - `jetpack/serve` now exports a `serve(config)` factory
+  - `jetpack/serve` now exports `serve(options)` and `serveResolved(config)`
   - `jetpack/rspack.config` moved to `jetpack/rspack-config`
-  - `jetpack/options` and `jetpack/proxy` were removed; the `proxy` config option still works
+  - `jetpack/options` and `jetpack/proxy` were removed
 - Build targets changed. Use `--target modern|legacy|all` and `target: 'modern' | 'legacy' | 'all'` instead of `--modern`, `--legacy`, or `target: { modern, legacy }`.
 - The modern browser target changed from Browserslist `defaults` to `baseline widely available with downstream`.
 - Dropped the implicit `./src/index.js` entry fallback.
@@ -20,7 +20,7 @@
   - build options -> `build.outDir`, `build.sourceMaps`, `build.minify`, and `build.chunkLoadRetry`
   - HTML options -> `html.title`, `html.cspNonce`, and `html.render`
   - `polyfills` is now top-level: `polyfills: 'usage' | 'entry' | false`
-  - removed `static`, config-file `dir`, and `css.features`
+  - removed `static`, `proxy`, config-file `dir`, and `css.features`
 - For advanced customization, use the `rspack` config hook. The old `webpack` hook alias was removed, `rspack(config, options)` is now `rspack(config, context)`
 - `sass-loader` resources should use `additionalData`.
 
@@ -45,6 +45,7 @@
 - Expanded asset extension list: `avif`, `webp`, `bmp`, `ico`, `aac`, `flac`, `m4a`, `mp3`, `opus`, `wav`, `m4v`.
 - Replaced webpack dev middleware/HMR with Rspack dev-server and added Jetpack's development error overlay.
 - Smaller install: dropped seven runtime dependencies in favour of Node built-ins.
+- `serve()` now resolves Jetpack options lazily. Pass an existing resolved config to `serveResolved()` instead.
 
 # 4.4.2
 

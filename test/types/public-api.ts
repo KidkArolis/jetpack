@@ -41,9 +41,6 @@ const config = defineConfig({
     include: true,
     exclude: ['prebuilt-lib']
   },
-  proxy: {
-    '/api/*': 'http://localhost:3000'
-  },
   rspack(rspackConfig, context) {
     const target: 'modern' | 'legacy' = context.target
     const swcLoaders = context.findLoader('builtin:swc-loader')
@@ -61,6 +58,9 @@ const config = defineConfig({
   }
 } satisfies JetpackConfig)
 
+// @ts-expect-error The proxy config option was removed in Jetpack 5.
+defineConfig({ proxy: {} } satisfies JetpackConfig)
+
 const resolved = await resolveConfig({
   command: 'build',
   dir: process.cwd(),
@@ -75,18 +75,18 @@ const target: 'modern' | 'legacy' | 'all' = resolved.target
 const polyfills: 'usage' | 'entry' | false = resolved.polyfills
 const inlineLimit: number = resolved.assets.inlineLimit
 const configs = await createRspackConfig({ command: 'build' }, { target })
-const middleware = serve(resolved)
 const lazyMiddleware = serve({ dir: process.cwd() })
-const resolvedMiddleware = await serve.resolve({ dir: process.cwd(), command: 'dev' })
 const lowLevelMiddleware = serveResolved(resolved)
+// @ts-expect-error Resolved configs use the explicit serveResolved API.
+serve(resolved)
+// @ts-expect-error serve.resolve was removed in Jetpack 5.
+serve.resolve({ dir: process.cwd() })
 const renderedTemplate = html`<div>${target}</div>`
 
 renderHtmlResponse(renderedTemplate, { cspNonce: 'nonce' })
 new DefinePlugin({ __TEST__: JSON.stringify(true) })
 rspack(configs.modern ?? {})
-middleware({}, {}, () => {})
 lazyMiddleware({}, {}, () => {})
-resolvedMiddleware({}, {}, () => {})
 lowLevelMiddleware({}, {}, () => {})
 void inlineLimit
 void polyfills

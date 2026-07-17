@@ -87,21 +87,12 @@ export default defineConfig({
 
 ## API Servers
 
-Proxy API requests during development:
-
-```js
-export default {
-  proxy: {
-    '/api/*': 'http://localhost:3000'
-  }
-}
-```
-
-Or mount Jetpack into your own server:
+Mount Jetpack into your own server after the API routes:
 
 ```js
 import { serve } from 'jetpack/serve'
 
+app.get('/api/unicorns', (req, res) => res.json([]))
 app.use(serve())
 ```
 

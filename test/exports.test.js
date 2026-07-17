@@ -20,7 +20,7 @@ test('public modules expose the library API', (t) => {
   t.is(typeof rspack, 'function')
   t.is(typeof createRspackConfig, 'function')
   t.is(typeof serve, 'function')
-  t.is(typeof serve.resolve, 'function')
+  t.is(serve.resolve, undefined)
   t.is(typeof serveResolved, 'function')
 })
 

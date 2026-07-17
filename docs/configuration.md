@@ -98,7 +98,6 @@ Top-level options:
 | `transpileDependencies` | `true`            | Controls which packages in `node_modules` are passed through Jetpack's JS compiler.                       |
 | `assets`                | see below         | Asset handling options.                                                                                   |
 | `define`                | `{}`              | Build-time constants for `rspack.DefinePlugin`. Values are JSON-serialized for you.                       |
-| `proxy`                 | `{}`              | Dev proxy map, or a function that receives the Express app.                                               |
 | `log`                   | `'info,progress'` | Log levels: `info`, `progress`, `all`, `silent`, or `none`.                                               |
 | `rspack`                | `undefined`       | Function that receives the generated rspack config.                                                       |
 
@@ -300,12 +299,6 @@ The default command is `build` when `NODE_ENV` is `production`, otherwise `dev`.
 ```js
 const config = await resolveConfig({ command: 'build' })
 app.use(serveResolved(config))
-```
-
-If your server setup is already async and you prefer resolving before mounting, use `serve.resolve()`:
-
-```js
-app.use(await serve.resolve({ dir: clientDir }))
 ```
 
 Use `configFile` to point at a specific config file, or `configFile: false` to skip config file lookup.

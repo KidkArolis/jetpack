@@ -45,17 +45,7 @@ If you enable `html.cspNonce`, set `res.locals.cspNonce` before `serve()` runs. 
 
 ## Separate API
 
-If the client and API deploy separately, use Jetpack's dev proxy:
-
-```js
-export default {
-  proxy: {
-    '/api/*': 'http://localhost:3000'
-  }
-}
-```
-
-In production, route `/api/*` at your CDN, load balancer, or application gateway.
+If the client and API run on separate origins, configure CORS on the API or use a dedicated reverse proxy. In production, route API requests at your CDN, load balancer, or application gateway.
 
 ## Differential Builds
 

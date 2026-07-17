@@ -74,8 +74,6 @@ export type JetpackTranspileDependenciesConfig =
       exclude?: string[]
     }
 
-export type JetpackProxyConfig = Record<string, string> | ((app: unknown) => void)
-
 export interface JetpackConfig {
   entry?: string
   port?: number | string
@@ -86,7 +84,6 @@ export interface JetpackConfig {
   target?: JetpackTarget
   polyfills?: JetpackPolyfills
   define?: Record<string, unknown>
-  proxy?: JetpackProxyConfig
   log?: JetpackLogLevel | string
   build?: JetpackBuildConfig
   html?: JetpackHtmlConfig
@@ -156,7 +153,6 @@ export interface ResolvedJetpackConfig {
   define: Record<string, unknown>
   polyfills: JetpackPolyfills
   target: JetpackTarget
-  proxy: JetpackProxyConfig
   logLevels: {
     info: boolean
     progress: boolean
