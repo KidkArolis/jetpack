@@ -15,7 +15,7 @@ const base = (pkg, extra = {}) => {
   const defaults = {
     command: 'dev',
     mode: 'development',
-    logLevels: { info: false, progress: false, none: false },
+    logLevels: { info: true, progress: true, none: false },
     dir: dir('fixtures', pkg),
     entry: '.',
     build: {
@@ -260,6 +260,10 @@ test('rejects config options that moved in Jetpack 5', async (t) => {
       message: `${name} moved to ${replacement}.`
     })
   }
+
+  await t.throwsAsync(options({ command: 'build', configFile: false, overrides: { minify: false } }), {
+    message: 'minify moved to build.minify.'
+  })
 })
 
 test('rejects config options that were removed in Jetpack 5', async (t) => {
@@ -333,6 +337,10 @@ test('supports configFile and configFile false', async (t) => {
 
   t.is(explicit.html.title, 'Explicit config')
   t.is(skipped.html.title, 'pkg-src')
+
+  await t.throwsAsync(options({ command: 'dev', dir: projectRoot, configFile: 'missing.config.mjs' }), {
+    message: `Config file not found: ${path.join(projectRoot, 'missing.config.mjs')}`
+  })
 })
 
 test('public config export resolves without cli parsing', async (t) => {
@@ -350,22 +358,17 @@ test('accepts string targets', async (t) => {
   t.is(opts.target, 'all')
 })
 
-test('resolved config does not include cli runtime flags', async (t) => {
-  const opts = await options({
-    command: 'build',
-    dir: dir('fixtures', 'pkg-src'),
-    overrides: {
-      printConfig: true,
-      yes: true,
-      dryRun: true,
-      coverage: 'US'
-    }
-  })
-
-  t.false('printConfig' in opts)
-  t.false('yes' in opts)
-  t.false('dryRun' in opts)
-  t.false('coverage' in opts)
+test('rejects cli runtime flags in config overrides', async (t) => {
+  for (const name of ['printConfig', 'yes', 'dryRun', 'coverage']) {
+    await t.throwsAsync(
+      options({
+        command: 'build',
+        dir: dir('fixtures', 'pkg-src'),
+        overrides: { [name]: true }
+      }),
+      { message: `Unknown config override "${name}".` }
+    )
+  }
 })
 
 test('accepts explicit mode independently of command', async (t) => {

@@ -99,13 +99,7 @@ export interface ResolveConfigInput {
   dir?: string
   entry?: string | null
   configFile?: string | false | null
-  overrides?: Partial<JetpackConfig> & {
-    minify?: boolean
-    printConfig?: boolean
-    yes?: boolean
-    dryRun?: boolean
-    coverage?: string | false
-  }
+  overrides?: Partial<JetpackConfig>
 }
 
 export interface ResolvedJetpackBuildConfig {

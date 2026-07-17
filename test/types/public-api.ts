@@ -68,9 +68,14 @@ const resolved = await resolveConfig({
   configFile: false,
   overrides: {
     target: config.target,
-    minify: false
+    build: { minify: false }
   }
 })
+
+// @ts-expect-error CLI runtime flags are not config overrides.
+resolveConfig({ overrides: { printConfig: true } })
+// @ts-expect-error Moved build options must use the nested config shape.
+resolveConfig({ overrides: { minify: false } })
 
 const target: 'modern' | 'legacy' | 'all' = resolved.target
 const polyfills: 'usage' | 'entry' | false = resolved.polyfills

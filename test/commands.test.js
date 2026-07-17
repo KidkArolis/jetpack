@@ -4,6 +4,7 @@ import fs from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import os from 'node:os'
 import { fileURLToPath } from 'node:url'
+import clean from '../lib/clean.js'
 import { browserCommand, runCompiler } from '../lib/inspect.js'
 import { runJetpack } from './helpers/process.js'
 
@@ -56,6 +57,16 @@ test('inspect closes the compiler when compilation fails', async (t) => {
   const error = await t.throwsAsync(runCompiler(compiler))
   t.is(error, failure)
   t.true(closed)
+})
+
+test('clean propagates filesystem failures', async (t) => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-clean-'))
+  const file = path.join(dir, 'not-a-directory')
+  await fs.writeFile(file, 'test')
+  t.teardown(() => fs.rm(dir, { recursive: true, force: true }))
+
+  const error = await t.throwsAsync(clean({ dir: file, build: { outDir: 'dist' } }, null, { yes: true }))
+  t.is(error.code, 'ENOTDIR')
 })
 
 test.serial('jetpack clean removes dist when confirmed', async (t) => {

@@ -3,6 +3,7 @@ import path from 'node:path'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import { fileURLToPath } from 'node:url'
+import { commandOptions } from '../lib/cli.js'
 import { runJetpack } from './helpers/process.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -80,6 +81,22 @@ test('--log=all enables info and progress logging', async (t) => {
   ])
   t.is(result.exitCode, 0)
   t.regex(result.stdout, /Building for production/)
+})
+
+test('config log setting is not overwritten by a cli default', async (t) => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-cli-'))
+  t.teardown(() => fs.rm(dir, { recursive: true, force: true }))
+  await fs.writeFile(path.join(dir, 'jetpack.config.mjs'), `export default { log: 'silent' }\n`)
+
+  const { config } = await commandOptions(['--dir', dir])
+  t.deepEqual(config.logLevels, { info: false, progress: false, none: true })
+})
+
+test('missing explicit config files fail', async (t) => {
+  const result = await runJetpack(['--config', 'missing.config.mjs', '--dir', path.join(fixturesDir, 'pkg-basic')])
+
+  t.is(result.exitCode, 1)
+  t.regex(result.stderr, /Config file not found: .*missing\.config\.mjs/)
 })
 
 test('invalid --target fails', async (t) => {
