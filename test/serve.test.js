@@ -51,6 +51,19 @@ function startMiddleware(middleware) {
   })
 }
 
+function startRawMiddleware(middleware) {
+  const server = http.createServer((req, res) => {
+    middleware(req, res, (err) => {
+      res.writeHead(err ? 500 : 404, { 'Content-Type': 'text/plain; charset=utf-8' })
+      res.end(err ? String(err) : 'Not found')
+    })
+  })
+
+  return new Promise((resolve) => {
+    server.listen(0, () => resolve(server))
+  })
+}
+
 function closeServer(server) {
   return new Promise((resolve, reject) => {
     server.close((err) => (err ? reject(err) : resolve()))
@@ -127,6 +140,22 @@ test.serial('jetpack/serve always resolves option-shaped input', async (t) => {
     const res = await fetch(`http://localhost:${port}/`)
     t.is(res.status, 200)
     t.regex(await res.text(), /<!doctype html>/i)
+  } finally {
+    await closeServer(server)
+    await fs.rm(dir, { recursive: true, force: true })
+  }
+})
+
+test.serial('jetpack/serve handles a missing production bundle with raw Node responses', async (t) => {
+  const dir = await setupTmpFixture('pkg-basic')
+  const middleware = serve({ command: 'build', dir, configFile: false })
+  const server = await startRawMiddleware(middleware)
+  const port = server.address().port
+
+  try {
+    const res = await fetch(`http://localhost:${port}/`)
+    t.is(res.status, 404)
+    t.is(await res.text(), 'No bundle found')
   } finally {
     await closeServer(server)
     await fs.rm(dir, { recursive: true, force: true })

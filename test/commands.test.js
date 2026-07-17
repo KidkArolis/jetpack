@@ -4,6 +4,7 @@ import fs from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import os from 'node:os'
 import { fileURLToPath } from 'node:url'
+import { browserCommand, runCompiler } from '../lib/inspect.js'
 import { runJetpack } from './helpers/process.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -29,6 +30,32 @@ test('jetpack browsers --target=legacy prints legacy info', async (t) => {
   t.is(result.exitCode, 0)
   t.regex(result.stdout, /\[legacy query\]/i)
   t.regex(result.stdout, /\[legacy browsers\]/i)
+})
+
+test('inspect uses platform-native browser launchers', (t) => {
+  const file = path.join('tmp', 'inspect.html')
+
+  t.deepEqual(browserCommand(file, 'darwin'), { command: 'open', args: [file] })
+  t.deepEqual(browserCommand(file, 'linux'), { command: 'xdg-open', args: [file] })
+  t.deepEqual(browserCommand(file, 'win32'), { command: 'explorer.exe', args: [file] })
+})
+
+test('inspect closes the compiler when compilation fails', async (t) => {
+  const failure = new Error('Compilation failed')
+  let closed = false
+  const compiler = {
+    run(callback) {
+      callback(failure)
+    },
+    close(callback) {
+      closed = true
+      callback()
+    }
+  }
+
+  const error = await t.throwsAsync(runCompiler(compiler))
+  t.is(error, failure)
+  t.true(closed)
 })
 
 test.serial('jetpack clean removes dist when confirmed', async (t) => {

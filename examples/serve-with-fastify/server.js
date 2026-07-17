@@ -1,21 +1,18 @@
 import fastify from 'fastify'
-import { resolveConfig } from '../../index.js'
 import { serve } from '../../serve.js'
 
 const app = fastify({ logger: true })
-const jetpack = serve(
-  await resolveConfig({
-    command: process.env.NODE_ENV === 'production' ? 'build' : 'dev'
-  })
-)
+const jetpack = serve()
 
 app.get('/api/data', (req, res) => {
   res.send('hello')
 })
 
 app.get('/*', (req, res) => {
-  jetpack(req.raw, res.raw, () => {})
   res.hijack()
+  jetpack(req.raw, res.raw, (err) => {
+    if (err && !res.raw.destroyed) res.raw.destroy(err)
+  })
 })
 
 app.listen({ port: 3000 }, function () {

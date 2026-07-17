@@ -20,7 +20,7 @@
   - build options -> `build.outDir`, `build.sourceMaps`, `build.minify`, and `build.chunkLoadRetry`
   - HTML options -> `html.title`, `html.cspNonce`, and `html.render`
   - `polyfills` is now top-level: `polyfills: 'usage' | 'entry' | false`
-  - removed `static`, `proxy`, config-file `dir`, and `css.features`
+  - removed `static`, `proxy`, config-file `dir`, `react`, `head`, `body`, and `css.features`; use `html.render` for custom document markup
 - For advanced customization, use the `rspack` config hook. The old `webpack` hook alias was removed, `rspack(config, options)` is now `rspack(config, context)`
 - `sass-loader` resources should use `additionalData`.
 

@@ -5,8 +5,38 @@ import path from 'node:path'
 import vm from 'node:vm'
 import { fileURLToPath } from 'node:url'
 import { createErrorFrameHandler } from '../lib/overlay/sourceMap.js'
+import { parseStack } from '../lib/overlay/stack.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+test('overlay parses Chrome and Firefox stack frames consistently', (t) => {
+  t.deepEqual(
+    parseStack(`Error: test
+    at render (http://localhost/assets/bundle.js:10:20)
+    at http://localhost/assets/bundle.js:11:21
+load@http://localhost/assets/bundle.js:12:22`),
+    [
+      {
+        methodName: 'render',
+        url: 'http://localhost/assets/bundle.js',
+        line: 10,
+        column: 20
+      },
+      {
+        methodName: '<anonymous>',
+        url: 'http://localhost/assets/bundle.js',
+        line: 11,
+        column: 21
+      },
+      {
+        methodName: 'load',
+        url: 'http://localhost/assets/bundle.js',
+        line: 12,
+        column: 22
+      }
+    ]
+  )
+})
 
 test('runtime overlay ignores stale source-frame responses', async (t) => {
   const elements = new Map()
@@ -46,6 +76,7 @@ test('runtime overlay ignores stale source-frame responses', async (t) => {
       return new Promise((resolve) => requests.push(resolve))
     },
     navigator: {},
+    parseStack,
     setTimeout,
     window: {
       addEventListener() {},
@@ -53,7 +84,11 @@ test('runtime overlay ignores stale source-frame responses', async (t) => {
     }
   }
   const clientPath = path.join(__dirname, '..', 'lib', 'overlay', 'client.js')
-  const source = `${await fs.readFile(clientPath, 'utf8')}\nglobalThis.showRuntimeErrorForTest = showRuntimeError\n`
+  const clientSource = (await fs.readFile(clientPath, 'utf8')).replace(
+    "import { parseStack } from './stack.js'\n\n",
+    ''
+  )
+  const source = `${clientSource}\nglobalThis.showRuntimeErrorForTest = showRuntimeError\n`
   vm.runInNewContext(source, context)
 
   const first = new Error('first')

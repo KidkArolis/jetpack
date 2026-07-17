@@ -238,29 +238,60 @@ test('normalizes grouped build and html config', async (t) => {
   t.is(opts.assets.inlineLimit, 4096)
 })
 
-test('rejects config options that moved into groups', async (t) => {
-  const projectRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-options-'))
-  await fs.cp(dir('fixtures', 'pkg-src'), projectRoot, { recursive: true })
-  t.teardown(() => fs.rm(projectRoot, { recursive: true, force: true }))
+test('rejects config options that moved in Jetpack 5', async (t) => {
+  const movedOptions = {
+    publicPath: 'assetBaseUrl',
+    dist: 'build.outDir',
+    outDir: 'build.outDir',
+    sourceMaps: 'build.sourceMaps',
+    minify: 'build.minify',
+    chunkLoadRetry: 'build.chunkLoadRetry',
+    title: 'html.title',
+    cspNonce: 'html.cspNonce'
+  }
 
-  await fs.writeFile(path.join(projectRoot, 'jetpack.config.mjs'), 'export default { minify: false }\n')
+  for (const [name, replacement] of Object.entries(movedOptions)) {
+    const projectRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-options-'))
+    await fs.cp(dir('fixtures', 'pkg-src'), projectRoot, { recursive: true })
+    t.teardown(() => fs.rm(projectRoot, { recursive: true, force: true }))
+    await fs.writeFile(path.join(projectRoot, 'jetpack.config.mjs'), `export default { ${name}: null }\n`)
 
-  await t.throwsAsync(options({ command: 'build', dir: projectRoot }), { message: 'minify moved to build.minify.' })
+    await t.throwsAsync(options({ command: 'build', dir: projectRoot }), {
+      message: `${name} moved to ${replacement}.`
+    })
+  }
 })
 
-test('rejects the removed proxy config option', async (t) => {
-  const src = dir('fixtures', 'pkg-src')
-  const projectRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-options-'))
-  await fs.cp(src, projectRoot, { recursive: true })
-  t.teardown(() => fs.rm(projectRoot, { recursive: true, force: true }))
+test('rejects config options that were removed in Jetpack 5', async (t) => {
+  const removedOptions = [
+    ['static', null, 'static is no longer supported.'],
+    ['proxy', null, 'proxy is no longer supported.'],
+    ['dir', null, 'dir is no longer supported.'],
+    ['exec', null, 'exec is no longer supported.'],
+    ['react', null, 'react is no longer supported.'],
+    ['head', null, 'head is no longer supported. Use html.render instead.'],
+    ['body', null, 'body is no longer supported. Use html.render instead.'],
+    ['webpack', null, 'webpack is no longer supported. Use rspack instead.'],
+    ['css', { features: {} }, 'css.features is no longer supported. Use the rspack hook instead.']
+  ]
 
-  await fs.writeFile(path.join(projectRoot, 'jetpack.config.mjs'), 'export default { proxy: {} }\n')
-  await t.throwsAsync(options({ command: 'dev', dir: projectRoot }), {
+  for (const [name, value, message] of removedOptions) {
+    const projectRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'jetpack-options-'))
+    await fs.cp(dir('fixtures', 'pkg-src'), projectRoot, { recursive: true })
+    t.teardown(() => fs.rm(projectRoot, { recursive: true, force: true }))
+    await fs.writeFile(
+      path.join(projectRoot, 'jetpack.config.mjs'),
+      `export default ${JSON.stringify({ [name]: value })}\n`
+    )
+
+    await t.throwsAsync(options({ command: 'dev', dir: projectRoot }), { message })
+  }
+
+  await t.throwsAsync(options({ command: 'dev', configFile: false, overrides: { proxy: {} } }), {
     message: 'proxy is no longer supported.'
   })
-
-  await t.throwsAsync(options({ command: 'dev', dir: projectRoot, configFile: false, overrides: { proxy: {} } }), {
-    message: 'proxy is no longer supported.'
+  await t.throwsAsync(options({ command: 'dev', configFile: false, overrides: { css: { features: {} } } }), {
+    message: 'css.features is no longer supported. Use the rspack hook instead.'
   })
 })
 
@@ -281,7 +312,7 @@ test('normalizes assetBaseUrl and assetBasePathname', async (t) => {
     command: 'dev',
     dir: dir('fixtures', 'pkg-src'),
     overrides: {},
-    config: null
+    configFile: false
   })
   t.is(opts.assetBaseUrl, '/assets/')
   t.is(opts.assetBasePathname, '/assets/')
@@ -468,7 +499,7 @@ test('passes a small public context to the rspack hook', async (t) => {
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
     overrides: {},
-    config: null
+    configFile: false
   })
 
   createRspackConfig({
@@ -494,7 +525,7 @@ test('passes rspack hook context for each requested target', async (t) => {
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
     overrides: { target: 'all' },
-    config: null
+    configFile: false
   })
 
   createRspackConfig({
@@ -521,7 +552,7 @@ test('rspack hook context finds generated loaders by name or regex', async (t) =
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null
+    configFile: false
   })
 
   const config = createRspackConfig({
@@ -556,7 +587,7 @@ test('resolves extensionless imports for supported js and typescript files', asy
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null
+    configFile: false
   })
   const config = createRspackConfig(opts).modern
 
@@ -567,7 +598,7 @@ test('uses assetBaseUrl as the runtime public path', async (t) => {
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null
+    configFile: false
   })
   const config = createRspackConfig({ ...opts, assetBaseUrl: 'https://cdn.example.com/assets/' }).modern
 
@@ -578,7 +609,7 @@ test('production builds split initial and async chunks', async (t) => {
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null
+    configFile: false
   })
   const config = createRspackConfig(opts).modern
 
@@ -643,7 +674,7 @@ test('accepts polyfill options', async (t) => {
   const entry = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null,
+    configFile: false,
     overrides: { polyfills: 'entry' }
   })
   t.is(entry.polyfills, 'entry')
@@ -651,7 +682,7 @@ test('accepts polyfill options', async (t) => {
   const disabled = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null,
+    configFile: false,
     overrides: { polyfills: false }
   })
   t.false(disabled.polyfills)
@@ -662,7 +693,7 @@ test('rejects invalid polyfill option', async (t) => {
     options({
       command: 'build',
       dir: dir('fixtures', 'pkg-src'),
-      config: null,
+      configFile: false,
       overrides: { polyfills: true }
     }),
     { message: 'polyfills must be "usage", "entry", or false.' }
@@ -680,7 +711,7 @@ test('transpiles dependencies by default', async (t) => {
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null
+    configFile: false
   })
   const config = createRspackConfig(opts).modern
   const include = dependencySwcRule(config).include
@@ -694,7 +725,7 @@ test('can disable dependency transpilation', async (t) => {
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null,
+    configFile: false,
     overrides: {
       transpileDependencies: false
     }
@@ -709,7 +740,7 @@ test('can limit and exclude dependency transpilation by package name', async (t)
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null,
+    configFile: false,
     overrides: {
       transpileDependencies: {
         include: ['@acme/ui', 'modern-lib'],
@@ -734,7 +765,7 @@ test('uses Jetpack modern defaults when no browserslist config exists', async (t
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null
+    configFile: false
   })
   const config = createRspackConfig(opts).modern
 
@@ -748,7 +779,7 @@ test('uses browserslist defaults for legacy when no browserslist config exists',
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null,
+    configFile: false,
     overrides: { target: 'legacy' }
   })
   const config = createRspackConfig(opts).legacy
@@ -763,7 +794,7 @@ test('uses project browserslist config when present', async (t) => {
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-basic'),
-    config: null
+    configFile: false
   })
   const config = createRspackConfig(opts).modern
   const targets = targetQuery({ ...opts, bundleTarget: 'modern' })
@@ -776,7 +807,7 @@ test('passes polyfill mode to swc env', async (t) => {
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null,
+    configFile: false,
     overrides: { polyfills: 'entry' }
   })
   const env = swcEnv(createRspackConfig(opts).modern)
@@ -789,7 +820,7 @@ test('can disable core-js polyfills in swc env', async (t) => {
   const opts = await options({
     command: 'build',
     dir: dir('fixtures', 'pkg-src'),
-    config: null,
+    configFile: false,
     overrides: { polyfills: false }
   })
   const env = swcEnv(createRspackConfig(opts).modern)

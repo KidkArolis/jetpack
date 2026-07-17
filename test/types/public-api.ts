@@ -1,3 +1,4 @@
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import rspack, { DefinePlugin } from '../../rspack.js'
 import createRspackConfig from '../../rspack-config.js'
 import serve, { serveResolved } from '../../serve.js'
@@ -82,11 +83,13 @@ serve(resolved)
 // @ts-expect-error serve.resolve was removed in Jetpack 5.
 serve.resolve({ dir: process.cwd() })
 const renderedTemplate = html`<div>${target}</div>`
+declare const request: IncomingMessage
+declare const response: ServerResponse
 
 renderHtmlResponse(renderedTemplate, { cspNonce: 'nonce' })
 new DefinePlugin({ __TEST__: JSON.stringify(true) })
 rspack(configs.modern ?? {})
-lazyMiddleware({}, {}, () => {})
-lowLevelMiddleware({}, {}, () => {})
+lazyMiddleware(request, response, () => {})
+lowLevelMiddleware(request, response, () => {})
 void inlineLimit
 void polyfills

@@ -11,7 +11,7 @@ async function assetRules(assets) {
   const opts = await options({
     command: 'build',
     dir: path.join(fixturesDir, 'pkg-basic'),
-    config: null
+    configFile: false
   })
   const config = createRspackConfig({
     ...opts,

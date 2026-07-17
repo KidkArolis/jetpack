@@ -13,7 +13,7 @@ async function cssRules(modules) {
   const opts = await options({
     command: 'build',
     dir: path.join(fixturesDir, 'pkg-basic'),
-    config: null
+    configFile: false
   })
   const config = createRspackConfig({
     ...opts,
@@ -38,7 +38,7 @@ async function stylesheetRule(filename, sourceMaps) {
   const opts = await options({
     command: 'build',
     dir: path.join(fixturesDir, 'pkg-basic'),
-    config: null
+    configFile: false
   })
   const config = createRspackConfig({
     ...opts,
@@ -144,7 +144,7 @@ test('css chunks use the same filename pattern as entry css', async (t) => {
   const opts = await options({
     command: 'build',
     dir: path.join(fixturesDir, 'pkg-basic'),
-    config: null
+    configFile: false
   })
   const plugin = cssExtractPlugin(createRspackConfig(opts).modern)
 
