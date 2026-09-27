@@ -64,8 +64,8 @@
     "test:types": "tsc -p tsconfig.types.json",
     "coverage": "c8 --reporter=text --reporter=html --include='lib/**/*.js' --include='*.js' --exclude='test/**' --exclude='examples/**' --exclude='lib/retryChunkLoadPlugin.js' ava",
     "format": "oxfmt --write '**/*.{js,json,css,yml}'",
-    "release": "npx np",
-    "release-rc": "npx np --tag=next --any-branch --no-cleanup"
+    "release": "npx np --no-publish && npm publish",
+    "release-rc": "npx np --tag=next --any-branch --no-cleanup --no-publish && npm publish --tag=next"
   },
   "dependencies": {
     "@jridgewell/trace-mapping": "^0.3.31",
