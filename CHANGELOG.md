@@ -1,7 +1,3 @@
-# 5.1.0
-
-- Upgrade all deps
-
 # 5.0.0
 
 **Breaking changes**
