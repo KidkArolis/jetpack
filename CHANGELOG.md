@@ -1,3 +1,7 @@
+# 5.0.1
+
+- Update all dependencies
+
 # 5.0.0
 
 **Breaking changes**
