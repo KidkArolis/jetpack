@@ -1,6 +1,6 @@
 {
   "name": "jetpack",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "type": "module",
   "description": "Run and build web code with Rspack.",
   "exports": {
