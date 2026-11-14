@@ -1,3 +1,8 @@
+# 5.1.0
+
+- Upgrade to rspack 2.3 with speed improvements
+- Upgrade all dependencies
+
 # 5.0.1
 
 - Update all dependencies
