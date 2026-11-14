@@ -4,6 +4,7 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { runJetpack } from './helpers/process.js'
+import { stripAnsi } from './helpers/ansi.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, 'fixtures')
@@ -16,11 +17,6 @@ async function setupTmpFixture(fixture, config) {
     await fs.writeFile(path.join(dest, 'jetpack.config.mjs'), `export default ${JSON.stringify(config, null, 2)}\n`)
   }
   return dest
-}
-
-// strips ANSI colour codes so regexes don't need to account for them
-function stripAnsi(s) {
-  return s.replace(/\[[0-9;]*m/g, '')
 }
 
 test('--print-config prints the rspack config to stdout', async (t) => {

@@ -5,6 +5,7 @@ import os from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { commandOptions } from '../lib/cli.js'
 import { runJetpack } from './helpers/process.js'
+import { stripAnsi } from './helpers/ansi.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, 'fixtures')
@@ -54,7 +55,7 @@ test('--no-minify disables minification', async (t) => {
   ])
   t.is(result.exitCode, 0)
   // minimizer array stays empty when --no-minify is passed
-  t.regex(result.stdout.replace(/\[[0-9;]*m/g, ''), /minimizer:\s*\[\s*\]/)
+  t.regex(stripAnsi(result.stdout), /minimizer:\s*\[\s*\]/)
 })
 
 test('--target controls the bundle target', async (t) => {
@@ -66,7 +67,7 @@ test('--target controls the bundle target', async (t) => {
     path.join(fixturesDir, 'pkg-basic')
   ])
   t.is(result.exitCode, 0)
-  const stdout = result.stdout.replace(/\[[0-9;]*m/g, '')
+  const stdout = stripAnsi(result.stdout)
   t.regex(stdout, /Legacy config/)
   t.notRegex(stdout, /Modern config/)
 })
@@ -110,7 +111,7 @@ test('positional path is used as the entry', async (t) => {
   const dir = path.join(fixturesDir, 'pkg-basic')
   const result = await runJetpack(['build', '--print-config', 'index.js', '--dir', dir])
   t.is(result.exitCode, 0)
-  t.regex(result.stdout.replace(/\[[0-9;]*m/g, ''), /entry:\s*\{[^}]*bundle:\s*\[\s*'\.\/index\.js'\s*\]/)
+  t.regex(stripAnsi(result.stdout), /entry:\s*\{[^}]*bundle:\s*\[\s*'\.\/index\.js'\s*\]/)
 })
 
 test.serial('clean command via positional', async (t) => {
