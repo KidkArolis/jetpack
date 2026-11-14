@@ -69,9 +69,9 @@
   },
   "dependencies": {
     "@jridgewell/trace-mapping": "^0.3.31",
-    "@rspack/core": "^2.2.9",
-    "@rspack/dev-server": "^2.2.1",
-    "@rspack/plugin-react-refresh": "^2.0.2",
+    "@rspack/core": "^2.3.2",
+    "@rspack/dev-server": "^2.2.2",
+    "@rspack/plugin-react-refresh": "^2.0.3",
     "@swc/helpers": "^0.5.23",
     "browserslist": "^4.29.4",
     "browserslist-useragent-regexp": "^4.1.4",
